@@ -1,0 +1,83 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# survParamSim
+
+The goal of survParamSim is to perform survival simulation with parametric survival model generated from 'survreg' function in 'survival' package.
+
+Outputs include prediction intervals of Kaplan-Meier estimates and hazard ratio of treatment effect.
+You can also access raw simulated survival profiles of each simulation for post-processing.
+
+In each simulation, coefficients are resampled from variance-covariance matrix of parameter estimates to capture uncertainty in model parameters.
+
+
+## Installation
+
+You can install the package from GitHub using __devtools__.
+
+``` r
+install.packages("devtools")
+devtools::install_git("https://github.com/yoshidk6/survParamSim")
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem.
+
+First, run survreg to fit parametric survival model:
+
+```{r fit}
+library(survival)
+library(survParamSim)
+
+set.seed(12345)
+
+fit.lung <- survreg(Surv(time, status) ~ sex, data = lung)
+
+fit.lung
+```
+
+Next, run parametric bootstrap simulation:
+
+```{r sim}
+# Remove a few subjects for later plotting purpose
+newdata <- 
+  lung %>% 
+  dplyr::filter(!is.na(ph.ecog), ph.ecog <= 2)
+
+sim <- surv_param_sim(object = fit.lung, newdata = newdata)
+
+sim
+```
+
+Calculate survival curves with prediction intervals
+
+```{r km_pi}
+km.pi <- calc_km_pi(sim, trt = "sex", group = c("ph.ecog"))
+
+km.pi
+plot_km_pi(km.pi) +
+  ggplot2::theme(legend.position = "bottom")
+```
+
+Calculate hazard ratios with prediction intervals:
+
+```{r hr_pi}
+hr.pi <- calc_hr_pi(sim, trt = "sex", group = c("ph.ecog"))
+
+hr.pi
+plot_hr_pi(hr.pi)
+```
+
+

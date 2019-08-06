@@ -1,0 +1,33 @@
+Package: survParamSim
+Type: Package
+Title: Parametric Survival Simulation with Parameter Uncertainty
+Version: 0.0.0013
+Authors@R: c(
+    person("Kenta", "Yoshida", , "6.kurabupasu@gmail.com", c("aut", "cre"), 
+      comment = c(ORCID = "0000-0003-4967-3831")),
+    person("Laurent", "Claret", , , c("aut")))
+Description: Perform survival simulation with parametric survival model generated from 'survreg' function in 'survival' package.
+    Outputs include prediction intervals of Kaplan-Meier estimates and hazard ratio of treatment effect.
+    In each simulation coefficients are resampled from variance-covariance matrix of parameter estimates to 
+    capture uncertainty in model parameters.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 3.4.0),
+Imports: 
+    magrittr (>= 1.5),
+    mvtnorm,
+    rlang,
+    purrr,
+    forcats,
+    dplyr,
+    tidyr,
+    tibble,
+    ggplot2,
+    survival (>= 2.43)
+Suggests: 
+    testthat (>= 2.1.0)
+RoxygenNote: 6.1.1
+Language: en-US
+URL: https://github.com/yoshidk6/survParamSim
+BugReports: https://github.com/yoshidk6/survParamSim/issues
