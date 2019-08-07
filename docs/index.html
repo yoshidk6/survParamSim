@@ -75,6 +75,7 @@
 <div id="survparamsim" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#survparamsim" class="anchor"></a>survParamSim</h1></div>
+
 <p>The goal of survParamSim is to perform survival simulation with parametric survival model generated from ‘survreg’ function in ‘survival’ package.</p>
 <p>Outputs include prediction intervals of Kaplan-Meier estimates and hazard ratio of treatment effect. You can also access raw simulated survival profiles of each simulation for post-processing.</p>
 <p>In each simulation, coefficients are resampled from variance-covariance matrix of parameter estimates to capture uncertainty in model parameters.</p>
@@ -116,7 +117,9 @@ newdata &lt;-<span class="st"> </span>
 <span class="st">  </span>lung <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(ph.ecog), ph.ecog <span class="op">&lt;=</span><span class="st"> </span><span class="dv">2</span>)
 
-sim &lt;-<span class="st"> </span><span class="kw"><a href="reference/surv_param_sim.html">surv_param_sim</a></span>(<span class="dt">object =</span> fit.lung, <span class="dt">newdata =</span> newdata)
+sim &lt;-<span class="st"> </span><span class="kw"><a href="reference/surv_param_sim.html">surv_param_sim</a></span>(<span class="dt">object =</span> fit.lung, <span class="dt">newdata =</span> newdata, 
+                      <span class="co"># Simulating only 100 times to make the example go fast</span>
+                      <span class="dt">n.rep =</span> <span class="dv">100</span>)
 
 sim
 <span class="co">#&gt; ---- Simulated survival data with the following model ----</span>
@@ -126,8 +129,8 @@ sim
 <span class="co">#&gt; * Use `calc_hr_pi()` function to get hazard ratio</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; * Settings:</span>
-<span class="co">#&gt;     #simulations: 1000 </span>
-<span class="co">#&gt;     #subjects (without NA): 226</span></code></pre></div>
+<span class="co">#&gt;     #simulations: 100 </span>
+<span class="co">#&gt;     #subjects: 226 (without NA in model variables)</span></code></pre></div>
 <p>Calculate survival curves with prediction intervals</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">km.pi &lt;-<span class="st"> </span><span class="kw"><a href="reference/calc_km_pi.html">calc_km_pi</a></span>(sim, <span class="dt">trt =</span> <span class="st">"sex"</span>, <span class="dt">group =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"ph.ecog"</span>))
 
@@ -187,7 +190,13 @@ hr.pi
 </ul>
 </div>
 
-      </div>
+      <div class="dev-status">
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://travis-ci.org/yoshidk6/survParamSim"><img src="https://travis-ci.org/yoshidk6/survParamSim.svg?branch=master" alt="Travis build status"></a></li>
+</ul>
+</div>
+</div>
 
 </div>
 
