@@ -40,26 +40,29 @@ test_that("predicted KM and median time per group", {
 })
 
 
-#### Want to add tests for graphics!!
-plot_km_pi(calc_km_pi(sim, trt = "sex"))
-plot_km_pi(calc_km_pi(sim, group = c("sex", "ph.ecog")))
+
+test_that("grouping and trt", {
+  plot.km.sex <- plot_km_pi(calc_km_pi(sim, trt = "sex"))
+  vdiffr::expect_doppelganger("km plot with sex as trt", plot.km.sex)
+
+  plot.km.sex.ecog <- plot_km_pi(calc_km_pi(sim, group = c("sex", "ph.ecog")))
+  vdiffr::expect_doppelganger("km plot with sex and ph.ecog as group", plot.km.sex.ecog)
+})
 
 
 test_that("long simulation time", {
-  km.pi <- calc_km_pi(sim, group = "sex", simtimelast = 2000)
-  plot_km_pi(km.pi, cut.sim.censor = FALSE)
-  plot_km_pi(km.pi)
-  #### Add tests!
+  km.pi.longsim <- calc_km_pi(sim, group = "sex", simtimelast = 2000)
 
-  expect_equal(2 * 2, 4)
+  vdiffr::expect_doppelganger("long sim time, not cutting with censor", plot_km_pi(km.pi.longsim, cut.sim.censor = FALSE))
+  vdiffr::expect_doppelganger("long sim time, cutting with censor", plot_km_pi(km.pi.longsim))
 })
 
 
 
-test_that("no group or trt case", {
-  km.pi <- calc_km_pi(sim)
+test_that("no group or trt", {
+  km.pi.no.group.trt <- calc_km_pi(sim)
 
-  summary(km.pi) %>%
+  summary(km.pi.no.group.trt) %>%
     dplyr::pull(median) %>%
     expect_equal(c(279, 320, 363, 310), tolerance = 1)
 
@@ -67,13 +70,8 @@ test_that("no group or trt case", {
 
 
 test_that("not calculating observed KM", {
-  sim <- suppressWarnings(surv_param_sim(object, newdata, n.rep, censor.dur))
+  vdiffr::expect_doppelganger("no observed KM curves", plot_km_pi(calc_km_pi(sim, group = "sex", calc.obs = FALSE)))
 
-  km.pi <- calc_km_pi(sim, group = "sex", calc.obs = FALSE)
-  #### Add tests!
-  plot_km_pi(km.pi)
-
-  expect_equal(2 * 2, 4)
 })
 
 

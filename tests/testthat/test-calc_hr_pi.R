@@ -16,21 +16,6 @@ censor.dur <- c(200, 1100)
 
 
 sim <- suppressWarnings(surv_param_sim(object, newdata, n.rep, censor.dur))
-hr.pi <- calc_hr_pi(sim, trt = "sex")
-
-plot_hr_pi(hr.pi)
-
-
-hr.pi <- calc_hr_pi(sim, trt = "sex", group = "ph.ecog")
-plot_hr_pi(hr.pi)
-
-hr.pi <- calc_hr_pi(sim, trt = "sex", group = "ph.ecog", trt.assign = "rev")
-plot_hr_pi(hr.pi)
-
-
-test_that("multiplication works", {
-  expect_equal(2 * 2, 4)
-})
 
 
 
@@ -77,6 +62,12 @@ test_that("check if trt is factor with three or more levels", {
   expect_error(calc_hr_pi(sim, trt = "trt"),
                "`trt` should have only two factor levels")
 
+})
+
+
+test_that("HR plots", {
+  vdiffr::expect_doppelganger("HR plot without group", plot_hr_pi(calc_hr_pi(sim, trt = "sex")))
+  vdiffr::expect_doppelganger("HR plot by ph.ecog", plot_hr_pi(calc_hr_pi(sim, trt = "sex", group = "ph.ecog", trt.assign = "rev")))
 })
 
 

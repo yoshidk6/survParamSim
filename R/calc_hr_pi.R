@@ -115,7 +115,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     sim.nested %>%
     dplyr::mutate(coxfit = purrr::map(data, safe_calc_hr_each_sim),
                   HR = purrr::map_dbl(coxfit, ~.$result),
-                  description = "obs") %>%
+                  description = "sim") %>%
     dplyr::select(-data, -coxfit)
 
 
