@@ -18,6 +18,7 @@ print.survparamsim <- function(x, ...) {
   cat("* Use `calc_hr_pi()` function to get hazard ratio\n\n")
   cat("* Settings:\n")
   cat("    #simulations:", max(x$sim$rep), "\n", sep=" ")
-  cat("    #subjects (without NA):", x$sim %>% dplyr::select(subj.sim) %>% dplyr::distinct() %>% nrow(), "\n", sep=" ")
+  cat("    #subjects:", x$sim %>% dplyr::select(subj.sim) %>% dplyr::distinct() %>% nrow(),
+      "(without NA in model variables)\n", sep=" ")
 }
 

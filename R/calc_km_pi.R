@@ -269,29 +269,35 @@ plot_km_pi <- function(km.pi, show.obs = TRUE, cut.sim.censor = TRUE){
 
 
   # Plot
-  ## Simulations
+  ## Simulations 1
   if(length(trt.syms) == 0) {
     g <-
       ggplot2::ggplot(sim.km.quantile.plot,
-                      ggplot2::aes(time)) +
-      ggplot2::geom_ribbon(ggplot2::aes(ymin = pi_low, ymax = pi_high),
-                           alpha = 0.4)
+                      ggplot2::aes(time))
   } else {
     g <-
       ggplot2::ggplot(sim.km.quantile.plot,
                       ggplot2::aes(time, color = factor(!!!trt.syms),
-                                   fill = factor(!!!trt.syms))) +
-      ggplot2::geom_ribbon(ggplot2::aes(ymin = pi_low, ymax = pi_high),
-                           alpha = 0.4) +
-      ggplot2::labs(color = color.lab, fill = color.lab)
+                                   fill = factor(!!!trt.syms)))
   }
-
 
   ## Observed
   if(km.pi$calc.obs & show.obs) {
     g <-
       g + ggplot2::geom_line(data = obs.km,
                              ggplot2::aes(y = surv), size = 1)
+  }
+
+  ## Simulations 2
+  if(length(trt.syms) == 0) {
+    g <-
+      g + ggplot2::geom_ribbon(ggplot2::aes(ymin = pi_low, ymax = pi_high),
+                               alpha = 0.4)
+  } else {
+    g <-
+      g + ggplot2::geom_ribbon(ggplot2::aes(ymin = pi_low, ymax = pi_high),
+                               alpha = 0.4) +
+      ggplot2::labs(color = color.lab, fill = color.lab)
   }
 
 

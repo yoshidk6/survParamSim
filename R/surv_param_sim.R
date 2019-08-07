@@ -75,6 +75,9 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL){
   ## Get #subjects and subject IDs, after NA excluded by model.frame()
   n.subj <- nrow(mf)
 
+  if(n.subj == 0) {
+    stop("No subjects present in `newdata` for simulation. It might be because all subjects has NA in model variables (including survival and censoring status)")
+  }
   if(n.subj < nrow(newdata)) {
     warning("Not all subjects in `newdata` will be used for `surv_param_sim`, likely because NA is present",
             call. = FALSE)
