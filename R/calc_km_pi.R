@@ -76,6 +76,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
       obs.nested %>%
       dplyr::mutate(kmfit = purrr::map(data, function(x) survfit(formula, data=x))) %>%
       dplyr::mutate(median = purrr::map_dbl(kmfit, function(x) summary(x)$table["median"]),
+                    n      = purrr::map_dbl(kmfit, function(x) summary(x)$table["records"]),
                     km = purrr::map(kmfit, approx_km_obs))
 
     obs.km <-
@@ -85,7 +86,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
     obs.median.time <-
       obs.km.nested %>%
-      dplyr::select(!!!trt.syms, !!!group.syms, median)
+      dplyr::select(!!!trt.syms, !!!group.syms, median, n)
 
   } else {
     obs.km <- NULL
@@ -115,6 +116,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
                     purrr::map(data, function(x) survfit(Surv(time, event)~1, data=x))) %>%
     # Calc median and KM curve
     dplyr::mutate(median = purrr::map_dbl(kmfit, function(x) summary(x)$table["median"]),
+                  n      = purrr::map_dbl(kmfit, function(x) summary(x)$table["records"]),
                   km = purrr::map(kmfit, approx_km))
 
 
@@ -136,7 +138,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   ## Calc quantiles for median survival time
   sim.median.time <-
     sim.km %>%
-    dplyr::select(rep, !!!trt.syms, !!!group.syms, median)
+    dplyr::select(rep, !!!trt.syms, !!!group.syms, median, n)
 
   quantiles <-
     tibble::tibble(description = c("pi_low", "pi_med", "pi_high"),
@@ -144,7 +146,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
   sim.median.pi <-
     sim.median.time %>%
-    dplyr::group_by(!!!trt.syms, !!!group.syms) %>%
+    dplyr::group_by(!!!trt.syms, !!!group.syms, n) %>%
     dplyr::summarize(pi_low = as.numeric(stats::quantile(median, probs = 0.5 - pi.range/2, na.rm = TRUE)),
                      pi_med = as.numeric(stats::quantile(median, probs = 0.5, na.rm = TRUE)),
                      pi_high= as.numeric(stats::quantile(median, probs = 0.5 + pi.range/2, na.rm = TRUE))) %>%

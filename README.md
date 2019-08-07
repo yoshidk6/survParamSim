@@ -3,6 +3,8 @@
 survParamSim
 ============
 
+[![Travis build status](https://travis-ci.org/yoshidk6/survParamSim.svg?branch=master)](https://travis-ci.org/yoshidk6/survParamSim)
+
 The goal of survParamSim is to perform survival simulation with parametric survival model generated from 'survreg' function in 'survival' package.
 
 Outputs include prediction intervals of Kaplan-Meier estimates and hazard ratio of treatment effect. You can also access raw simulated survival profiles of each simulation for post-processing.
@@ -57,7 +59,9 @@ newdata <-
   lung %>% 
   dplyr::filter(!is.na(ph.ecog), ph.ecog <= 2)
 
-sim <- surv_param_sim(object = fit.lung, newdata = newdata)
+sim <- surv_param_sim(object = fit.lung, newdata = newdata, 
+                      # Simulating only 100 times to make the example go fast
+                      n.rep = 100)
 
 sim
 #> ---- Simulated survival data with the following model ----
@@ -67,8 +71,8 @@ sim
 #> * Use `calc_hr_pi()` function to get hazard ratio
 #> 
 #> * Settings:
-#>     #simulations: 1000 
-#>     #subjects (without NA): 226
+#>     #simulations: 100 
+#>     #subjects: 226 (without NA in model variables)
 ```
 
 Calculate survival curves with prediction intervals

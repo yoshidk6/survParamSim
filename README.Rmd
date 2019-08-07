@@ -58,7 +58,9 @@ newdata <-
   lung %>% 
   dplyr::filter(!is.na(ph.ecog), ph.ecog <= 2)
 
-sim <- surv_param_sim(object = fit.lung, newdata = newdata)
+sim <- surv_param_sim(object = fit.lung, newdata = newdata, 
+                      # Simulating only 100 times to make the example go fast
+                      n.rep = 100)
 
 sim
 ```

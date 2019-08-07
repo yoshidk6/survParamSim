@@ -22,6 +22,15 @@ test_that("observed median time per group", {
   expect_equal(km.pi$obs.median.time$median, c(270, 426))
 })
 
+
+test_that("summary of prediction intervals for median survival time", {
+  expect_equal(summary(km.pi)$median,
+               c(213, 281, 331, 270, 298, 414, 535, 426),
+               tolerance = 1)
+  expect_equal(summary(km.pi)$n, rep(c(137, 90), each = 4))
+})
+
+
 test_that("predicted KM and median time per group", {
   km.pi$sim.median.time %>%
     dplyr::filter(rep == 1) %>%

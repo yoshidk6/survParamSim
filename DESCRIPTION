@@ -24,7 +24,8 @@ Imports:
     tidyr,
     tibble,
     ggplot2,
-    survival (>= 2.43)
+    survival (>= 2.43),
+    vdiffr
 Suggests: 
     testthat (>= 2.1.0)
 RoxygenNote: 6.1.1
