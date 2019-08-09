@@ -9,7 +9,7 @@ extract_sim <- function(sim) {
 
   time.var   <- as.character(attributes(formula(sim$survreg))$variables[[2]][[2]])
   status.var <- as.character(attributes(formula(sim$survreg))$variables[[2]][[3]])
-
+  if(status.var[[1]] == "!") status.var <- status.var[[2]]
 
   sim.merged.with.cov <-
     sim$newdata.nona.sim %>%
