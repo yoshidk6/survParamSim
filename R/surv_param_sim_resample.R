@@ -43,20 +43,13 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
 
   newdata.resampled <-
     newdata.resampled %>%
+    dplyr::arrange(rep) %>%
     dplyr::mutate(subj.sim.all = dplyr::row_number())
 
   newdata.resampled.nested <-
     newdata.resampled %>%
     dplyr::group_by(rep) %>%
     tidyr::nest()
-  #
-  # sim.each <- surv_param_sim(object, newdata.resampled.nested$data[[1]], n.rep = 1, censor.dur = censor.dur)
-  #
-  # sim.each.sim <-
-  #   sim.each$sim %>%
-  #   dplyr::left_join(dplyr::select(sim.each$newdata.nona.sim, subj.sim, subj.sim.all), by = "subj.sim") %>%
-  #   dplyr::mutate(subj.sim = subj.sim.all) %>%
-  #   dplyr::select(-subj.sim.all)
 
 
   simulate_each <- function(data, object, censor.dur){
@@ -75,9 +68,9 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
     tidyr::unnest(sim)
 
 
+  # Generate newdata.nona.obs from non-resample data
   sim.wo.resample <- surv_param_sim(object, newdata, n.rep = 1, censor.dur = censor.dur)
 
-  ### Generate newdata.nona.obs from non-resample data
 
   # Create a list for output
   out <- list()

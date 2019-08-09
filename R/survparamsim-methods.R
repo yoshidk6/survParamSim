@@ -15,6 +15,7 @@ print.survparamsim <- function(x, ...) {
   dput(x$survreg$call)
   cat("\n")
   cat("* Use `calc_km_pi()` function to get survival curves and median survival time\n")
+  cat("* Use `extract_sim()` function to extract individual simulated survivals\n")
   cat("* Use `calc_hr_pi()` function to get hazard ratio\n\n")
   cat("* Settings:\n")
   cat("    #simulations:", max(x$sim$rep), "\n", sep=" ")

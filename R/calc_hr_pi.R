@@ -226,6 +226,7 @@ plot_hr_pi <- function(hr.pi, show.obs = TRUE){
 print.survparamsim.hrpi <- function(x, ...){
   cat("---- Simulated and observed (if calculated) hazard ratio ----\n")
   cat("* Use `summary()` function to extract prediction intervals and observed HR\n")
+  cat("* Use `extract_hr()` function to extract individual simulated HRs\n")
   cat("* Use `plot_hr_pi()` function to draw histogram of predicted HR\n\n")
   cat("* Settings:\n")
   cat("    trt:", ifelse(is.null(x$trt), "(NULL)", x$trt), "\n", sep=" ")
