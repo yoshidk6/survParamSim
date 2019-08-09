@@ -13,12 +13,11 @@ censor.dur <- c(200, 1100)
 
 sim <- suppressWarnings(surv_param_sim(object, newdata, n.rep, censor.dur))
 
+# sim <- surv_param_sim(object, newdata, n.rep = 1, censor.dur)
+
 
 test_that("have NA in dataset", {
   expect_warning(surv_param_sim(object, newdata, n.rep, censor.dur),
                  "Not all subjects in `newdata`")
 })
 
-test_that("multiplication works", {
-  expect_equal(2 * 2, 4)
-})

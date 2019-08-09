@@ -61,7 +61,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   if(calc.obs){
     # Fit K-M curve to observed data
     obs.nested <-
-      sim$newdata.nona %>%
+      sim$newdata.nona.obs %>%
       dplyr::group_by(!!!trt.syms, !!!group.syms) %>%
       tidyr::nest()
 
@@ -99,7 +99,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   ## First nest data - KM fit will done for each nested data
 
   newdata.group <-
-    sim$newdata.nona %>%
+    sim$newdata.nona.sim %>%
     dplyr::select(subj.sim, !!!trt.syms, !!!group.syms)
 
   sim.grouped <-

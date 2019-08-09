@@ -16,7 +16,8 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
   trt.assign <- match.arg(trt.assign)
 
-  newdata.nona <- sim$newdata.nona
+  newdata.nona.obs <- sim$newdata.nona.obs
+  newdata.nona.sim <- sim$newdata.nona.sim
 
   if(missing(trt)) stop("`trt` needs to be specified")
   if(length(trt) > 1) stop("`trt` can only take one string")
@@ -27,7 +28,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
   # Check trt values
   trt.vec <-
-    newdata.nona %>%
+    newdata.nona.obs %>%
     dplyr::select(!!trt.sym) %>%
     .[[1]]
 
@@ -40,13 +41,19 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
   #### Convert trt to factor, then add an option to reverse control vs trt ####
 
-  newdata.nona <-
-    newdata.nona %>%
+  newdata.nona.obs <-
+    newdata.nona.obs %>%
+    dplyr::mutate(!!trt.sym := factor(!!trt.sym))
+  newdata.nona.sim <-
+    newdata.nona.sim %>%
     dplyr::mutate(!!trt.sym := factor(!!trt.sym))
 
   if(trt.assign == "reverse"){
-    newdata.nona <-
-      newdata.nona %>%
+    newdata.nona.obs <-
+      newdata.nona.obs %>%
+      dplyr::mutate(!!trt.sym := forcats::fct_rev(!!trt.sym))
+    newdata.nona.sim <-
+      newdata.nona.sim %>%
       dplyr::mutate(!!trt.sym := forcats::fct_rev(!!trt.sym))
   }
 
@@ -54,7 +61,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
   # Calc HR for observed data
   if(calc.obs){
     obs.nested <-
-      newdata.nona %>%
+      newdata.nona.obs %>%
       dplyr::group_by(!!!group.syms) %>%
       tidyr::nest()
 
@@ -87,7 +94,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
   ## First nest data - cox fit will done for each nested data
   newdata.trt.group <-
-    newdata.nona %>%
+    newdata.nona.sim %>%
     dplyr::select(subj.sim, !!trt.sym, !!!group.syms)
 
   sim.nested <-

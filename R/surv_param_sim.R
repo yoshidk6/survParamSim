@@ -4,6 +4,7 @@
 #' generated with \code{\link[survival]{survreg}} function.
 #'
 #'
+#' @rdname survparamsim
 #' @export
 #' @param object A `survreg` class object. Currently accept exponential,
 #'   lognormal, weibull, loglogistic, and gaussian distributions.
@@ -157,7 +158,8 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL){
 
   out$survreg <- object
   out$newdata <- newdata
-  out$newdata.nona <- newdata.nona
+  out$newdata.nona.obs <- newdata.nona
+  out$newdata.nona.sim <- newdata.nona
   out$sim <- sim
   out$censor.dur <- censor.dur
 
