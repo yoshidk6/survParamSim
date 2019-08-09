@@ -117,7 +117,7 @@ newdata &lt;-<span class="st"> </span>
 <span class="st">  </span>lung <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(ph.ecog), ph.ecog <span class="op">&lt;=</span><span class="st"> </span><span class="dv">2</span>)
 
-sim &lt;-<span class="st"> </span><span class="kw"><a href="reference/surv_param_sim.html">surv_param_sim</a></span>(<span class="dt">object =</span> fit.lung, <span class="dt">newdata =</span> newdata, 
+sim &lt;-<span class="st"> </span><span class="kw"><a href="reference/survparamsim.html">surv_param_sim</a></span>(<span class="dt">object =</span> fit.lung, <span class="dt">newdata =</span> newdata, 
                       <span class="co"># Simulating only 100 times to make the example go fast</span>
                       <span class="dt">n.rep =</span> <span class="dv">100</span>)
 

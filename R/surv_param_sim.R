@@ -3,7 +3,6 @@
 #' The main function to generate predicted survival using a model object
 #' generated with \code{\link[survival]{survreg}} function.
 #'
-#'
 #' @rdname survparamsim
 #' @export
 #' @param object A `survreg` class object. Currently accept exponential,
@@ -24,6 +23,8 @@
 #' @param censor.dur A two elements vector specifying duration of events
 #'   censoring. Censoring time will be calculated with uniform distribution
 #'   between two numbers. No censoring will be applied if NULL is provided.
+#' @param na.warning Boolean specifying whether warning will be shown if
+#' `newdata` contain subjects with missing model variables.
 #' @return A `survparamsim` object that contains the original `survreg` class
 #'   object, newdata, and a data frame for predicted survival profiles with the
 #'   following columns:
@@ -36,7 +37,13 @@
 #'   }
 #'
 #' @details
-#' Currently we have not tested if this function work for a `survreg` model
+#' \code{\link{surv_param_sim}} returns simulation using the provided subject
+#' in `newdata` as it is, while \code{\link{surv_param_sim_resample}} perform
+#' simulation based on resampled subjects from the dataset. The latter allows
+#' more flexibility in terms of simulating future trials with different number
+#' of subjects.
+#'
+#' Currently we have not tested whether this function work for a `survreg` model
 #' with stratification variables.
 #'
 #'
@@ -58,7 +65,7 @@
 #'
 #'
 #'
-surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL){
+surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL, na.warning = TRUE){
 
   if(missing(newdata)) stop("`newdata` needs to be provided even if the same as the one for `survreg()`")
 
@@ -79,9 +86,8 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL){
   if(n.subj == 0) {
     stop("No subjects present in `newdata` for simulation. It might be because all subjects has NA in model variables (including survival and censoring status)")
   }
-  if(n.subj < nrow(newdata)) {
-    warning("Not all subjects in `newdata` will be used for `surv_param_sim`, likely because NA is present",
-            call. = FALSE)
+  if(n.subj < nrow(newdata) & na.warning) {
+    warning("Not all subjects in `newdata` will be used for `surv_param_sim`, likely because NA is present")
   }
 
 

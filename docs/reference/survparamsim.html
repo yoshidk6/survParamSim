@@ -101,8 +101,8 @@ generated with survreg function." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Simulation of parametric survival model</h1>
-    <small class="dont-index">Source: <a href='https://github.com/yoshidk6/survParamSim/blob/master/R/surv_param_sim.R'><code>R/surv_param_sim.R</code></a></small>
-    <div class="hidden name"><code>surv_param_sim.Rd</code></div>
+    <small class="dont-index">Source: <a href='https://github.com/yoshidk6/survParamSim/blob/master/R/surv_param_sim.R'><code>R/surv_param_sim.R</code></a>, <a href='https://github.com/yoshidk6/survParamSim/blob/master/R/surv_param_sim_resample.R'><code>R/surv_param_sim_resample.R</code></a></small>
+    <div class="hidden name"><code>survparamsim.Rd</code></div>
     </div>
 
     <div class="ref-description">
@@ -112,7 +112,11 @@ generated with <code><a href='https://www.rdocumentation.org/packages/survival/t
     
     </div>
 
-    <pre class="usage"><span class='fu'>surv_param_sim</span>(<span class='no'>object</span>, <span class='no'>newdata</span>, <span class='kw'>n.rep</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>censor.dur</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>surv_param_sim</span>(<span class='no'>object</span>, <span class='no'>newdata</span>, <span class='kw'>n.rep</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>censor.dur</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>na.warning</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='fu'>surv_param_sim_resample</span>(<span class='no'>object</span>, <span class='no'>newdata</span>, <span class='kw'>n.rep</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
+  <span class='kw'>censor.dur</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>n.resample</span>, <span class='kw'>strat.resample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -145,6 +149,22 @@ lognormal, weibull, loglogistic, and gaussian distributions.</p></td>
 censoring. Censoring time will be calculated with uniform distribution
 between two numbers. No censoring will be applied if NULL is provided.</p></td>
     </tr>
+    <tr>
+      <th>na.warning</th>
+      <td><p>Boolean specifying whether warning will be shown if
+`newdata` contain subjects with missing model variables.</p></td>
+    </tr>
+    <tr>
+      <th>n.resample</th>
+      <td><p>Number of subjects for resampled simulations.
+If `strat.resample` is provided, this needs to be a vector of the length
+equal to the number of categories in the statifying variable.</p></td>
+    </tr>
+    <tr>
+      <th>strat.resample</th>
+      <td><p>String specifying stratification variable for
+resampling.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -162,7 +182,12 @@ between two numbers. No censoring will be applied if NULL is provided.</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Currently we have not tested if this function work for a `survreg` model
+    <p><code>surv_param_sim</code> returns simulation using the provided subject
+in `newdata` as it is, while <code>surv_param_sim_resample</code> perform
+simulation based on resampled subjects from the dataset. The latter allows
+more flexibility in terms of simulating future trials with different number
+of subjects.</p>
+<p>Currently we have not tested whether this function work for a `survreg` model
 with stratification variables.</p>
     
 
