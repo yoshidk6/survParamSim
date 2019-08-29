@@ -64,10 +64,34 @@ test_that("check if trt is factor with three or more levels", {
 })
 
 
-test_that("HR plots", {
-  vdiffr::expect_doppelganger("HR plot without group", plot_hr_pi(calc_hr_pi(sim, trt = "sex")))
-  vdiffr::expect_doppelganger("HR plot by ph.ecog", plot_hr_pi(calc_hr_pi(sim, trt = "sex", group = "ph.ecog", trt.assign = "rev")))
+test_that("check HR calculation", {
+  hr.pi.raw <- extract_hr(hr.pi)
+
+  expect_equal(dim(hr.pi.raw), c(30, 2))
+  expect_equal(hr.pi.raw$HR[[1]], 0.708, tolerance = .001)
+
+
+  hr.pi.raw.group <- extract_hr(calc_hr_pi(sim, trt = "sex", group = "ph.ecog", trt.assign = "rev"))
+  expect_equal(dim(hr.pi.raw.group), c(90, 3))
+  expect_equal(hr.pi.raw.group$HR[[1]], 1.3, tolerance = .01)
 })
+
+
+test_that("check TRT levels assignment", {
+  expect_equal(calc_hr_pi(sim, trt = "sex", group = "ph.ecog", trt.assign = "rev")$trt.levels,
+               c("2", "1"))
+})
+
+
+test_that("check summary", {
+  hr.pi.summary <- summary(hr.pi)
+
+  expect_equal(dim(hr.pi.summary), c(4, 3))
+  expect_equal(hr.pi.summary$HR, c(0.46, 0.624, 0.836, 0.596), tolerance = .001)
+
+})
+
+
 
 
 

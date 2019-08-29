@@ -57,6 +57,8 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
       dplyr::mutate(!!trt.sym := forcats::fct_rev(!!trt.sym))
   }
 
+  trt.levels <- dplyr::pull(newdata.nona.obs, !!trt.sym) %>% levels()
+
 
   # Calc HR for observed data
   if(calc.obs){
@@ -166,6 +168,8 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
   out$sim.hr <- sim.hr
   out$hr.pi.quantile <- hr.pi.quantile
 
+  out$trt.levels <- trt.levels
+
   structure(out, class = c("survparamsim.hrpi"))
 }
 
@@ -229,8 +233,9 @@ print.survparamsim.hrpi <- function(x, ...){
   cat("* Use `extract_hr()` function to extract individual simulated HRs\n")
   cat("* Use `plot_hr_pi()` function to draw histogram of predicted HR\n\n")
   cat("* Settings:\n")
-  cat("    trt:", ifelse(is.null(x$trt), "(NULL)", x$trt), "\n", sep=" ")
-  cat("    group:", x$group, "\n", sep=" ")
+  cat("    trt: ", x$trt, "\n", sep="")
+  cat("         (", x$trt.levels[[2]], " as test trt, ", x$trt.levels[[1]], " as control)\n", sep="")
+  cat("    group:", ifelse(is.null(x$group), "(NULL)", x$group), "\n", sep=" ")
   cat("    pi.range:", x$pi.range, "\n", sep=" ")
   cat("    calc.obs:", x$calc.obs, "\n", sep=" ")
 

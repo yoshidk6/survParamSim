@@ -329,7 +329,7 @@ print.survparamsim.kmpi <- function(x, ...){
   cat("* Use `plot_km_pi()` function to draw survival curves\n\n")
   cat("* Settings:\n")
   cat("    trt:", ifelse(is.null(x$trt), "(NULL)", x$trt), "\n", sep=" ")
-  cat("    group:", x$group, "\n", sep=" ")
+  cat("    group:", ifelse(is.null(x$group), "(NULL)", x$group), "\n", sep=" ")
   cat("    pi.range:", x$pi.range, "\n", sep=" ")
   cat("    calc.obs:", x$calc.obs, "\n", sep=" ")
 
