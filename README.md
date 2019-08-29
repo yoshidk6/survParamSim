@@ -68,6 +68,7 @@ sim
 #> survreg(formula = Surv(time, status) ~ sex, data = lung)
 #> 
 #> * Use `calc_km_pi()` function to get survival curves and median survival time
+#> * Use `extract_sim()` function to extract individual simulated survivals
 #> * Use `calc_hr_pi()` function to get hazard ratio
 #> 
 #> * Settings:
@@ -104,10 +105,12 @@ hr.pi <- calc_hr_pi(sim, trt = "sex", group = c("ph.ecog"))
 hr.pi
 #> ---- Simulated and observed (if calculated) hazard ratio ----
 #> * Use `summary()` function to extract prediction intervals and observed HR
+#> * Use `extract_hr()` function to extract individual simulated HRs
 #> * Use `plot_hr_pi()` function to draw histogram of predicted HR
 #> 
 #> * Settings:
-#>     trt: sex 
+#>     trt: sex
+#>          (2 as test trt, 1 as control)
 #>     group: ph.ecog 
 #>     pi.range: 0.95 
 #>     calc.obs: TRUE
