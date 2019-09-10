@@ -45,16 +45,16 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   }
 
 
-  # Define function to approximate KM curves from KM fit object
-  approx_km_obs <- function(x){
-    surv <- approx(c(0,x$time), c(1,x$surv), xout=t.out, method="constant")$y
-    data.frame(time = t.out,
-               surv = surv)
-  }
+  # Define function to approximate or extract KM curves from KM fit object
   approx_km <- function(x){
     surv <- approx(c(0,x$time), c(1,x$surv), xout=t.out, method="constant", rule=2)$y
     data.frame(time = t.out,
                surv = surv)
+  }
+  extract_km_obs <- function(x){
+    data.frame(time = c(0, x$time),
+               surv = c(1, x$surv),
+               cnsr = c(0, x$n.censor))
   }
 
 
@@ -77,7 +77,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
       dplyr::mutate(kmfit = purrr::map(data, function(x) survfit(formula, data=x))) %>%
       dplyr::mutate(median = purrr::map_dbl(kmfit, function(x) summary(x)$table["median"]),
                     n      = purrr::map_dbl(kmfit, function(x) summary(x)$table["records"]),
-                    km = purrr::map(kmfit, approx_km_obs))
+                    km = purrr::map(kmfit, extract_km_obs))
 
     obs.km <-
       obs.km.nested %>%
@@ -286,8 +286,11 @@ plot_km_pi <- function(km.pi, show.obs = TRUE, cut.sim.censor = TRUE){
   ## Observed
   if(km.pi$calc.obs & show.obs) {
     g <-
-      g + ggplot2::geom_line(data = obs.km,
-                             ggplot2::aes(y = surv), size = 1)
+      g +
+      ggplot2::geom_step(data = obs.km,
+                         ggplot2::aes(y = surv), size = 1) +
+      ggplot2::geom_point(data = dplyr::filter(obs.km, cnsr > 0),
+                          ggplot2::aes(y = surv), shape = "|", size = 3)
   }
 
   ## Simulations 2
