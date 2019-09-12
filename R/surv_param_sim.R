@@ -73,8 +73,14 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL, na.
 
 
   # Prepare model parameter with bootstrap
-  thetaHat <- c(object$coef,log(object$scale)) # point estimates of model parameters
-  theta    <- mvtnorm::rmvnorm(n.rep, thetaHat, object$var) # parametric bootstrap of model parameters
+  ## point estimates of model parameters
+  if(object$dist != "exponential"){
+    theta <- c(object$coef, log(object$scale))
+  } else {
+    theta <- object$coef
+  }
+
+  th.bs <- mvtnorm::rmvnorm(n.rep, theta, stats::vcov(object)) # parametric bootstrap of model parameters
 
 
   # Prep data matrix for simulation
@@ -91,44 +97,49 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL, na.
   }
 
 
-
   # Survival time simulation
-  logmean <- theta[,-ncol(theta)] %*% t(rdata)
+  ## Generate linear predictors (lp)
+  if(object$dist != "exponential"){
+    lp <- th.bs[,-ncol(th.bs)] %*% t(rdata)
+    scale.bs <- th.bs[,ncol(th.bs)]
+  } else {
+    lp <- th.bs %*% t(rdata)
+  }
 
   preds <-
     switch(object$dist,
            gaussian =
-             rnorm(n    = length(logmean),
-                   mean = logmean,
-                   sd   = exp(th[,ncol(th)])),
+             rnorm(n    = length(lp),
+                   mean = lp,
+                   sd   = exp(scale.bs)),
            lognormal =
-             rlnorm(n    = length(logmean),
-                    mean = logmean,
-                    sd   = exp(theta[,ncol(theta)])),
+             rlnorm(n    = length(lp),
+                    mean = lp,
+                    sd   = exp(scale.bs)),
            weibull =
-             rweibull(n     = length(logmean),
-                      shape = 1/exp(theta[,ncol(theta)]),
-                      scale = exp(logmean)),
+             rweibull(n     = length(lp),
+                      shape = 1/exp(scale.bs),
+                      scale = exp(lp)),
            loglogistic = exp(
-             rlogis(n = length(logmean),
-                        location = logmean,
-                        scale = exp(theta[,ncol(theta)]))
-             ),
+             rlogis(n = length(lp),
+                    location = lp,
+                    scale = exp(scale.bs))
+           ),
            exponential =
-             rexp(n = length(logmean),
-                  rate = 1/exp(th[]))
+             rexp(n = length(lp),
+                  rate = 1/exp(lp))
     )
 
 
-  preds <- matrix(preds, nrow=nrow(logmean))
-  event.status <- matrix(rep(1,n.rep*n.subj),ncol=ncol(logmean))
+  preds <- matrix(preds, nrow=nrow(lp))
+  event.status <- matrix(rep(1,n.rep*n.subj),ncol=ncol(lp))
 
 
   # Censoring time simulation if censor.dur is not NULL
   if(!is.null(censor.dur)){
     censor.time <-
       runif(n.rep*n.subj, censor.dur[1], censor.dur[2]) %>%
-      matrix(nrow=nrow(logmean))
+      matrix(nrow=nrow(lp))
 
     event.status[preds > censor.time] <- 0
 
