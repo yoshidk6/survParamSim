@@ -4,7 +4,7 @@
 \alias{plot_km_pi}
 \title{Plot Kaplan-Meier curves with prediction intervals from parametric bootstrap simulation}
 \usage{
-plot_km_pi(km.pi, show.obs = TRUE, cut.sim.censor = TRUE)
+plot_km_pi(km.pi, show.obs = TRUE, trunc.sim.censor = TRUE)
 }
 \arguments{
 \item{km.pi}{an output from \code{\link{calc_km_pi}} function.}
@@ -12,7 +12,7 @@ plot_km_pi(km.pi, show.obs = TRUE, cut.sim.censor = TRUE)
 \item{show.obs}{A logical specifying whether to show observed K-M curve on the plot.
 This will have no effect if `calc.obs` was set to `FALSE` in \code{\link{calc_km_pi}}.}
 
-\item{cut.sim.censor}{A logical specifying whether to cut the simulated
+\item{trunc.sim.censor}{A logical specifying whether to truncate the simulated
 curve at the last time of `censor.dur`` specified in \code{\link{surv_param_sim}}.}
 }
 \description{

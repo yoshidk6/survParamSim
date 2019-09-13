@@ -75,8 +75,8 @@ extract_km_pi <- function(km.pi, trunc.sim.censor = TRUE) {
 #' @rdname extractpi
 #' @export
 #' @details
-#' \code{\link{extract_km_obs}} extracts observed K-M curves.
-extract_km_obs <- function(km.pi, trunc.sim.censor = TRUE) {
+#' \code{\link{extract_km_obs}} extracts observed Kaplan-Meier curves.
+extract_km_obs <- function(km.pi) {
   return(km.pi$obs.km)
 }
 
@@ -85,7 +85,7 @@ extract_km_obs <- function(km.pi, trunc.sim.censor = TRUE) {
 #' @details
 #' \code{\link{extract_median_surv}} extracts prediction intervals of
 #' median survival times and and the corresponding observed values.
-extract_median_surv <- function(km.pi, trunc.sim.censor = TRUE) {
+extract_median_surv <- function(km.pi) {
   return(km.pi$median.pi)
 }
 

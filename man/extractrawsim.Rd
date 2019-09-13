@@ -15,8 +15,10 @@ extract_hr(hr.pi)
 \item{hr.pi}{a return object from \code{\link{calc_hr_pi}} function.}
 }
 \description{
-\code{\link{extract_sim}} extract raw survival time & event status for all simulated subjects.
+Functions to extract raw simulated samples
 }
 \details{
-\code{\link{extract_hr}} extract simulated HRs for all repeated simulations
+\code{\link{extract_sim}} extracts raw survival time & event status for all simulated subjects.
+
+\code{\link{extract_hr}} extracts simulated HRs for all repeated simulations
 }
