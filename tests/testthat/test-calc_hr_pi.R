@@ -64,6 +64,21 @@ test_that("check if trt is factor with three or more levels", {
 })
 
 
+test_that("not all groups have both treatment arms", {
+  newdata.wo.both.trt <-
+    dplyr::tibble(time = 0,
+                  status = 1,
+                  sex = c(1, 1, 2, 1, 1),
+                  ph.ecog = c(1, 1, 1, 2, 2))
+
+  sim.tmp <- suppressWarnings(surv_param_sim(object, newdata.wo.both.trt, n.rep, censor.dur))
+
+  expect_error(calc_hr_pi(sim.tmp, trt = "sex", group = "ph.ecog"),
+               "All subgroups should contain")
+
+})
+
+
 test_that("check HR calculation", {
   hr.pi.raw <- extract_hr(hr.pi)
 

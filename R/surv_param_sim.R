@@ -118,26 +118,20 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
 
   preds <-
     switch(object$dist,
-           gaussian =
-             rnorm(n    = length(lp),
-                   mean = lp,
-                   sd   = exp(scale.bs)),
-           lognormal =
-             rlnorm(n    = length(lp),
-                    mean = lp,
-                    sd   = exp(scale.bs)),
-           weibull =
-             rweibull(n     = length(lp),
-                      shape = 1/exp(scale.bs),
-                      scale = exp(lp)),
-           loglogistic = exp(
-             rlogis(n = length(lp),
-                    location = lp,
-                    scale = exp(scale.bs))
-           ),
-           exponential =
-             rexp(n = length(lp),
-                  rate = 1/exp(lp))
+           gaussian = rnorm(n    = length(lp),
+                            mean = lp,
+                            sd   = exp(scale.bs)),
+           lognormal = rlnorm(n    = length(lp),
+                              mean = lp,
+                              sd   = exp(scale.bs)),
+           weibull = rweibull(n     = length(lp),
+                              shape = 1/exp(scale.bs),
+                              scale = exp(lp)),
+           loglogistic = exp(rlogis(n = length(lp),
+                                    location = lp,
+                                    scale = exp(scale.bs))),
+           exponential = rexp(n = length(lp),
+                              rate = 1/exp(lp))
     )
 
 
@@ -149,7 +143,7 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
   if(!is.null(censor.dur)){
     censor.time <-
       runif(n.rep*n.subj, censor.dur[1], censor.dur[2]) %>%
-      matrix(nrow=nrow(lp))
+      matrix(nrow = nrow(lp))
 
     event.status[preds > censor.time] <- 0
 

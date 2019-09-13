@@ -25,22 +25,10 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
   group.syms <- rlang::syms(group)
   trt.sym    <- rlang::sym(trt)
 
-
   # Check trt values
-  trt.vec <-
-    newdata.nona.obs %>%
-    dplyr::select(!!trt.sym) %>%
-    .[[1]]
+  check_trt(newdata.nona.obs, trt.sym, group.syms)
 
-  if(sum(is.na(trt.vec)) > 0) stop("`trt` cannot has NA values")
-  if(length(unique(trt.vec)) != 2) stop("`trt` should contain exactly two unique values")
-  if(is.factor(trt.vec) & nlevels(trt.vec) != 2) stop("`trt` should have only two factor levels, consider using `droplevels()` to remove unused levels")
-
-  #### Throw error if not all groups have both treatment arms ####
-
-
-  #### Convert trt to factor, then add an option to reverse control vs trt ####
-
+  # Convert trt to factor
   newdata.nona.obs <-
     newdata.nona.obs %>%
     dplyr::mutate(!!trt.sym := factor(!!trt.sym))
@@ -48,6 +36,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     newdata.nona.sim %>%
     dplyr::mutate(!!trt.sym := factor(!!trt.sym))
 
+  # Reverse control vs trt
   if(trt.assign == "reverse"){
     newdata.nona.obs <-
       newdata.nona.obs %>%
@@ -221,6 +210,39 @@ plot_hr_pi <- function(hr.pi, show.obs = TRUE){
 
 }
 
+
+check_trt <- function(newdata.nona.obs, trt.sym, group.syms){
+
+  # Check trt values
+  trt.vec <-
+    newdata.nona.obs %>%
+    dplyr::select(!!trt.sym) %>%
+    .[[1]]
+
+  if(sum(is.na(trt.vec)) > 0) stop("`trt` cannot has NA values")
+  if(length(unique(trt.vec)) != 2) stop("`trt` should contain exactly two unique values")
+  if(is.factor(trt.vec) & nlevels(trt.vec) != 2) stop("`trt` should have only two factor levels, consider using `droplevels()` to remove unused levels")
+
+
+  # Throw error if not all groups have both treatment arms
+  if(length(group.syms) != 0){
+    n.distinct.group <-
+      newdata.nona.obs %>%
+      dplyr::distinct(!!!group.syms) %>%
+      nrow()
+  } else {
+    n.distinct.group <- 1
+  }
+
+  n.distinct.group.trt <-
+    newdata.nona.obs %>%
+    dplyr::distinct(!!!group.syms, !!trt.sym) %>%
+    nrow()
+
+  if(n.distinct.group.trt != 2 * n.distinct.group)
+    stop("All subgroups should contain at lease one subject for each `trt`")
+
+}
 
 
 
