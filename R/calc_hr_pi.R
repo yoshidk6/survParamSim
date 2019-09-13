@@ -229,9 +229,9 @@ plot_hr_pi <- function(hr.pi, show.obs = TRUE){
 #' @export
 print.survparamsim.hrpi <- function(x, ...){
   cat("---- Simulated and observed (if calculated) hazard ratio ----\n")
-  cat("* Use `summary()` function to extract prediction intervals and observed HR\n")
-  cat("* Use `extract_hr()` function to extract individual simulated HRs\n")
-  cat("* Use `plot_hr_pi()` function to draw histogram of predicted HR\n\n")
+  cat("* Use `extract_hr_pi()` to extract prediction intervals and observed HR\n")
+  cat("* Use `extract_hr()` to extract individual simulated HRs\n")
+  cat("* Use `plot_hr_pi()` to draw histogram of predicted HR\n\n")
   cat("* Settings:\n")
   cat("    trt: ", x$trt, "\n", sep="")
   cat("         (", x$trt.levels[[2]], " as test trt, ", x$trt.levels[[1]], " as control)\n", sep="")
@@ -247,7 +247,7 @@ print.survparamsim.hrpi <- function(x, ...){
 #' @export
 summary.survparamsim.hrpi <- function(object, ...) {
 
-  return(object$hr.pi)
+  return(extract_hr_pi(object))
 }
 
 

@@ -82,7 +82,8 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     obs.km <-
       obs.km.nested %>%
       tidyr::unnest(km) %>%
-      dplyr::filter(!is.na(surv))
+      dplyr::filter(!is.na(surv)) %>%
+      dplyr::select(-median)
 
     obs.median.time <-
       obs.km.nested %>%
@@ -124,7 +125,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   sim.km.quantile <-
     sim.km %>%
     tidyr::unnest(km) %>%
-    dplyr::group_by(time, !!!trt.syms, !!!group.syms) %>%
+    dplyr::group_by(!!!trt.syms, !!!group.syms, n, time) %>%
     tidyr::nest() %>%
     dplyr::mutate(quantiles = purrr::map(data, function(x)
       dplyr::summarize(x,
@@ -204,10 +205,10 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 #' @param km.pi an output from \code{\link{calc_km_pi}} function.
 #' @param show.obs A logical specifying whether to show observed K-M curve on the plot.
 #'   This will have no effect if `calc.obs` was set to `FALSE` in \code{\link{calc_km_pi}}.
-#' @param cut.sim.censor A logical specifying whether to cut the simulated
+#' @param trunc.sim.censor A logical specifying whether to truncate the simulated
 #' curve at the last time of `censor.dur`` specified in \code{\link{surv_param_sim}}.
 #'
-plot_km_pi <- function(km.pi, show.obs = TRUE, cut.sim.censor = TRUE){
+plot_km_pi <- function(km.pi, show.obs = TRUE, trunc.sim.censor = TRUE){
 
   group <- km.pi$group
   trt   <- km.pi$trt
@@ -215,59 +216,12 @@ plot_km_pi <- function(km.pi, show.obs = TRUE, cut.sim.censor = TRUE){
   color.lab <- trt
 
   obs.km <- km.pi$obs.km
-  sim.km.quantile <- km.pi$sim.km.quantile
+  sim.km.quantile.plot <- extract_km_pi(km.pi, trunc.sim.censor = trunc.sim.censor)
 
 
   group.syms <- rlang::syms(group)
   trt.syms   <- rlang::syms(trt)
 
-
-  #### Below will not work if simtimelast is missing and obs.km is not calculated ####
-
-
-  # Extract quantile from simulation
-  # Limit data based on `simtimelast` or the last observed time
-  if(is.null(km.pi$simtimelast) & km.pi$calc.obs){
-    ## Get last obs time for each group
-    timelast <-
-      obs.km %>%
-      dplyr::group_by(!!!trt.syms, !!!group.syms) %>%
-      dplyr::arrange(time) %>%
-      dplyr::slice(dplyr::n()) %>%
-      dplyr::ungroup() %>%
-      dplyr::select(!!!trt.syms, !!!group.syms, timelast = time)
-
-    if(is.null(c(group, trt))){
-      sim.km.quantile.plot <-
-        sim.km.quantile %>%
-        tidyr::crossing(timelast) %>%
-        dplyr::filter(time <= timelast)
-
-    } else {
-      sim.km.quantile.plot <-
-        sim.km.quantile %>%
-        dplyr::full_join(timelast, by = c(group, trt)) %>%
-        dplyr::filter(time <= timelast)
-    }
-
-  } else if(!is.null(km.pi$simtimelast)) {
-    sim.km.quantile.plot <-
-      sim.km.quantile %>%
-      dplyr::filter(time <= km.pi$simtimelast)
-
-  } else {
-    sim.km.quantile.plot <-
-      sim.km.quantile %>%
-      dplyr::filter(time <= km.pi$t.last)
-  }
-
-
-  if(cut.sim.censor & !is.null(km.pi$censor.dur)){
-    sim.km.quantile.plot <-
-      sim.km.quantile.plot %>%
-      dplyr::filter(time <= km.pi$censor.dur[[2]])
-
-  }
 
 
   # Plot
@@ -328,8 +282,9 @@ plot_km_pi <- function(km.pi, show.obs = TRUE, cut.sim.censor = TRUE){
 #' @export
 print.survparamsim.kmpi <- function(x, ...){
   cat("---- Simulated and observed (if calculated) survival curves ----\n")
-  cat("* Use `summary()` function to extract median survival times\n")
-  cat("* Use `plot_km_pi()` function to draw survival curves\n\n")
+  cat("* Use `extract_median_surv()` to extract median survival times\n")
+  cat("* Use `extract_km_pi()` to extract prediction intervals of K-M curves\n")
+  cat("* Use `plot_km_pi()` to draw survival curves\n\n")
   cat("* Settings:\n")
   cat("    trt:", ifelse(is.null(x$trt), "(NULL)", x$trt), "\n", sep=" ")
   cat("    group:", ifelse(is.null(x$group), "(NULL)", x$group), "\n", sep=" ")
@@ -344,7 +299,7 @@ print.survparamsim.kmpi <- function(x, ...){
 #' @export
 summary.survparamsim.kmpi <- function(object, ...) {
 
-  return(object$median.pi)
+  return(extract_median_surv(object))
 }
 
 

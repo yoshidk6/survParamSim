@@ -62,8 +62,8 @@ test_that("grouping and trt", {
 test_that("long simulation time", {
   km.pi.longsim <- calc_km_pi(sim, group = "sex", simtimelast = 2000)
 
-  vdiffr::expect_doppelganger("long sim time, not cutting with censor", plot_km_pi(km.pi.longsim, cut.sim.censor = FALSE))
-  vdiffr::expect_doppelganger("long sim time, cutting with censor", plot_km_pi(km.pi.longsim))
+  vdiffr::expect_doppelganger("long sim time, not truncating with censor", plot_km_pi(km.pi.longsim, trunc.sim.censor = FALSE))
+  vdiffr::expect_doppelganger("long sim time, truncating with censor", plot_km_pi(km.pi.longsim))
 })
 
 

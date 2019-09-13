@@ -24,10 +24,10 @@ test_that("have NA in dataset", {
 
 
 
-test_that("work with various distributions", {
-
-  # fit.exp <- survreg(Surv(time, status) ~ sex + ph.ecog, data = lung, dist = "exponential")
-
-
-})
+# test_that("work with various distributions", {
+#
+#   fit.exp <- survreg(Surv(time, status) ~ sex + ph.ecog, data = lung, dist = "exponential")
+#
+#
+# })
 
