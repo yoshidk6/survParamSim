@@ -67,8 +67,8 @@ sim
 #> ---- Simulated survival data with the following model ----
 #> survreg(formula = Surv(time, status) ~ sex, data = lung)
 #> 
-#> * Use `calc_km_pi()` function to get survival curves and median survival time
 #> * Use `extract_sim()` function to extract individual simulated survivals
+#> * Use `calc_km_pi()` function to get survival curves and median survival time
 #> * Use `calc_hr_pi()` function to get hazard ratio
 #> 
 #> * Settings:
@@ -83,8 +83,9 @@ km.pi <- calc_km_pi(sim, trt = "sex", group = c("ph.ecog"))
 
 km.pi
 #> ---- Simulated and observed (if calculated) survival curves ----
-#> * Use `summary()` function to extract median survival times
-#> * Use `plot_km_pi()` function to draw survival curves
+#> * Use `extract_median_surv()` to extract median survival times
+#> * Use `extract_km_pi()` to extract prediction intervals of K-M curves
+#> * Use `plot_km_pi()` to draw survival curves
 #> 
 #> * Settings:
 #>     trt: sex 
@@ -104,9 +105,9 @@ hr.pi <- calc_hr_pi(sim, trt = "sex", group = c("ph.ecog"))
 
 hr.pi
 #> ---- Simulated and observed (if calculated) hazard ratio ----
-#> * Use `summary()` function to extract prediction intervals and observed HR
-#> * Use `extract_hr()` function to extract individual simulated HRs
-#> * Use `plot_hr_pi()` function to draw histogram of predicted HR
+#> * Use `extract_hr_pi()` to extract prediction intervals and observed HR
+#> * Use `extract_hr()` to extract individual simulated HRs
+#> * Use `plot_hr_pi()` to draw histogram of predicted HR
 #> 
 #> * Settings:
 #>     trt: sex
