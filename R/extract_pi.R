@@ -1,4 +1,4 @@
-#' Functions to extract prediction intervals (and observed data)
+#' Functions to extract prediction intervals and observed data
 #'
 #'
 #' @rdname extractpi

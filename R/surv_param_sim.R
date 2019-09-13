@@ -23,6 +23,10 @@
 #' @param censor.dur A two elements vector specifying duration of events
 #'   censoring. Censoring time will be calculated with uniform distribution
 #'   between two numbers. No censoring will be applied if NULL is provided.
+#' @param coef.var Boolean specifying whether parametric bootstrap are
+#' performed on survival model coefficients, based on variance-covariance
+#' matrix. If FALSE, prediction interval only reflects inherent variability
+#' from survival events.
 #' @param na.warning Boolean specifying whether warning will be shown if
 #' `newdata` contain subjects with missing model variables.
 #' @return A `survparamsim` object that contains the original `survreg` class
@@ -65,7 +69,8 @@
 #'
 #'
 #'
-surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL, na.warning = TRUE){
+surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
+                           coef.var = TRUE, na.warning = TRUE){
 
   if(missing(newdata)) stop("`newdata` needs to be provided even if the same as the one for `survreg()`")
 
@@ -80,7 +85,12 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL, na.
     theta <- object$coef
   }
 
-  th.bs <- mvtnorm::rmvnorm(n.rep, theta, stats::vcov(object)) # parametric bootstrap of model parameters
+  # parametric bootstrap of model parameters
+  if(coef.var) {
+    th.bs <- mvtnorm::rmvnorm(n.rep, theta, stats::vcov(object))
+  } else {
+    th.bs <- matrix(rep(theta, each = n.rep), nrow = n.rep)
+  }
 
 
   # Prep data matrix for simulation

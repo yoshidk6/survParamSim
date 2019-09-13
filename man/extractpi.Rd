@@ -5,7 +5,7 @@
 \alias{extract_km_obs}
 \alias{extract_median_surv}
 \alias{extract_hr_pi}
-\title{Functions to extract prediction intervals (and observed data)}
+\title{Functions to extract prediction intervals and observed data}
 \usage{
 extract_km_pi(km.pi, trunc.sim.censor = TRUE)
 
@@ -24,7 +24,7 @@ curve at the last time of `censor.dur`` specified in \code{\link{surv_param_sim}
 \item{hr.pi}{a return object from \code{\link{calc_hr_pi}} function.}
 }
 \description{
-Functions to extract prediction intervals (and observed data)
+Functions to extract prediction intervals and observed data
 }
 \details{
 \code{\link{extract_km_pi}} extracts prediction intervals of simulated Kaplan-Meier curves.

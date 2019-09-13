@@ -16,10 +16,6 @@ sim.resample <- surv_param_sim_resample(object, newdata, n.rep, censor.dur, n.re
 
 
 test_that("#subjects simulated after resampling", {
-
   expect_equal(nrow(sim.resample$sim),
-               n.rep * sum(n.resample))
-
-  expect_equal(sim.resample$sim$subj.sim %>% unique() %>% length(),
                n.rep * sum(n.resample))
 })

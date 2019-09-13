@@ -113,7 +113,7 @@ generated with <code><a href='https://www.rdocumentation.org/packages/survival/t
     </div>
 
     <pre class="usage"><span class='fu'>surv_param_sim</span>(<span class='no'>object</span>, <span class='no'>newdata</span>, <span class='kw'>n.rep</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>censor.dur</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>na.warning</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='kw'>coef.var</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>na.warning</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='fu'>surv_param_sim_resample</span>(<span class='no'>object</span>, <span class='no'>newdata</span>, <span class='kw'>n.rep</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
   <span class='kw'>censor.dur</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>n.resample</span>, <span class='kw'>strat.resample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
@@ -148,6 +148,13 @@ lognormal, weibull, loglogistic, and gaussian distributions.</p></td>
       <td><p>A two elements vector specifying duration of events
 censoring. Censoring time will be calculated with uniform distribution
 between two numbers. No censoring will be applied if NULL is provided.</p></td>
+    </tr>
+    <tr>
+      <th>coef.var</th>
+      <td><p>Boolean specifying whether parametric bootstrap are
+performed on survival model coefficients, based on variance-covariance
+matrix. If FALSE, prediction interval only reflects inherent variability
+from survival events.</p></td>
     </tr>
     <tr>
       <th>na.warning</th>

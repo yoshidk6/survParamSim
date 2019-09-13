@@ -6,7 +6,7 @@
 \title{Simulation of parametric survival model}
 \usage{
 surv_param_sim(object, newdata, n.rep = 1000, censor.dur = NULL,
-  na.warning = TRUE)
+  coef.var = TRUE, na.warning = TRUE)
 
 surv_param_sim_resample(object, newdata, n.rep = 1000,
   censor.dur = NULL, n.resample, strat.resample = NULL)
@@ -33,6 +33,11 @@ lognormal, weibull, loglogistic, and gaussian distributions.}
 \item{censor.dur}{A two elements vector specifying duration of events
 censoring. Censoring time will be calculated with uniform distribution
 between two numbers. No censoring will be applied if NULL is provided.}
+
+\item{coef.var}{Boolean specifying whether parametric bootstrap are
+performed on survival model coefficients, based on variance-covariance
+matrix. If FALSE, prediction interval only reflects inherent variability
+from survival events.}
 
 \item{na.warning}{Boolean specifying whether warning will be shown if
 `newdata` contain subjects with missing model variables.}

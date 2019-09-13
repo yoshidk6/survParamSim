@@ -110,7 +110,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>plot_km_pi</span>(<span class='no'>km.pi</span>, <span class='kw'>show.obs</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cut.sim.censor</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>plot_km_pi</span>(<span class='no'>km.pi</span>, <span class='kw'>show.obs</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>trunc.sim.censor</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -125,8 +125,8 @@
 This will have no effect if `calc.obs` was set to `FALSE` in <code><a href='calc_km_pi.html'>calc_km_pi</a></code>.</p></td>
     </tr>
     <tr>
-      <th>cut.sim.censor</th>
-      <td><p>A logical specifying whether to cut the simulated
+      <th>trunc.sim.censor</th>
+      <td><p>A logical specifying whether to truncate the simulated
 curve at the last time of `censor.dur`` specified in <code><a href='survparamsim.html'>surv_param_sim</a></code>.</p></td>
     </tr>
     </table>
