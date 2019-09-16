@@ -33,7 +33,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   ## Last observed time
   ## Calculate last time from original dataset just in case newdata's survival data is dummy
   t.last.newdata  <- survfit(formula, data = sim$newdata) %>% .$time
-  t.last.origdata <- stats::model.frame(sim$survreg)[,1][,1]
+  t.last.origdata <- as.numeric(sim$survreg$y[,1])
 
   t.last <-max(c(t.last.newdata, t.last.origdata))
 
