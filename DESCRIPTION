@@ -24,10 +24,10 @@ Imports:
     tidyr,
     tibble,
     ggplot2,
-    survival (>= 2.43),
-    vdiffr
+    survival (>= 2.43)
 Suggests: 
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    vdiffr
 RoxygenNote: 6.1.1
 Language: en-US
 URL: https://github.com/yoshidk6/survParamSim
