@@ -16,9 +16,12 @@
 calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
                        calc.obs = TRUE, simtimelast = NULL){
 
+  # Replace with packageVersion("tidyr") == '1.0.0' if nest issue is resolved in the next version
+  # See https://github.com/tidyverse/tidyr/issues/751
+  nest2 <- ifelse(packageVersion("tidyr") >= '1.0.0', tidyr::nest_legacy, tidyr::nest)
 
   ###### Need to throw an error if grouping variable is not present in newdata
-
+# browser()
 
   if(length(trt) > 1) stop("`trt` can only take one string")
 
@@ -63,7 +66,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     obs.nested <-
       sim$newdata.nona.obs %>%
       dplyr::group_by(!!!trt.syms, !!!group.syms) %>%
-      tidyr::nest()
+      nest2()
 
     ## Define formula
     formula <-
@@ -108,7 +111,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     dplyr::left_join(newdata.group, by = "subj.sim") %>%
     dplyr::group_by(rep, !!!trt.syms, !!!group.syms)
 
-  sim.nested <- tidyr::nest(sim.grouped)
+  sim.nested <- nest2(sim.grouped)
 
   sim.km <-
     sim.nested %>%
@@ -126,7 +129,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     sim.km %>%
     tidyr::unnest(km) %>%
     dplyr::group_by(!!!trt.syms, !!!group.syms, n, time) %>%
-    tidyr::nest() %>%
+    nest2() %>%
     dplyr::mutate(quantiles = purrr::map(data, function(x)
       dplyr::summarize(x,
                        pi_low = stats::quantile(surv, probs = 0.5 - pi.range/2),

@@ -8,6 +8,9 @@
 surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
                                     n.resample, strat.resample = NULL){
 
+  # Replace with packageVersion("tidyr") == '1.0.0' if nest issue is resolved in the next version
+  # See https://github.com/tidyverse/tidyr/issues/751
+  nest2 <- ifelse(packageVersion("tidyr") >= '1.0.0', tidyr::nest_legacy, tidyr::nest)
 
   resample_per_strat <- function(data, n.resample, n.rep){
     dplyr::sample_n(data, n.resample * n.rep, replace = TRUE) %>%
@@ -35,7 +38,7 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
     newdata.resampled <-
       newdata %>%
       dplyr::group_by(!!strat.sym) %>%
-      tidyr::nest() %>%
+      nest2() %>%
       dplyr::left_join(sample_scheme, by = strat.resample) %>%
       dplyr::mutate(sample = purrr::map2(data, n.resample, resample_per_strat, n.rep = n.rep)) %>%
       tidyr::unnest(sample)
@@ -49,7 +52,7 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
   newdata.resampled.nested <-
     newdata.resampled %>%
     dplyr::group_by(rep) %>%
-    tidyr::nest()
+    nest2()
 
 
   simulate_each <- function(data, object, censor.dur){

@@ -14,6 +14,10 @@
 calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
                        calc.obs = TRUE, trt.assign = c("default", "reverse")){
 
+  # Replace with packageVersion("tidyr") == '1.0.0' if nest issue is resolved in the next version
+  # See https://github.com/tidyverse/tidyr/issues/751
+  nest2 <- ifelse(packageVersion("tidyr") >= '1.0.0', tidyr::nest_legacy, tidyr::nest)
+
   trt.assign <- match.arg(trt.assign)
 
   newdata.nona.obs <- sim$newdata.nona.obs
@@ -54,7 +58,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     obs.nested <-
       newdata.nona.obs %>%
       dplyr::group_by(!!!group.syms) %>%
-      tidyr::nest()
+      nest2()
 
     ## Define function to calc HR
     calc_hr_each_obs <- function(x){
@@ -92,7 +96,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     sim$sim %>%
     dplyr::left_join(newdata.trt.group, by = "subj.sim") %>%
     dplyr::group_by(!!!group.syms, rep) %>%
-    tidyr::nest()
+    nest2()
 
 
   ## Define function to calc HR
