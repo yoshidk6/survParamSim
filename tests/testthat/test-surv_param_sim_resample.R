@@ -12,6 +12,7 @@ censor.dur <- c(200, 1100)
 
 n.resample = c(10, 30)
 
+sim.noresample <- surv_param_sim(object, newdata, n.rep, censor.dur)
 sim.resample <- surv_param_sim_resample(object, newdata, n.rep, censor.dur, n.resample, strat.resample = "sex")
 
 
@@ -19,3 +20,6 @@ test_that("#subjects simulated after resampling", {
   expect_equal(nrow(sim.resample$sim),
                n.rep * sum(n.resample))
 })
+
+
+

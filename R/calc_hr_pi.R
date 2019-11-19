@@ -17,6 +17,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
   # Replace with packageVersion("tidyr") == '1.0.0' if nest issue is resolved in the next version
   # See https://github.com/tidyverse/tidyr/issues/751
   nest2 <- ifelse(packageVersion("tidyr") >= '1.0.0', tidyr::nest_legacy, tidyr::nest)
+  unnest2 <- ifelse(packageVersion("tidyr") >= '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
 
   trt.assign <- match.arg(trt.assign)
 

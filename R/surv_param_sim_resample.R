@@ -11,6 +11,7 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
   # Replace with packageVersion("tidyr") == '1.0.0' if nest issue is resolved in the next version
   # See https://github.com/tidyverse/tidyr/issues/751
   nest2 <- ifelse(packageVersion("tidyr") >= '1.0.0', tidyr::nest_legacy, tidyr::nest)
+  unnest2 <- ifelse(packageVersion("tidyr") >= '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
 
   resample_per_strat <- function(data, n.resample, n.rep){
     dplyr::sample_n(data, n.resample * n.rep, replace = TRUE) %>%
@@ -41,7 +42,7 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
       nest2() %>%
       dplyr::left_join(sample_scheme, by = strat.resample) %>%
       dplyr::mutate(sample = purrr::map2(data, n.resample, resample_per_strat, n.rep = n.rep)) %>%
-      tidyr::unnest(sample)
+      unnest2(sample)
   }
 
   newdata.resampled <-
@@ -68,7 +69,7 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
   sim <-
     newdata.resampled.nested %>%
     dplyr::mutate(sim = purrr::map(data, simulate_each, object = object, censor.dur = censor.dur)) %>%
-    tidyr::unnest(sim)
+    unnest2(sim)
 
 
   # Generate newdata.nona.obs from non-resample data

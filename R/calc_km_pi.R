@@ -19,6 +19,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   # Replace with packageVersion("tidyr") == '1.0.0' if nest issue is resolved in the next version
   # See https://github.com/tidyverse/tidyr/issues/751
   nest2 <- ifelse(packageVersion("tidyr") >= '1.0.0', tidyr::nest_legacy, tidyr::nest)
+  unnest2 <- ifelse(packageVersion("tidyr") >= '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
 
   ###### Need to throw an error if grouping variable is not present in newdata
 # browser()
@@ -84,7 +85,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
     obs.km <-
       obs.km.nested %>%
-      tidyr::unnest(km) %>%
+      unnest2(km) %>%
       dplyr::filter(!is.na(surv)) %>%
       dplyr::select(-median)
 
@@ -127,7 +128,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   ## Calc quantile for survival curves
   sim.km.quantile <-
     sim.km %>%
-    tidyr::unnest(km) %>%
+    unnest2(km) %>%
     dplyr::group_by(!!!trt.syms, !!!group.syms, n, time) %>%
     nest2() %>%
     dplyr::mutate(quantiles = purrr::map(data, function(x)
@@ -135,7 +136,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
                        pi_low = stats::quantile(surv, probs = 0.5 - pi.range/2),
                        pi_med = stats::quantile(surv, probs = 0.5),
                        pi_high= stats::quantile(surv, probs = 0.5 + pi.range/2)))) %>%
-    tidyr::unnest(quantiles) %>%
+    unnest2(quantiles) %>%
     dplyr::select(-data)
 
 
