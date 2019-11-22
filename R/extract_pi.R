@@ -3,7 +3,7 @@
 #'
 #' @rdname extractpi
 #' @export
-#' @param km.pi a return object from \code{\link{calc_km_pi}} function.
+#' @param km.pi A return object from \code{\link{calc_km_pi}} function.
 #' @param trunc.sim.censor A logical specifying whether to truncate the simulated
 #' curve at the last time of `censor.dur`` specified in \code{\link{surv_param_sim}}.
 #' @details
@@ -82,11 +82,30 @@ extract_km_obs <- function(km.pi) {
 
 #' @rdname extractpi
 #' @export
+#' @param outtype Specifies whether output will be in long or wide format.
 #' @details
 #' \code{\link{extract_median_surv}} extracts prediction intervals of
 #' median survival times and and the corresponding observed values.
-extract_median_surv <- function(km.pi) {
-  return(km.pi$median.pi)
+extract_median_surv <- function(km.pi, outtype = c("long", "wide")) {
+
+  outtype <- match.arg(outtype)
+
+  out <- km.pi$median.pi
+
+  if(outtype == "wide"){
+    out <-
+      out %>%
+      dplyr::select(-quantile) %>%
+      tidyr::spread(description, median)
+
+    if(km.pi$calc.obs){
+      out <- dplyr::select(out, pi_low, pi_med, pi_high, obs, dplyr::everything())
+    } else {
+      out <- dplyr::select(out, pi_low, pi_med, pi_high, dplyr::everything())
+    }
+  }
+
+  return(out)
 }
 
 #' @rdname extractpi
@@ -95,7 +114,26 @@ extract_median_surv <- function(km.pi) {
 #' @details
 #' \code{\link{extract_hr_pi}} extracts prediction intervals of simulated
 #' hazard ratios and the corresponding observed values.
-extract_hr_pi <- function(hr.pi) {
-  return(hr.pi$hr.pi)
+extract_hr_pi <- function(hr.pi, outtype = c("long", "wide")) {
+
+  outtype <- match.arg(outtype)
+
+  out <- hr.pi$hr.pi.quantile
+
+  if(outtype == "wide"){
+    out <-
+      out %>%
+      dplyr::select(-quantile) %>%
+      tidyr::spread(description, HR)
+
+    if(hr.pi$calc.obs){
+      out <- dplyr::select(out, pi_low, pi_med, pi_high, obs, dplyr::everything())
+    } else {
+      out <- dplyr::select(out, pi_low, pi_med, pi_high, dplyr::everything())
+    }
+  }
+
+  return(out)
+
 }
 

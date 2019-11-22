@@ -91,6 +91,11 @@ test_that("check HR calculation", {
   expect_equal(hr.pi.raw.group$HR[[1]], 1.3, tolerance = .01)
 })
 
+test_that("Extract HR quantile in wide format", {
+  hr.pi.quantile <- extract_hr_pi(hr.pi, outtype ="wide")
+  expect_equal(dim(hr.pi.quantile), c(1, 4))
+  expect_equal(names(hr.pi.quantile), c("pi_low", "pi_med", "pi_high", "obs"))
+})
 
 test_that("check TRT levels assignment", {
   expect_equal(calc_hr_pi(sim, trt = "sex", group = "ph.ecog", trt.assign = "rev")$trt.levels,

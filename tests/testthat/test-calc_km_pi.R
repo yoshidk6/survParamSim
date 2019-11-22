@@ -22,6 +22,12 @@ test_that("observed median time per group", {
   expect_equal(km.pi$obs.median.time$median, c(270, 426))
 })
 
+test_that("Extract median quantile in wide format", {
+  median.pi.quantile <- extract_median_surv(km.pi, outtype ="wide")
+  expect_equal(dim(median.pi.quantile), c(2, 6))
+  expect_equal(names(median.pi.quantile), c("pi_low", "pi_med", "pi_high", "obs", "sex", "n"))
+
+})
 
 test_that("summary of prediction intervals for median survival time", {
   expect_equal(summary(km.pi)$median,
