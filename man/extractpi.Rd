@@ -11,15 +11,17 @@ extract_km_pi(km.pi, trunc.sim.censor = TRUE)
 
 extract_km_obs(km.pi)
 
-extract_median_surv(km.pi)
+extract_median_surv(km.pi, outtype = c("long", "wide"))
 
-extract_hr_pi(hr.pi)
+extract_hr_pi(hr.pi, outtype = c("long", "wide"))
 }
 \arguments{
-\item{km.pi}{a return object from \code{\link{calc_km_pi}} function.}
+\item{km.pi}{A return object from \code{\link{calc_km_pi}} function.}
 
 \item{trunc.sim.censor}{A logical specifying whether to truncate the simulated
 curve at the last time of `censor.dur`` specified in \code{\link{surv_param_sim}}.}
+
+\item{outtype}{Specifies whether output will be in long or wide format.}
 
 \item{hr.pi}{a return object from \code{\link{calc_hr_pi}} function.}
 }
