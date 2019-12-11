@@ -12,12 +12,21 @@ extract_sim <- function(sim) {
   status.var <- as.character(attributes(formula(sim$survreg))$variables[[2]][[3]])
   if(status.var[[1]] == "!") status.var <- status.var[[2]]
 
-  sim.merged.with.cov <-
-    sim$newdata.nona.sim %>%
-    dplyr::select(-time.var, -status.var, -n.resample) %>%
-    dplyr::left_join(sim$sim, .,
-                     by = c("rep", "subj.sim")) %>%
-    dplyr::select(rep, subj.sim, time, event, dplyr::everything())
+
+  if(is(sim, "survparamsim_resample")){
+    sim.merged.with.cov <-
+      sim$newdata.nona.sim %>%
+      dplyr::select(-time.var, -status.var, -n.resample) %>%
+      dplyr::left_join(sim$sim, ., by = c("rep", "subj.sim")) %>%
+      dplyr::select(rep, subj.sim, time, event, dplyr::everything())
+
+  } else {
+    sim.merged.with.cov <-
+      sim$newdata.nona.sim %>%
+      dplyr::select(-time.var, -status.var) %>%
+      dplyr::left_join(sim$sim, ., by = c("subj.sim")) %>%
+      dplyr::select(rep, subj.sim, time, event, dplyr::everything())
+  }
 
   return(sim.merged.with.cov)
 }

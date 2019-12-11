@@ -87,6 +87,6 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
   out$sim <- sim
   out$censor.dur <- censor.dur
 
-  structure(out, class = c("survparamsim"))
+  structure(out, class = c("survparamsim_resample", "survparamsim"))
 
 }
