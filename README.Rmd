@@ -16,12 +16,8 @@ knitr::opts_chunk$set(
 
 [![Travis build status](https://travis-ci.org/yoshidk6/survParamSim.svg?branch=master)](https://travis-ci.org/yoshidk6/survParamSim)
 
-The goal of survParamSim is to perform survival simulation with parametric survival model generated from 'survreg' function in 'survival' package.
-
-Outputs include prediction intervals of Kaplan-Meier estimates and hazard ratio of treatment effect.
-You can also access raw simulated survival profiles of each simulation for post-processing.
-
-In each simulation, coefficients are resampled from variance-covariance matrix of parameter estimates to capture uncertainty in model parameters.
+The goal of survParamSim is to perform survival simulation with parametric survival model generated from 'survreg' function in 'survival' package. 
+In each simulation, coefficients are resampled from variance-covariance matrix of parameter estimates, in order to capture uncertainty in model parameters.
 
 
 ## Installation
@@ -35,7 +31,8 @@ devtools::install_git("https://github.com/yoshidk6/survParamSim")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem.
+[This GitHub pages](https://yoshidk6.github.io/survParamSim) contains function references and [vignette](https://yoshidk6.github.io/survParamSim/articles/survParamSim.html).
+The example below is a sneak peek of example outputs. 
 
 First, run survreg to fit parametric survival model:
 
@@ -61,24 +58,24 @@ colon2 <-
 ```{r fit}
 fit.colon <- survreg(Surv(time, status) ~ rx + node4 + depth, 
                      data = colon2, dist = "lognormal")
-
-summary(fit.colon)
 ```
 
 Next, run parametric bootstrap simulation:
 
 ```{r sim}
-sim <- surv_param_sim(object = fit.colon, newdata = colon2, 
-                      # Simulating only 100 times to make the example go fast
-                      n.rep = 100)
+sim <- 
+  surv_param_sim(object = fit.colon, newdata = colon2, 
+                 censor.dur = c(1800, 3000),
+                 # Simulating only 100 times to make the example go fast
+                 n.rep = 100)
 
 sim
 ```
 
 Calculate survival curves with prediction intervals:
 
-```{r km_pi}
-km.pi <- calc_km_pi(sim, trt = "rx")
+```{r km_pi_group}
+km.pi <- calc_km_pi(sim, trt = "rx", group = c("node4", "depth"))
 
 km.pi
 plot_km_pi(km.pi) +
@@ -87,24 +84,10 @@ plot_km_pi(km.pi) +
   expand_limits(y = 0)
 ```
 
-Plot can be made for subgroups.  
-You can see that prediction interval is wide for depth: 1 and nodes4: 1 group, mainly due to small number of subjects
-
-```{r km_pi_group}
-km.pi <- calc_km_pi(sim, trt = "rx", group = c("node4", "depth"))
-
-plot_km_pi(km.pi) +
-  theme(legend.position = "bottom") +
-  labs(y = "Recurrence free rate") +
-  expand_limits(y = 0)
-```
-
 Calculate hazard ratios with prediction intervals:
 
-You can again see the wide prediction interval for depth: 1 and nodes4: 1 group
-
 ```{r hr_pi}
-hr.pi <- calc_hr_pi(sim, trt = "rx", group = c("node4", "depth"))
+hr.pi <- calc_hr_pi(sim, trt = "rx", group = c("depth"))
 
 hr.pi
 plot_hr_pi(hr.pi)

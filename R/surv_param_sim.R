@@ -77,6 +77,8 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
   ## Need to show error if the dataset contains a column named `subj.sim`
 
 
+  check_censor_dur(censor.dur)
+
   # Prepare model parameter with bootstrap
   ## point estimates of model parameters
   if(object$dist != "exponential"){
@@ -118,20 +120,20 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
 
   preds <-
     switch(object$dist,
-           gaussian = rnorm(n    = length(lp),
-                            mean = lp,
-                            sd   = exp(scale.bs)),
-           lognormal = rlnorm(n    = length(lp),
-                              mean = lp,
-                              sd   = exp(scale.bs)),
-           weibull = rweibull(n     = length(lp),
-                              shape = 1/exp(scale.bs),
-                              scale = exp(lp)),
-           loglogistic = exp(rlogis(n = length(lp),
-                                    location = lp,
-                                    scale = exp(scale.bs))),
-           exponential = rexp(n = length(lp),
-                              rate = 1/exp(lp))
+           gaussian = stats::rnorm(n    = length(lp),
+                                   mean = lp,
+                                   sd   = exp(scale.bs)),
+           lognormal = stats::rlnorm(n    = length(lp),
+                                     mean = lp,
+                                     sd   = exp(scale.bs)),
+           weibull = stats::rweibull(n     = length(lp),
+                                     shape = 1/exp(scale.bs),
+                                     scale = exp(lp)),
+           loglogistic = exp(stats::rlogis(n = length(lp),
+                                           location = lp,
+                                           scale = exp(scale.bs))),
+           exponential = stats::rexp(n = length(lp),
+                                     rate = 1/exp(lp))
     )
 
 
@@ -142,7 +144,7 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
   # Censoring time simulation if censor.dur is not NULL
   if(!is.null(censor.dur)){
     censor.time <-
-      runif(n.rep*n.subj, censor.dur[1], censor.dur[2]) %>%
+      stats::runif(n.rep*n.subj, censor.dur[1], censor.dur[2]) %>%
       matrix(nrow = nrow(lp))
 
     event.status[preds > censor.time] <- 0
@@ -188,4 +190,10 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
 }
 
 
+check_censor_dur <- function(censor.dur = NULL) {
+  if(!is.null(censor.dur)) {
+    if(length(censor.dur) != 2) stop("censor.dur has to be length two vector or NULL")
+    if(censor.dur[1] > censor.dur[2]) stop("censor.dur[2] has to be larger than censor.dur[1]")
+  }
+}
 

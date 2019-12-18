@@ -13,7 +13,7 @@ extract_sim <- function(sim) {
   if(status.var[[1]] == "!") status.var <- status.var[[2]]
 
 
-  if(is(sim, "survparamsim_resample")){
+  if(methods::is(sim, "survparamsim_resample")){
     sim.merged.with.cov <-
       sim$newdata.nona.sim %>%
       dplyr::select(-time.var, -status.var, -n.resample) %>%

@@ -1,0 +1,135 @@
+---
+title: "survParamSim"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{survParamSim}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(dplyr)
+library(ggplot2)
+library(survival)
+library(survParamSim)
+
+set.seed(12345)
+```
+
+## Fit model with `survreg()` function
+
+Before running a parametric survival simulation, you need to fit a model to your data using `survreg()` function of `survival` package.  
+In this vignette, we will be using `colon` dataset available in `survival` package, where the treatment effect of adjuvant Levamisole+5-FU for colon cancer over placebo is evaluated.
+
+First, we load the data and do some data wrangling.
+
+```{r prep}
+# ref for dataset https://vincentarelbundock.github.io/Rdatasets/doc/survival/colon.html
+colon2 <- 
+  as_tibble(colon) %>% 
+  # recurrence only and not including Lev alone arm
+  filter(rx != "Lev",
+         etype == 1) %>% 
+  # Same definition as Lin et al, 1994
+  mutate(rx = factor(rx, levels = c("Obs", "Lev+5FU")),
+         depth = as.numeric(extent <= 2))
+```
+
+Generating Kaplan-Meier curves for visually checking the data.  
+The second plot is looking at how many censoring we have over time.  
+Looks like we have a fairly uniform censoring between 1800 to 3000 days.
+
+```{r plot_raw_data}
+survfit.colon <- survfit(Surv(time, status) ~ rx, data = colon2)
+survminer::ggsurvplot(survfit.colon)
+
+survfit.colon.censor <- survfit(Surv(time, 1-status) ~ rx, data = colon2)
+survminer::ggsurvplot(survfit.colon.censor)
+```
+
+
+Next we fit a lognormal parametric model for the data.  
+Here we are using `node4` and `depth` as additional covariates in addition to treatment (`rx`).  
+You can see that all of the factor has strong association with the outcome.
+
+```{r fit}
+fit.colon <- survreg(Surv(time, status) ~ rx + node4 + depth, 
+                     data = colon2, dist = "lognormal")
+
+summary(fit.colon)
+```
+
+## Perform simulation
+
+`surv_param_sim()` is the main function of the package that takes `survreg` object as described above.  
+It also require you to supply `newdata`, which is required even if it is not new - i.e. the same data was used for both `survreg()` and `surv_param_sim()`.
+
+What it does is:
+1. Re-sample all the coefficients in the parametric survival model from variance-covariance matrix for `n.rep` times.
+2. Perform survival time for all subjects in `newdata` with the corresponding covariates, using one of the resampled coefficients. Also generate censoring time according to `censor.dur` (if not NULL), and replace the simulated survival time above if censoring time is earlier.
+4. Repeat the steps 2. for `n.rep` times.
+
+```{r sim}
+sim <- 
+  surv_param_sim(object = fit.colon, newdata = colon2, 
+                 # Simulate censoring according to the plot above
+                 censor.dur = c(1800, 3000),
+                 # Simulate only 100 times to make the example go fast
+                 n.rep = 100)
+```
+
+After the simulation is performed, you can either extract raw simulation results or further calculate Kaplan-Meier estimates or hazard ratio of treatment effect, as you see when you type `sim` in the console.
+
+```{r simout}
+sim
+```
+
+## Survival time profile
+
+To calculate survival curves for each simulated dataset, `calc_km_pi()` can be used on the simulated object above.
+
+```{r km_pi_calc}
+km.pi <- calc_km_pi(sim, trt = "rx")
+km.pi
+```
+
+Similar to the raw simulated object, you can have a few options for further processing - one of them is plotting prediction intervals with `plot_km_pi()` function.
+
+```{r km_pi_plot}
+km.pi
+plot_km_pi(km.pi) +
+  theme(legend.position = "bottom") +
+  labs(y = "Recurrence free rate") +
+  expand_limits(y = 0)
+```
+
+Plot can also be made for subgroups.  
+You can see that prediction interval is wide for (depth: 1 & nodes4: 1) group, mainly due to small number of subjects
+
+```{r km_pi_group}
+km.pi <- calc_km_pi(sim, trt = "rx", group = c("node4", "depth"))
+
+plot_km_pi(km.pi) +
+  theme(legend.position = "bottom") +
+  labs(y = "Recurrence free rate") +
+  expand_limits(y = 0)
+```
+
+## Hazard ratios (HRs)
+
+To calculate prediction intervals of HRs, `calc_hr_pi()` can be used on the simulated object above.
+Here I only generated subgroups based on "depth", since the very small N in (depth: 1 & nodes4: 1) can cause issue with calculating HRs.
+
+```{r hr_pi}
+hr.pi <- calc_hr_pi(sim, trt = "rx", group = c("depth"))
+
+hr.pi
+plot_hr_pi(hr.pi)
+```

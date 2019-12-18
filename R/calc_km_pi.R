@@ -18,8 +18,8 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
   # Replace with packageVersion("tidyr") == '1.0.0' if nest issue is resolved in the next version
   # See https://github.com/tidyverse/tidyr/issues/751
-  nest2 <- ifelse(packageVersion("tidyr") >= '1.0.0', tidyr::nest_legacy, tidyr::nest)
-  unnest2 <- ifelse(packageVersion("tidyr") >= '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
+  nest2 <- ifelse(utils::packageVersion("tidyr") >= '1.0.0', tidyr::nest_legacy, tidyr::nest)
+  unnest2 <- ifelse(utils::packageVersion("tidyr") >= '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
 
   ###### Need to throw an error if grouping variable is not present in newdata
 # browser()
@@ -32,11 +32,11 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   # Calc time for output
   formula <-
     paste(attributes(formula(sim$survreg))$variables,"~1")[2] %>%
-    as.formula()
+    stats::as.formula()
 
   ## Last observed time
   ## Calculate last time from original dataset just in case newdata's survival data is dummy
-  t.last.newdata  <- survfit(formula, data = sim$newdata) %>% .$time
+  t.last.newdata  <- survival::survfit(formula, data = sim$newdata) %>% .$time
   t.last.origdata <- as.numeric(sim$survreg$y[,1])
 
   t.last <-max(c(t.last.newdata, t.last.origdata))
@@ -51,7 +51,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
   # Define function to approximate or extract KM curves from KM fit object
   approx_km <- function(x){
-    surv <- approx(c(0,x$time), c(1,x$surv), xout=t.out, method="constant", rule=2)$y
+    surv <- stats::approx(c(0,x$time), c(1,x$surv), xout=t.out, method="constant", rule=2)$y
     data.frame(time = t.out,
                surv = surv)
   }
@@ -72,13 +72,13 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     ## Define formula
     formula <-
       paste(attributes(formula(sim$survreg))$variables,"~1")[2] %>%
-      as.formula()
+      stats::as.formula()
 
 
     ## Calc median and KM curve
     obs.km.nested <-
       obs.nested %>%
-      dplyr::mutate(kmfit = purrr::map(data, function(x) survfit(formula, data=x))) %>%
+      dplyr::mutate(kmfit = purrr::map(data, function(x) survival::survfit(formula, data=x))) %>%
       dplyr::mutate(median = purrr::map_dbl(kmfit, function(x) summary(x)$table["median"]),
                     n      = purrr::map_dbl(kmfit, function(x) summary(x)$table["records"]),
                     km = purrr::map(kmfit, extract_km_obs))
@@ -118,7 +118,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     sim.nested %>%
     # Fit each nested data to KM
     dplyr::mutate(kmfit =
-                    purrr::map(data, function(x) survfit(Surv(time, event)~1, data=x))) %>%
+                    purrr::map(data, function(x) survival::survfit(Surv(time, event)~1, data=x))) %>%
     # Calc median and KM curve
     dplyr::mutate(median = purrr::map_dbl(kmfit, function(x) summary(x)$table["median"]),
                   n      = purrr::map_dbl(kmfit, function(x) summary(x)$table["records"]),

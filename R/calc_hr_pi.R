@@ -16,8 +16,8 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
   # Replace with packageVersion("tidyr") == '1.0.0' if nest issue is resolved in the next version
   # See https://github.com/tidyverse/tidyr/issues/751
-  nest2 <- ifelse(packageVersion("tidyr") >= '1.0.0', tidyr::nest_legacy, tidyr::nest)
-  unnest2 <- ifelse(packageVersion("tidyr") >= '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
+  nest2 <- ifelse(utils::packageVersion("tidyr") >= '1.0.0', tidyr::nest_legacy, tidyr::nest)
+  unnest2 <- ifelse(utils::packageVersion("tidyr") >= '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
 
   trt.assign <- match.arg(trt.assign)
 
@@ -65,9 +65,9 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     calc_hr_each_obs <- function(x){
       formula <-
         paste(attributes(formula(sim$survreg))$variables,"~",trt)[2] %>%
-        as.formula()
+        stats::as.formula()
 
-      coxph(formula, data=x) %>%
+      survival::coxph(formula, data=x) %>%
         summary() %>%
         .$coefficients %>%
         .[2]
@@ -104,9 +104,9 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
   calc_hr_each_sim <- function(x){
     formula <-
       paste("Surv(time, event) ~",trt) %>%
-      as.formula()
+      stats::as.formula()
 
-    coxph(formula, data=x) %>%
+    survival::coxph(formula, data=x) %>%
       summary() %>%
       .$coefficients %>%
       .[,2]

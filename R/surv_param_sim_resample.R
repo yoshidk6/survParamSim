@@ -10,8 +10,8 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
 
   # Replace with packageVersion("tidyr") == '1.0.0' if nest issue is resolved in the next version
   # See https://github.com/tidyverse/tidyr/issues/751
-  nest2 <- ifelse(packageVersion("tidyr") >= '1.0.0', tidyr::nest_legacy, tidyr::nest)
-  unnest2 <- ifelse(packageVersion("tidyr") >= '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
+  nest2 <- ifelse(utils::packageVersion("tidyr") >= '1.0.0', tidyr::nest_legacy, tidyr::nest)
+  unnest2 <- ifelse(utils::packageVersion("tidyr") >= '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
 
   resample_per_strat <- function(data, n.resample, n.rep){
     dplyr::sample_n(data, n.resample * n.rep, replace = TRUE) %>%

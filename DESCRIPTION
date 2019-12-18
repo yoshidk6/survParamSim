@@ -27,8 +27,11 @@ Imports:
     survival (>= 2.43)
 Suggests: 
     testthat (>= 2.1.0),
-    vdiffr
+    vdiffr,
+    knitr,
+    rmarkdown
 RoxygenNote: 6.1.1
 Language: en-US
 URL: https://github.com/yoshidk6/survParamSim
 BugReports: https://github.com/yoshidk6/survParamSim/issues
+VignetteBuilder: knitr
