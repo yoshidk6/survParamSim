@@ -5,11 +5,23 @@
 \alias{surv_param_sim_resample}
 \title{Simulation of parametric survival model}
 \usage{
-surv_param_sim(object, newdata, n.rep = 1000, censor.dur = NULL,
-  coef.var = TRUE, na.warning = TRUE)
+surv_param_sim(
+  object,
+  newdata,
+  n.rep = 1000,
+  censor.dur = NULL,
+  coef.var = TRUE,
+  na.warning = TRUE
+)
 
-surv_param_sim_resample(object, newdata, n.rep = 1000,
-  censor.dur = NULL, n.resample, strat.resample = NULL)
+surv_param_sim_resample(
+  object,
+  newdata,
+  n.rep = 1000,
+  censor.dur = NULL,
+  n.resample,
+  strat.resample = NULL
+)
 }
 \arguments{
 \item{object}{A `survreg` class object. Currently accept exponential,

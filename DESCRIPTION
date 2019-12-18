@@ -24,14 +24,15 @@ Imports:
     tidyr,
     tibble,
     ggplot2,
-    survival (>= 2.43)
+    survival (>= 2.43),
+    methods
 Suggests: 
     testthat (>= 2.1.0),
     vdiffr,
     knitr,
     rmarkdown,
     survminer
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.0
 Language: en-US
 URL: https://github.com/yoshidk6/survParamSim
 BugReports: https://github.com/yoshidk6/survParamSim/issues

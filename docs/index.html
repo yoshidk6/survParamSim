@@ -7,10 +7,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Parametric Survival Simulation with Parameter Uncertainty • survParamSim</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Parametric Survival Simulation with Parameter Uncertainty">
-<meta property="og:description" content="Perform survival simulation with parametric survival model generated from 'survreg' function in 'survival' package.
+<meta property="og:description" content="Perform survival simulation with parametric survival model generated from survreg function in survival package.
     Outputs include prediction intervals of Kaplan-Meier estimates and hazard ratio of treatment effect.
     In each simulation coefficients are resampled from variance-covariance matrix of parameter estimates to 
     capture uncertainty in model parameters.">
@@ -21,7 +22,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-article">
+    <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -33,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">survParamSim</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.17</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.20</span>
       </span>
     </div>
 
@@ -41,9 +42,12 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
+</li>
+<li>
+  <a href="articles/survParamSim.html">Get started</a>
 </li>
 <li>
   <a href="reference/index.html">Reference</a>
@@ -52,7 +56,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/yoshidk6/survParamSim">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -65,65 +69,63 @@
 <!--/.navbar -->
 
       
-      </header><div class="row">
-  <div class="col-md-9 contents">
-    
 
-    
-    
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+      </header><div class="row">
+  <div class="contents col-md-9">
 <div id="survparamsim" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#survparamsim" class="anchor"></a>survParamSim</h1></div>
 
-<p>The goal of survParamSim is to perform survival simulation with parametric survival model generated from ‘survreg’ function in ‘survival’ package.</p>
-<p>Outputs include prediction intervals of Kaplan-Meier estimates and hazard ratio of treatment effect. You can also access raw simulated survival profiles of each simulation for post-processing.</p>
-<p>In each simulation, coefficients are resampled from variance-covariance matrix of parameter estimates to capture uncertainty in model parameters.</p>
+<p>The goal of survParamSim is to perform survival simulation with parametric survival model generated from ‘survreg’ function in ‘survival’ package. In each simulation, coefficients are resampled from variance-covariance matrix of parameter estimates, in order to capture uncertainty in model parameters.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install the package from GitHub using <strong>devtools</strong>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"devtools"</span>)
-devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_git</a></span>(<span class="st">"https://github.com/yoshidk6/survParamSim"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>)
+devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_git</a></span>(<span class="st">"https://github.com/yoshidk6/survParamSim"</span>)</code></pre></div>
 </div>
 <div id="example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example" class="anchor"></a>Example</h2>
-<p>This is a basic example which shows you how to solve a common problem.</p>
+<p><a href="https://yoshidk6.github.io/survParamSim">This GitHub pages</a> contains function references and <a href="https://yoshidk6.github.io/survParamSim/articles/survParamSim.html">vignette</a>. The example below is a sneak peek of example outputs.</p>
 <p>First, run survreg to fit parametric survival model:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(survival)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(survParamSim)
-
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">12345</span>)
-
-fit.lung &lt;-<span class="st"> </span><span class="kw">survreg</span>(<span class="kw">Surv</span>(time, status) <span class="op">~</span><span class="st"> </span>sex, <span class="dt">data =</span> lung)
-
-fit.lung
-<span class="co">#&gt; Call:</span>
-<span class="co">#&gt; survreg(formula = Surv(time, status) ~ sex, data = lung)</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr)
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Coefficients:</span>
-<span class="co">#&gt; (Intercept)         sex </span>
-<span class="co">#&gt;    5.488584    0.395578 </span>
+<span class="co">#&gt; Attaching package: 'dplyr'</span>
+<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Scale= 0.755088 </span>
+<span class="co">#&gt;     filter, lag</span>
+<span class="co">#&gt; The following objects are masked from 'package:base':</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Loglik(model)= -1148.7   Loglik(intercept only)= -1153.9</span>
-<span class="co">#&gt;  Chisq= 10.4 on 1 degrees of freedom, p= 0.00126 </span>
-<span class="co">#&gt; n= 228</span></code></pre></div>
+<span class="co">#&gt;     intersect, setdiff, setequal, union</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ggplot2)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(survival)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(survParamSim)
+
+<span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">12345</span>)
+
+<span class="co"># ref for dataset https://vincentarelbundock.github.io/Rdatasets/doc/survival/colon.html</span>
+colon2 &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">as_tibble</span>(colon) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># recurrence only and not including Lev alone arm</span>
+<span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(rx <span class="op">!=</span><span class="st"> "Lev"</span>,
+         etype <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># Same definition as Lin et al, 1994</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rx =</span> <span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(rx, <span class="dt">levels =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Obs"</span>, <span class="st">"Lev+5FU"</span>)),
+         <span class="dt">depth =</span> <span class="kw"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(extent <span class="op">&lt;=</span><span class="st"> </span><span class="dv">2</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit.colon &lt;-<span class="st"> </span><span class="kw">survreg</span>(<span class="kw">Surv</span>(time, status) <span class="op">~</span><span class="st"> </span>rx <span class="op">+</span><span class="st"> </span>node4 <span class="op">+</span><span class="st"> </span>depth, 
+                     <span class="dt">data =</span> colon2, <span class="dt">dist =</span> <span class="st">"lognormal"</span>)</code></pre></div>
 <p>Next, run parametric bootstrap simulation:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Remove a few subjects for later plotting purpose</span>
-newdata &lt;-<span class="st"> </span>
-<span class="st">  </span>lung <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(ph.ecog), ph.ecog <span class="op">&lt;=</span><span class="st"> </span><span class="dv">2</span>)
-
-sim &lt;-<span class="st"> </span><span class="kw"><a href="reference/survparamsim.html">surv_param_sim</a></span>(<span class="dt">object =</span> fit.lung, <span class="dt">newdata =</span> newdata, 
-                      <span class="co"># Simulating only 100 times to make the example go fast</span>
-                      <span class="dt">n.rep =</span> <span class="dv">100</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sim &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="reference/survparamsim.html">surv_param_sim</a></span>(<span class="dt">object =</span> fit.colon, <span class="dt">newdata =</span> colon2, 
+                 <span class="dt">censor.dur =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1800</span>, <span class="dv">3000</span>),
+                 <span class="co"># Simulating only 100 times to make the example go fast</span>
+                 <span class="dt">n.rep =</span> <span class="dv">100</span>)
 
 sim
 <span class="co">#&gt; ---- Simulated survival data with the following model ----</span>
-<span class="co">#&gt; survreg(formula = Surv(time, status) ~ sex, data = lung)</span>
+<span class="co">#&gt; survreg(formula = Surv(time, status) ~ rx + node4 + depth, data = colon2, </span>
+<span class="co">#&gt;     dist = "lognormal")</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; * Use `extract_sim()` function to extract individual simulated survivals</span>
 <span class="co">#&gt; * Use `calc_km_pi()` function to get survival curves and median survival time</span>
@@ -131,9 +133,9 @@ sim
 <span class="co">#&gt; </span>
 <span class="co">#&gt; * Settings:</span>
 <span class="co">#&gt;     #simulations: 100 </span>
-<span class="co">#&gt;     #subjects: 226 (without NA in model variables)</span></code></pre></div>
-<p>Calculate survival curves with prediction intervals</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">km.pi &lt;-<span class="st"> </span><span class="kw"><a href="reference/calc_km_pi.html">calc_km_pi</a></span>(sim, <span class="dt">trt =</span> <span class="st">"sex"</span>, <span class="dt">group =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"ph.ecog"</span>))
+<span class="co">#&gt;     #subjects: 619 (without NA in model variables)</span></code></pre></div>
+<p>Calculate survival curves with prediction intervals:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">km.pi &lt;-<span class="st"> </span><span class="kw"><a href="reference/calc_km_pi.html">calc_km_pi</a></span>(sim, <span class="dt">trt =</span> <span class="st">"rx"</span>, <span class="dt">group =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"node4"</span>, <span class="st">"depth"</span>))
 
 km.pi
 <span class="co">#&gt; ---- Simulated and observed (if calculated) survival curves ----</span>
@@ -142,15 +144,17 @@ km.pi
 <span class="co">#&gt; * Use `plot_km_pi()` to draw survival curves</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; * Settings:</span>
-<span class="co">#&gt;     trt: sex </span>
-<span class="co">#&gt;     group: ph.ecog </span>
+<span class="co">#&gt;     trt: rx </span>
+<span class="co">#&gt;     group: node4 </span>
 <span class="co">#&gt;     pi.range: 0.95 </span>
 <span class="co">#&gt;     calc.obs: TRUE</span>
 <span class="kw"><a href="reference/plot_km_pi.html">plot_km_pi</a></span>(km.pi) <span class="op">+</span>
-<span class="st">  </span>ggplot2<span class="op">::</span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>)</code></pre></div>
-<p><img src="reference/figures/README-km_pi-1.png" width="100%"></p>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">"Recurrence free rate"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">expand_limits</span>(<span class="dt">y =</span> <span class="dv">0</span>)</code></pre></div>
+<p><img src="reference/figures/README-km_pi_group-1.png" width="100%"></p>
 <p>Calculate hazard ratios with prediction intervals:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hr.pi &lt;-<span class="st"> </span><span class="kw"><a href="reference/calc_hr_pi.html">calc_hr_pi</a></span>(sim, <span class="dt">trt =</span> <span class="st">"sex"</span>, <span class="dt">group =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"ph.ecog"</span>))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hr.pi &lt;-<span class="st"> </span><span class="kw"><a href="reference/calc_hr_pi.html">calc_hr_pi</a></span>(sim, <span class="dt">trt =</span> <span class="st">"rx"</span>, <span class="dt">group =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"depth"</span>))
 
 hr.pi
 <span class="co">#&gt; ---- Simulated and observed (if calculated) hazard ratio ----</span>
@@ -159,9 +163,9 @@ hr.pi
 <span class="co">#&gt; * Use `plot_hr_pi()` to draw histogram of predicted HR</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; * Settings:</span>
-<span class="co">#&gt;     trt: sex</span>
-<span class="co">#&gt;          (2 as test trt, 1 as control)</span>
-<span class="co">#&gt;     group: ph.ecog </span>
+<span class="co">#&gt;     trt: rx</span>
+<span class="co">#&gt;          (Lev+5FU as test trt, Obs as control)</span>
+<span class="co">#&gt;     group: depth </span>
 <span class="co">#&gt;     pi.range: 0.95 </span>
 <span class="co">#&gt;     calc.obs: TRUE</span>
 <span class="kw"><a href="reference/plot_hr_pi.html">plot_hr_pi</a></span>(hr.pi)</code></pre></div>
@@ -189,19 +193,18 @@ hr.pi
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Kenta Yoshida <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-4967-3831" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID" height="16"></a> </li>
+<li>Kenta Yoshida <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-4967-3831" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID"></a> </li>
 <li>Laurent Claret <br><small class="roles"> Author </small>  </li>
 </ul>
 </div>
 
-      <div class="dev-status">
+  <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://travis-ci.org/yoshidk6/survParamSim"><img src="https://travis-ci.org/yoshidk6/survParamSim.svg?branch=master" alt="Travis build status"></a></li>
 </ul>
 </div>
 </div>
-
 </div>
 
 
@@ -210,12 +213,14 @@ hr.pi
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

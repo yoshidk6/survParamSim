@@ -8,8 +8,8 @@
 #' \code{\link{extract_sim}} extracts raw survival time & event status for all simulated subjects.
 extract_sim <- function(sim) {
 
-  time.var   <- as.character(attributes(formula(sim$survreg))$variables[[2]][[2]])
-  status.var <- as.character(attributes(formula(sim$survreg))$variables[[2]][[3]])
+  time.var   <- as.character(attributes(stats::formula(sim$survreg))$variables[[2]][[2]])
+  status.var <- as.character(attributes(stats::formula(sim$survreg))$variables[[2]][[3]])
   if(status.var[[1]] == "!") status.var <- status.var[[2]]
 
 

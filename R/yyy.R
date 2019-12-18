@@ -3,7 +3,7 @@
 
 if(getRversion() >= "2.15.1"){
   # General
-  utils::globalVariables(c('.', ':=', "data", 'subj.sim', 'median',
+  utils::globalVariables(c('.', ':=', "data", 'subj.sim', 'subj.sim.all', 'median',
                            'pi_low', 'pi_med', 'pi_high', 'obs',
                            'n', 'description', 'quantile', 'event'))
 
