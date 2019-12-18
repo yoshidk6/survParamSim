@@ -27,7 +27,7 @@ surv_param_sim_resample(
 \item{object}{A `survreg` class object. Currently accept exponential,
 lognormal, weibull, loglogistic, and gaussian distributions.}
 
-\item{newdata}{A requred data frame for simulation that contain covariates in
+\item{newdata}{A required data frame for simulation that contain covariates in
   the survival model. It is required even if this is the same as the one used
   for \code{\link[survival]{survreg}} function.
 
@@ -40,7 +40,7 @@ lognormal, weibull, loglogistic, and gaussian distributions.}
   Subjects with NA for covariates in `survreg` model will be removed from
   the simulation and subsequent plotting of observed data.}
 
-\item{n.rep}{An interger defining numbers of parametric bootstrap runs}
+\item{n.rep}{An integer defining numbers of parametric bootstrap runs}
 
 \item{censor.dur}{A two elements vector specifying duration of events
 censoring. Censoring time will be calculated with uniform distribution
@@ -56,7 +56,7 @@ from survival events.}
 
 \item{n.resample}{Number of subjects for resampled simulations.
 If `strat.resample` is provided, this needs to be a vector of the length
-equal to the number of categories in the statifying variable.}
+equal to the number of categories in the stratification variable.}
 
 \item{strat.resample}{String specifying stratification variable for
 resampling.}

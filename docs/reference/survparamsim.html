@@ -70,7 +70,7 @@ generated with survreg function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">survParamSim</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.20</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -147,7 +147,7 @@ lognormal, weibull, loglogistic, and gaussian distributions.</p></td>
     </tr>
     <tr>
       <th>newdata</th>
-      <td><p>A requred data frame for simulation that contain covariates in
+      <td><p>A required data frame for simulation that contain covariates in
   the survival model. It is required even if this is the same as the one used
   for <code><a href='https://rdrr.io/pkg/survival/man/survreg.html'>survreg</a></code> function.</p>
 <p>It also has to contain columns for survival information. These can be used
@@ -160,7 +160,7 @@ lognormal, weibull, loglogistic, and gaussian distributions.</p></td>
     </tr>
     <tr>
       <th>n.rep</th>
-      <td><p>An interger defining numbers of parametric bootstrap runs</p></td>
+      <td><p>An integer defining numbers of parametric bootstrap runs</p></td>
     </tr>
     <tr>
       <th>censor.dur</th>
@@ -184,7 +184,7 @@ from survival events.</p></td>
       <th>n.resample</th>
       <td><p>Number of subjects for resampled simulations.
 If `strat.resample` is provided, this needs to be a vector of the length
-equal to the number of categories in the statifying variable.</p></td>
+equal to the number of categories in the stratification variable.</p></td>
     </tr>
     <tr>
       <th>strat.resample</th>

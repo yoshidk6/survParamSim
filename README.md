@@ -1,14 +1,18 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-survParamSim
-============
 
-[![Travis build status](https://travis-ci.org/yoshidk6/survParamSim.svg?branch=master)](https://travis-ci.org/yoshidk6/survParamSim)
+# survParamSim
 
-The goal of survParamSim is to perform survival simulation with parametric survival model generated from 'survreg' function in 'survival' package. In each simulation, coefficients are resampled from variance-covariance matrix of parameter estimates, in order to capture uncertainty in model parameters.
+[![Travis build
+status](https://travis-ci.org/yoshidk6/survParamSim.svg?branch=master)](https://travis-ci.org/yoshidk6/survParamSim)
 
-Installation
-------------
+The goal of survParamSim is to perform survival simulation with
+parametric survival model generated from ‘survreg’ function in
+‘survival’ package. In each simulation, coefficients are resampled
+from variance-covariance matrix of parameter estimates, in order to
+capture uncertainty in model parameters.
+
+## Installation
 
 You can install the package from GitHub using **devtools**.
 
@@ -17,10 +21,12 @@ install.packages("devtools")
 devtools::install_git("https://github.com/yoshidk6/survParamSim")
 ```
 
-Example
--------
+## Example
 
-[This GitHub pages](https://yoshidk6.github.io/survParamSim) contains function references and [vignette](https://yoshidk6.github.io/survParamSim/articles/survParamSim.html). The example below is a sneak peek of example outputs.
+[This GitHub pages](https://yoshidk6.github.io/survParamSim) contains
+function references and
+[vignette](https://yoshidk6.github.io/survParamSim/articles/survParamSim.html).
+The example below is a sneak peek of example outputs.
 
 First, run survreg to fit parametric survival model:
 

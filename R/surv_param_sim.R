@@ -7,7 +7,7 @@
 #' @export
 #' @param object A `survreg` class object. Currently accept exponential,
 #'   lognormal, weibull, loglogistic, and gaussian distributions.
-#' @param newdata A requred data frame for simulation that contain covariates in
+#' @param newdata A required data frame for simulation that contain covariates in
 #'   the survival model. It is required even if this is the same as the one used
 #'   for \code{\link[survival]{survreg}} function.
 #'
@@ -19,7 +19,7 @@
 #'
 #'   Subjects with NA for covariates in `survreg` model will be removed from
 #'   the simulation and subsequent plotting of observed data.
-#' @param n.rep An interger defining numbers of parametric bootstrap runs
+#' @param n.rep An integer defining numbers of parametric bootstrap runs
 #' @param censor.dur A two elements vector specifying duration of events
 #'   censoring. Censoring time will be calculated with uniform distribution
 #'   between two numbers. No censoring will be applied if NULL is provided.
