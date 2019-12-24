@@ -88,20 +88,18 @@ Currently we have not tested whether this function work for a `survreg` model
 with stratification variables.
 }
 \examples{
-\dontrun{
-
 library(survival)
 
 fit.lung <- survreg(Surv(time, status) ~ sex + ph.ecog, data = lung)
 
 object <- fit.lung
 n.rep  <-  30
-newdata <- tibble::as_tibble(dplyr::select(lung, time, status, sex, ph.ecog))
+newdata <-
+  tibble::as_tibble(dplyr::select(lung, time, status, sex, ph.ecog)) \%>\%
+  tidyr::drop_na()
 censor.dur <- c(200, 1100)
 
 sim <- surv_param_sim(object, newdata, n.rep, censor.dur)
-
-}
 
 
 
