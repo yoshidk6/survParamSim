@@ -216,20 +216,18 @@ of subjects.</p>
 with stratification variables.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>survival</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>survival</span>)
 
 <span class='no'>fit.lung</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/survival/man/survreg.html'>survreg</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/survival/man/Surv.html'>Surv</a></span>(<span class='no'>time</span>, <span class='no'>status</span>) ~ <span class='no'>sex</span> + <span class='no'>ph.ecog</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>lung</span>)
 
 <span class='no'>object</span> <span class='kw'>&lt;-</span> <span class='no'>fit.lung</span>
 <span class='no'>n.rep</span>  <span class='kw'>&lt;-</span>  <span class='fl'>30</span>
-<span class='no'>newdata</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>tibble</span><span class='kw ns'>::</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/as_tibble.html'>as_tibble</a></span>(<span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>lung</span>, <span class='no'>time</span>, <span class='no'>status</span>, <span class='no'>sex</span>, <span class='no'>ph.ecog</span>))
+<span class='no'>newdata</span> <span class='kw'>&lt;-</span>
+  <span class='kw pkg'>tibble</span><span class='kw ns'>::</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/as_tibble.html'>as_tibble</a></span>(<span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>lung</span>, <span class='no'>time</span>, <span class='no'>status</span>, <span class='no'>sex</span>, <span class='no'>ph.ecog</span>)) <span class='kw'>%&gt;%</span>
+  <span class='kw pkg'>tidyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://tidyr.tidyverse.org/reference/drop_na.html'>drop_na</a></span>()
 <span class='no'>censor.dur</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>200</span>, <span class='fl'>1100</span>)
 
-<span class='no'>sim</span> <span class='kw'>&lt;-</span> <span class='fu'>surv_param_sim</span>(<span class='no'>object</span>, <span class='no'>newdata</span>, <span class='no'>n.rep</span>, <span class='no'>censor.dur</span>)
-
-}</div></pre>
+<span class='no'>sim</span> <span class='kw'>&lt;-</span> <span class='fu'>surv_param_sim</span>(<span class='no'>object</span>, <span class='no'>newdata</span>, <span class='no'>n.rep</span>, <span class='no'>censor.dur</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
