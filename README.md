@@ -14,11 +14,10 @@ capture uncertainty in model parameters.
 
 ## Installation
 
-You can install the package from GitHub using **devtools**.
+You can install the package from CRAN.
 
 ``` r
-install.packages("devtools")
-devtools::install_git("https://github.com/yoshidk6/survParamSim")
+install.packages("survParamSim")
 ```
 
 ## Example
