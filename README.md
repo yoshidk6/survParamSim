@@ -109,6 +109,24 @@ plot_km_pi(km.pi) +
 
 <img src="man/figures/README-km_pi_group-1.png" width="100%" />
 
+``` r
+extract_median_surv(km.pi)
+#> # A tibble: 32 x 7
+#>    rx    node4 depth     n description median quantile
+#>    <fct> <dbl> <dbl> <dbl> <chr>        <dbl>    <dbl>
+#>  1 Obs       0     0   193 pi_low       1257.    0.025
+#>  2 Obs       0     0   193 pi_med       1895.    0.5  
+#>  3 Obs       0     0   193 pi_high      2713.    0.975
+#>  4 Obs       0     0   193 obs          1436    NA    
+#>  5 Obs       0     1    35 pi_low       1539.    0.025
+#>  6 Obs       0     1    35 pi_med       2558.    0.5  
+#>  7 Obs       0     1    35 pi_high      2913.    0.975
+#>  8 Obs       0     1    35 obs            NA    NA    
+#>  9 Obs       1     0    76 pi_low        264.    0.025
+#> 10 Obs       1     0    76 pi_med        451.    0.5  
+#> # … with 22 more rows
+```
+
 Calculate hazard ratios with prediction intervals:
 
 ``` r
@@ -130,3 +148,18 @@ plot_hr_pi(hr.pi)
 ```
 
 <img src="man/figures/README-hr_pi-1.png" width="100%" />
+
+``` r
+extract_hr_pi(hr.pi)
+#> # A tibble: 8 x 4
+#>   depth description    HR quantile
+#>   <dbl> <chr>       <dbl>    <dbl>
+#> 1     0 pi_low      0.464    0.025
+#> 2     0 pi_med      0.624    0.5  
+#> 3     0 pi_high     0.794    0.975
+#> 4     0 obs         0.590   NA    
+#> 5     1 pi_low      0.233    0.025
+#> 6     1 pi_med      0.597    0.5  
+#> 7     1 pi_high     1.13     0.975
+#> 8     1 obs         0.607   NA
+```

@@ -110,6 +110,12 @@ plot_km_pi(km.pi) +
   expand_limits(y = 0)
 ```
 
+Or providing median survival summary table with `extract_median_surv()` function.
+
+```{r km_pi_table}
+extract_median_surv(km.pi)
+```
+
 Plot can also be made for subgroups.  
 You can see that prediction interval is wide for (depth: 1 & nodes4: 1) group, mainly due to small number of subjects
 
@@ -133,3 +139,11 @@ hr.pi <- calc_hr_pi(sim, trt = "rx", group = c("depth"))
 hr.pi
 plot_hr_pi(hr.pi)
 ```
+
+
+You can also extract prediction intervals and observed HR with `extract_hr_pi()` function.
+
+```{r hr_pi_table}
+extract_hr_pi(hr.pi)
+```
+
