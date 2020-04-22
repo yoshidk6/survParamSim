@@ -5,6 +5,7 @@
 
 [![Travis build
 status](https://travis-ci.org/yoshidk6/survParamSim.svg?branch=master)](https://travis-ci.org/yoshidk6/survParamSim)
+[![downloads](https://cranlogs.r-pkg.org/badges/grand-total/survParamSim)](https://CRAN.R-project.org/package=survParamSim)
 
 The goal of survParamSim is to perform survival simulation with
 parametric survival model generated from ‘survreg’ function in
@@ -14,11 +15,10 @@ capture uncertainty in model parameters.
 
 ## Installation
 
-You can install the package from GitHub using **devtools**.
+You can install the package from CRAN.
 
 ``` r
-install.packages("devtools")
-devtools::install_git("https://github.com/yoshidk6/survParamSim")
+install.packages("survParamSim")
 ```
 
 ## Example
