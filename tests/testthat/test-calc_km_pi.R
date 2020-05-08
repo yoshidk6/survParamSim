@@ -43,12 +43,17 @@ test_that("predicted KM and median time per group", {
     dplyr::pull(median) %>%
     expect_equal(c(295, 439), tolerance = 1)
 
-  km.pi$sim.km.quantile %>%
+  km.quantile <-
+    km.pi$sim.km.quantile %>%
     dplyr::group_by(sex) %>%
     dplyr::slice(10) %>%
     dplyr::ungroup() %>%
     dplyr::select(pi_low, pi_high) %>%
-    as.data.frame() %>%
+    as.data.frame()
+
+  km.quantile %>%
+    dplyr::mutate(pi_low  = unname(pi_low),
+                  pi_high = unname(pi_high)) %>%
     expect_equal(data.frame(pi_low  = c(0.777, 0.841),
                             pi_high = c(0.922, 0.951)),
                  tolerance = 0.01)
