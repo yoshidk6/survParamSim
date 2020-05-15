@@ -2,14 +2,11 @@
 % Please edit documentation in R/extract_pi.R
 \name{extract_km_pi}
 \alias{extract_km_pi}
-\alias{extract_km_obs}
 \alias{extract_median_surv}
 \alias{extract_hr_pi}
 \title{Functions to extract prediction intervals and observed data}
 \usage{
 extract_km_pi(km.pi, trunc.sim.censor = TRUE)
-
-extract_km_obs(km.pi)
 
 extract_median_surv(km.pi, outtype = c("long", "wide"))
 
@@ -30,8 +27,6 @@ Functions to extract prediction intervals and observed data
 }
 \details{
 \code{\link{extract_km_pi}} extracts prediction intervals of simulated Kaplan-Meier curves.
-
-\code{\link{extract_km_obs}} extracts observed Kaplan-Meier curves.
 
 \code{\link{extract_median_surv}} extracts prediction intervals of
 median survival times and and the corresponding observed values.

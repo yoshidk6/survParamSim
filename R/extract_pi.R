@@ -72,13 +72,6 @@ extract_km_pi <- function(km.pi, trunc.sim.censor = TRUE) {
   return(sim.km.quantile.plot)
 }
 
-#' @rdname extractpi
-#' @export
-#' @details
-#' \code{\link{extract_km_obs}} extracts observed Kaplan-Meier curves.
-extract_km_obs <- function(km.pi) {
-  return(km.pi$obs.km)
-}
 
 #' @rdname extractpi
 #' @export

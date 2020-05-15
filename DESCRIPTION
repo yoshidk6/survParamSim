@@ -32,7 +32,7 @@ Suggests:
     knitr,
     rmarkdown,
     survminer
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 Language: en-US
 URL: https://github.com/yoshidk6/survParamSim
 BugReports: https://github.com/yoshidk6/survParamSim/issues

@@ -42,3 +42,12 @@ extract_hr <- function(hr.pi) {
   return(dplyr::select(hr.pi$sim.hr, -description))
 }
 
+
+#' @rdname extractrawsim
+#' @export
+#' @param km.pi A return object from \code{\link{calc_km_pi}} function.
+#' @details
+#' \code{\link{extract_km_obs}} extracts observed Kaplan-Meier curves.
+extract_km_obs <- function(km.pi) {
+  return(km.pi$obs.km)
+}
