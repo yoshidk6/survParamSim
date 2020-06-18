@@ -1,9 +1,15 @@
 
-# survParamSim 0.1.2 (in development)
+
+# survParamSim 0.1.3 (in development)
 
 ## Minor changes
 
-* Bug fix of surv_param_sim_resample
+
+# survParamSim 0.1.2
+
+## Minor changes
+
+* Bug fix of `surv_param_sim_resample()` with `tidyr >= 1.0.0`
 
 # survParamSim 0.1.1
 
