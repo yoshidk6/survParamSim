@@ -5,6 +5,8 @@
 
 [![Travis build
 status](https://travis-ci.org/yoshidk6/survParamSim.svg?branch=master)](https://travis-ci.org/yoshidk6/survParamSim)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/survParamSim)](https://cran.r-project.org/package=survParamSim)
 [![downloads](https://cranlogs.r-pkg.org/badges/grand-total/survParamSim)](https://CRAN.R-project.org/package=survParamSim)
 
 The goal of survParamSim is to perform survival simulation with
