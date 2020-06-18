@@ -3,10 +3,7 @@
 
 ## Minor changes
 
-
-# survParamSim 0.1.1
-
-## Minor changes
+* Bug fix of surv_param_sim_resample
 
 # survParamSim 0.1.1
 
