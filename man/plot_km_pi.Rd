@@ -10,10 +10,10 @@ plot_km_pi(km.pi, show.obs = TRUE, trunc.sim.censor = TRUE)
 \item{km.pi}{an output from \code{\link{calc_km_pi}} function.}
 
 \item{show.obs}{A logical specifying whether to show observed K-M curve on the plot.
-This will have no effect if `calc.obs` was set to `FALSE` in \code{\link{calc_km_pi}}.}
+This will have no effect if \code{calc.obs} was set to \code{FALSE} in \code{\link{calc_km_pi}}.}
 
 \item{trunc.sim.censor}{A logical specifying whether to truncate the simulated
-curve at the last time of `censor.dur`` specified in \code{\link{surv_param_sim}}.}
+curve at the last time of \code{censor.dur} specified in \code{\link{surv_param_sim}}.}
 }
 \description{
 Need to think about how to apply this for subgroups

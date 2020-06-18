@@ -1,7 +1,7 @@
-pandoc: 2.3.1
+pandoc: 2.7.3
 pkgdown: 1.5.1
 pkgdown_sha: ~
 articles:
   survParamSim: survParamSim.html
-last_built: 2020-05-12T15:49Z
+last_built: 2020-06-18T04:42Z
 

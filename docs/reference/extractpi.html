@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">survParamSim</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1.9000</span>
       </span>
     </div>
 
@@ -125,8 +125,6 @@
 
     <pre class="usage"><span class='fu'>extract_km_pi</span>(<span class='no'>km.pi</span>, <span class='kw'>trunc.sim.censor</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-<span class='fu'>extract_km_obs</span>(<span class='no'>km.pi</span>)
-
 <span class='fu'>extract_median_surv</span>(<span class='no'>km.pi</span>, <span class='kw'>outtype</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"long"</span>, <span class='st'>"wide"</span>))
 
 <span class='fu'>extract_hr_pi</span>(<span class='no'>hr.pi</span>, <span class='kw'>outtype</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"long"</span>, <span class='st'>"wide"</span>))</pre>
@@ -156,7 +154,6 @@ curve at the last time of `censor.dur`` specified in <code><a href='survparamsim
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>extract_km_pi</code> extracts prediction intervals of simulated Kaplan-Meier curves.</p>
-<p><code>extract_km_obs</code> extracts observed Kaplan-Meier curves.</p>
 <p><code>extract_median_surv</code> extracts prediction intervals of
 median survival times and and the corresponding observed values.</p>
 <p><code>extract_hr_pi</code> extracts prediction intervals of simulated

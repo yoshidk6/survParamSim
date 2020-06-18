@@ -73,7 +73,7 @@ generated with survreg function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">survParamSim</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1.9000</span>
       </span>
     </div>
 
@@ -148,21 +148,21 @@ generated with <code><a href='https://rdrr.io/pkg/survival/man/survreg.html'>sur
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>object</th>
-      <td><p>A `survreg` class object. Currently accept exponential,
+      <td><p>A <code>survreg</code> class object. Currently accept exponential,
 lognormal, weibull, loglogistic, and gaussian distributions.</p></td>
     </tr>
     <tr>
       <th>newdata</th>
       <td><p>A required data frame for simulation that contain covariates in
-  the survival model. It is required even if this is the same as the one used
-  for <code><a href='https://rdrr.io/pkg/survival/man/survreg.html'>survreg</a></code> function.</p>
+the survival model. It is required even if this is the same as the one used
+for <code><a href='https://rdrr.io/pkg/survival/man/survreg.html'>survreg</a></code> function.</p>
 <p>It also has to contain columns for survival information. These can be used
-  in <code><a href='plot_km_pi.html'>plot_km_pi</a></code> and <code><a href='plot_hr_pi.html'>plot_hr_pi</a></code> function as
-  observed data. Survival information can be dummy data, but time need to be
-  long enough so that simulated KM plot will be long enough for
-  <code><a href='plot_km_pi.html'>plot_km_pi</a></code> to draw simulated survival curves.</p>
-<p>Subjects with NA for covariates in `survreg` model will be removed from
-  the simulation and subsequent plotting of observed data.</p></td>
+in <code><a href='plot_km_pi.html'>plot_km_pi</a></code> and <code><a href='plot_hr_pi.html'>plot_hr_pi</a></code> function as
+observed data. Survival information can be dummy data, but time need to be
+long enough so that simulated KM plot will be long enough for
+<code><a href='plot_km_pi.html'>plot_km_pi</a></code> to draw simulated survival curves.</p>
+<p>Subjects with NA for covariates in <code>survreg</code> model will be removed from
+the simulation and subsequent plotting of observed data.</p></td>
     </tr>
     <tr>
       <th>n.rep</th>
@@ -184,12 +184,12 @@ from survival events.</p></td>
     <tr>
       <th>na.warning</th>
       <td><p>Boolean specifying whether warning will be shown if
-`newdata` contain subjects with missing model variables.</p></td>
+<code>newdata</code> contain subjects with missing model variables.</p></td>
     </tr>
     <tr>
       <th>n.resample</th>
       <td><p>Number of subjects for resampled simulations.
-If `strat.resample` is provided, this needs to be a vector of the length
+If <code>strat.resample</code> is provided, this needs to be a vector of the length
 equal to the number of categories in the stratification variable.</p></td>
     </tr>
     <tr>
@@ -201,24 +201,24 @@ resampling.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A `survparamsim` object that contains the original `survreg` class
-  object, newdata, and a data frame for predicted survival profiles with the
-  following columns:</p><ul>
+    <p>A <code>survparamsim</code> object that contains the original <code>survreg</code> class
+object, newdata, and a data frame for predicted survival profiles with the
+following columns:</p><ul>
 <li><p><strong>event</strong>: event status, 0=censored, 1=event</p></li>
 <li><p><strong>rep</strong>: ID for parametric bootstrap runs</p></li>
 <li><p><strong>subj</strong>: ID for subjects in newdata (currently
-             original ID is not retained and subj is sequentially assigned
-             as 1:nrow(newdata))</p></li>
+original ID is not retained and subj is sequentially assigned
+as 1:nrow(newdata))</p></li>
 </ul>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>surv_param_sim</code> returns simulation using the provided subject
-in `newdata` as it is, while <code>surv_param_sim_resample</code> perform
+in <code>newdata</code> as it is, while <code>surv_param_sim_resample</code> perform
 simulation based on resampled subjects from the dataset. The latter allows
 more flexibility in terms of simulating future trials with different number
 of subjects.</p>
-<p>Currently we have not tested whether this function work for a `survreg` model
+<p>Currently we have not tested whether this function work for a <code>survreg</code> model
 with stratification variables.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

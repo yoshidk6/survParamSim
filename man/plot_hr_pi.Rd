@@ -10,7 +10,7 @@ plot_hr_pi(hr.pi, show.obs = TRUE)
 \item{hr.pi}{a return object from \code{\link{calc_hr_pi}} function.}
 
 \item{show.obs}{A logical specifying whether to show observed HR on the plot.
-This will have no effect if `calc.obs` was set to `FALSE` in \code{\link{calc_hr_pi}}.}
+This will have no effect if \code{calc.obs} was set to \code{FALSE} in \code{\link{calc_hr_pi}}.}
 }
 \description{
 Plot HR

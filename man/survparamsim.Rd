@@ -24,21 +24,21 @@ surv_param_sim_resample(
 )
 }
 \arguments{
-\item{object}{A `survreg` class object. Currently accept exponential,
+\item{object}{A \code{survreg} class object. Currently accept exponential,
 lognormal, weibull, loglogistic, and gaussian distributions.}
 
 \item{newdata}{A required data frame for simulation that contain covariates in
-  the survival model. It is required even if this is the same as the one used
-  for \code{\link[survival]{survreg}} function.
+the survival model. It is required even if this is the same as the one used
+for \code{\link[survival]{survreg}} function.
 
-  It also has to contain columns for survival information. These can be used
-  in \code{\link{plot_km_pi}} and \code{\link{plot_hr_pi}} function as
-  observed data. Survival information can be dummy data, but time need to be
-  long enough so that simulated KM plot will be long enough for
-  \code{\link{plot_km_pi}} to draw simulated survival curves.
+It also has to contain columns for survival information. These can be used
+in \code{\link{plot_km_pi}} and \code{\link{plot_hr_pi}} function as
+observed data. Survival information can be dummy data, but time need to be
+long enough so that simulated KM plot will be long enough for
+\code{\link{plot_km_pi}} to draw simulated survival curves.
 
-  Subjects with NA for covariates in `survreg` model will be removed from
-  the simulation and subsequent plotting of observed data.}
+Subjects with NA for covariates in \code{survreg} model will be removed from
+the simulation and subsequent plotting of observed data.}
 
 \item{n.rep}{An integer defining numbers of parametric bootstrap runs}
 
@@ -52,26 +52,26 @@ matrix. If FALSE, prediction interval only reflects inherent variability
 from survival events.}
 
 \item{na.warning}{Boolean specifying whether warning will be shown if
-`newdata` contain subjects with missing model variables.}
+\code{newdata} contain subjects with missing model variables.}
 
 \item{n.resample}{Number of subjects for resampled simulations.
-If `strat.resample` is provided, this needs to be a vector of the length
+If \code{strat.resample} is provided, this needs to be a vector of the length
 equal to the number of categories in the stratification variable.}
 
 \item{strat.resample}{String specifying stratification variable for
 resampling.}
 }
 \value{
-A `survparamsim` object that contains the original `survreg` class
-  object, newdata, and a data frame for predicted survival profiles with the
-  following columns:
-  \itemize{\item \strong{time}: predicted event or censor time
-           \item \strong{event}: event status, 0=censored, 1=event
-           \item \strong{rep}: ID for parametric bootstrap runs
-           \item \strong{subj}: ID for subjects in newdata (currently
-             original ID is not retained and subj is sequentially assigned
-             as 1:nrow(newdata))
-  }
+A \code{survparamsim} object that contains the original \code{survreg} class
+object, newdata, and a data frame for predicted survival profiles with the
+following columns:
+\itemize{\item \strong{time}: predicted event or censor time
+\item \strong{event}: event status, 0=censored, 1=event
+\item \strong{rep}: ID for parametric bootstrap runs
+\item \strong{subj}: ID for subjects in newdata (currently
+original ID is not retained and subj is sequentially assigned
+as 1:nrow(newdata))
+}
 }
 \description{
 The main function to generate predicted survival using a model object
@@ -79,12 +79,12 @@ generated with \code{\link[survival]{survreg}} function.
 }
 \details{
 \code{\link{surv_param_sim}} returns simulation using the provided subject
-in `newdata` as it is, while \code{\link{surv_param_sim_resample}} perform
+in \code{newdata} as it is, while \code{\link{surv_param_sim_resample}} perform
 simulation based on resampled subjects from the dataset. The latter allows
 more flexibility in terms of simulating future trials with different number
 of subjects.
 
-Currently we have not tested whether this function work for a `survreg` model
+Currently we have not tested whether this function work for a \code{survreg} model
 with stratification variables.
 }
 \examples{
