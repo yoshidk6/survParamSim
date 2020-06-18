@@ -42,8 +42,8 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
       nest2() %>%
       dplyr::left_join(sample_scheme, by = strat.resample) %>%
       dplyr::mutate(sample = purrr::map2(data, n.resample, resample_per_strat, n.rep = n.rep)) %>%
-      unnest2(sample) %>%
       dplyr::select(-data) %>%
+      unnest2(sample) %>%
       dplyr::ungroup()
   }
 

@@ -68,7 +68,8 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
       sim$newdata.nona.obs %>%
       dplyr::group_by(!!!trt.syms, !!!group.syms)
 
-    if(length(dplyr::group_vars(obs.grouped)) == 0) {
+    if(length(dplyr::group_vars(obs.grouped)) == 0 &
+       utils::packageVersion("tidyr") >= '1.0.0') {
       obs.nested <-
         obs.grouped %>%
         nest2(data = dplyr::everything())
