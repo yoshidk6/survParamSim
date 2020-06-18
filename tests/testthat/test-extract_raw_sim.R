@@ -10,7 +10,7 @@ n.rep  <-  30
 newdata <- tibble::as_tibble(dplyr::select(lung, time, status, sex, ph.ecog)) %>% tidyr::drop_na()
 censor.dur <- c(200, 1100)
 
-n.resample = c(10, 30)
+n.resample <- c(10, 30)
 
 
 test_that("make sure extraction works for both with or without resampling", {

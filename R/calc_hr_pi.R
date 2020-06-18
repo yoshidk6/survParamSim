@@ -8,16 +8,17 @@
 #' You will have faceted histograms for these variables in \code{\link{plot_hr_pi}} function.
 #' @param pi.range Prediction interval for simulated HR.
 #' @param calc.obs A logical to specify whether to calculate HR for the observed data.
-#' Need be set as FALSE if survival information in the `newdata`` is dummy.
+#' Need be set as FALSE if survival information in the `newdata` is dummy.
 #' @param trt.assign Specify which of the categories of `trt` need to be considered as control group.
 #'
 calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
                        calc.obs = TRUE, trt.assign = c("default", "reverse")){
 
-  # Replace with packageVersion("tidyr") == '1.0.0' if nest issue is resolved in the next version
+  # Replace nest with packageVersion("tidyr") >= '1.0.0' for a speed issue
+  # and different behavior when no grouping is supplied
   # See https://github.com/tidyverse/tidyr/issues/751
-  nest2 <- ifelse(utils::packageVersion("tidyr") >= '1.0.0', tidyr::nest_legacy, tidyr::nest)
-  unnest2 <- ifelse(utils::packageVersion("tidyr") >= '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
+  nest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::nest_legacy, tidyr::nest)
+  unnest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
 
   trt.assign <- match.arg(trt.assign)
 
@@ -53,13 +54,19 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
   trt.levels <- dplyr::pull(newdata.nona.obs, !!trt.sym) %>% levels()
 
-
   # Calc HR for observed data
   if(calc.obs){
-    obs.nested <-
+    obs.grouped <-
       newdata.nona.obs %>%
-      dplyr::group_by(!!!group.syms) %>%
-      nest2()
+      dplyr::group_by(!!!group.syms)
+
+    if(length(dplyr::group_vars(obs.grouped)) == 0) {
+      obs.nested <-
+        obs.grouped %>%
+        nest2(data = dplyr::everything())
+    } else {
+      obs.nested <- nest2(obs.grouped)
+    }
 
     ## Define function to calc HR
     calc_hr_each_obs <- function(x){
@@ -80,7 +87,8 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
       dplyr::mutate(coxfit = purrr::map(data, safe_calc_hr_each_obs),
                     HR = purrr::map_dbl(coxfit, ~.$result),
                     description = "obs") %>%
-      dplyr::select(-data, -coxfit)
+      dplyr::select(-data, -coxfit) %>%
+      dplyr::ungroup()
   } else {
     obs.hr <- NULL
   }
@@ -119,7 +127,8 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     dplyr::mutate(coxfit = purrr::map(data, safe_calc_hr_each_sim),
                   HR = purrr::map_dbl(coxfit, ~.$result),
                   description = "sim") %>%
-    dplyr::select(-data, -coxfit)
+    dplyr::select(-data, -coxfit) %>%
+    dplyr::ungroup()
 
 
 

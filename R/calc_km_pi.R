@@ -8,18 +8,18 @@
 #' You will have faceted survival curves for these variables in \code{\link{plot_km_pi}} function.
 #' @param pi.range Prediction interval for simulated survival curves.
 #' @param calc.obs A logical to specify whether KM estimates will be performed
-#' for the observed data. Need be set as FALSE if survival information in the `newdata`` is dummy.
+#' for the observed data. Need be set as FALSE if survival information in the `newdata` is dummy.
 #' @param simtimelast An optional numeric to specify last simulation time for survival curve.
-#' If NULL (default), the last observation time in the `newdata`` will be used.
+#' If NULL (default), the last observation time in the `newdata` will be used.
 #'
 #'
 calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
                        calc.obs = TRUE, simtimelast = NULL){
 
-  # Replace with packageVersion("tidyr") == '1.0.0' if nest issue is resolved in the next version
+  # Replace nest with packageVersion("tidyr") == '1.0.0' for a speed issue
   # See https://github.com/tidyverse/tidyr/issues/751
-  nest2 <- ifelse(utils::packageVersion("tidyr") >= '1.0.0', tidyr::nest_legacy, tidyr::nest)
-  unnest2 <- ifelse(utils::packageVersion("tidyr") >= '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
+  nest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::nest_legacy, tidyr::nest)
+  unnest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
 
   ###### Need to throw an error if grouping variable is not present in newdata
 # browser()
@@ -64,10 +64,18 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
   if(calc.obs){
     # Fit K-M curve to observed data
-    obs.nested <-
+    obs.grouped <-
       sim$newdata.nona.obs %>%
-      dplyr::group_by(!!!trt.syms, !!!group.syms) %>%
-      nest2()
+      dplyr::group_by(!!!trt.syms, !!!group.syms)
+
+    if(length(dplyr::group_vars(obs.grouped)) == 0) {
+      obs.nested <-
+        obs.grouped %>%
+        nest2(data = dplyr::everything())
+    } else {
+      obs.nested <- nest2(obs.grouped)
+    }
+
 
     ## Define formula
     formula <-
@@ -86,6 +94,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     obs.km <-
       obs.km.nested %>%
       unnest2(km) %>%
+      dplyr::ungroup() %>%
       dplyr::filter(!is.na(surv)) %>%
       dplyr::select(-median)
 
@@ -137,6 +146,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
                        pi_med = stats::quantile(surv, probs = 0.5),
                        pi_high= stats::quantile(surv, probs = 0.5 + pi.range/2)))) %>%
     unnest2(quantiles) %>%
+    dplyr::ungroup() %>%
     dplyr::select(-data)
 
 
@@ -210,7 +220,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 #' @param show.obs A logical specifying whether to show observed K-M curve on the plot.
 #'   This will have no effect if `calc.obs` was set to `FALSE` in \code{\link{calc_km_pi}}.
 #' @param trunc.sim.censor A logical specifying whether to truncate the simulated
-#' curve at the last time of `censor.dur`` specified in \code{\link{surv_param_sim}}.
+#' curve at the last time of `censor.dur` specified in \code{\link{surv_param_sim}}.
 #'
 plot_km_pi <- function(km.pi, show.obs = TRUE, trunc.sim.censor = TRUE){
 
