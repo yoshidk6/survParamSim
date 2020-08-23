@@ -22,7 +22,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   unnest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
 
   ###### Need to throw an error if grouping variable is not present in newdata
-# browser()
+  # browser()
 
   if(length(trt) > 1) stop("`trt` can only take one string")
 
@@ -55,53 +55,78 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     data.frame(time = t.out,
                surv = surv)
   }
-  extract_km_obs <- function(x){
-    data.frame(time = c(0, x$time),
-               surv = c(1, x$surv),
-               cnsr = c(0, x$n.censor))
-  }
 
 
   if(calc.obs){
     # Fit K-M curve to observed data
     obs.grouped <-
       sim$newdata.nona.obs %>%
-      dplyr::group_by(!!!trt.syms, !!!group.syms)
+      dplyr::group_by(!!!trt.syms, !!!group.syms) %>%
+      dplyr::mutate(.km_group_id = factor(dplyr::cur_group_id()))
 
-    if(length(dplyr::group_vars(obs.grouped)) == 0 &
-       utils::packageVersion("tidyr") >= '1.0.0') {
-      obs.nested <-
-        obs.grouped %>%
-        nest2(data = dplyr::everything())
-    } else {
-      obs.nested <- nest2(obs.grouped)
-    }
-
-
-    ## Define formula
-    formula <-
-      paste(attributes(formula(sim$survreg))$variables,"~1")[2] %>%
-      stats::as.formula()
+    obs.groups <-
+      obs.grouped %>%
+      dplyr::select(.km_group_id, !!!trt.syms, !!!group.syms, ) %>%
+      dplyr::distinct() %>%
+      dplyr::ungroup()
 
 
     ## Calc median and KM curve
-    obs.km.nested <-
-      obs.nested %>%
-      dplyr::mutate(kmfit = purrr::map(data, function(x) survival::survfit(formula, data=x))) %>%
-      dplyr::mutate(median = purrr::map_dbl(kmfit, function(x) summary(x)$table["median"]),
-                    n      = purrr::map_dbl(kmfit, function(x) summary(x)$table["records"]),
-                    km = purrr::map(kmfit, extract_km_obs))
+    formula <-
+      paste(attributes(formula(sim$survreg))$variables,"~.km_group_id")[2] %>%
+      stats::as.formula()
+
+    obs.kmfit <-
+      obs.grouped %>%
+      survival::survfit(formula, data = .)
+
+    ### deal with no grouping variables (i.e. only one value for `.km_group_id`)
+    ### $table output vector or matrix depending on the input
+    ### and they need to be handled differently
+
+    if(length(obs.groups$.km_group_id) == 1) {
+      obs.med.records.raw <-
+        summary(obs.kmfit)$table[c("median", "records")] %>%
+        tibble::as_tibble_row()
+
+      km.group.id.vec.obs.km <- obs.groups$.km_group_id
+
+    } else {
+      obs.med.records.raw <-
+        summary(obs.kmfit)$table[,c("median", "records")] %>%
+        tibble::as_tibble()
+
+      km.group.id.vec.obs.km <-
+        rep(sort(obs.groups$.km_group_id),
+            times = obs.kmfit$strata)
+    }
+
+    obs.median.time.1 <-
+      obs.med.records.raw %>%
+      dplyr::rename(n = records) %>%
+      dplyr::mutate(.km_group_id = factor(dplyr::row_number())) %>%
+      dplyr::full_join(obs.groups, by = ".km_group_id")
+
+
+    # Need to add time 0 record for plotting purpose
+    obs.km.time0 <-
+      obs.groups %>%
+      dplyr::select(.km_group_id) %>%
+      dplyr::mutate(time = 0, surv = 1, cnsr = 0)
 
     obs.km <-
-      obs.km.nested %>%
-      unnest2(km) %>%
-      dplyr::ungroup() %>%
-      dplyr::filter(!is.na(surv)) %>%
-      dplyr::select(-median)
+      tibble::tibble(time = obs.kmfit$time,
+                     surv = obs.kmfit$surv,
+                     cnsr = obs.kmfit$n.censor,
+                     .km_group_id = km.group.id.vec.obs.km) %>%
+      dplyr::bind_rows(obs.km.time0) %>%
+      dplyr::arrange(.km_group_id, time) %>%
+      dplyr::full_join(obs.median.time.1, by = ".km_group_id") %>%
+      dplyr::select(-.km_group_id)
 
     obs.median.time <-
-      obs.km.nested %>%
-      dplyr::select(!!!trt.syms, !!!group.syms, median, n)
+      obs.median.time.1 %>%
+      dplyr::select(-.km_group_id)
 
   } else {
     obs.km <- NULL
