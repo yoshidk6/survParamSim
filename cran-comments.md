@@ -1,5 +1,5 @@
 ## Test environments
-* local Mac OSX install, R 4.0.0
+* local Mac OSX install, R 4.0.2
 * ubuntu 16.04 (on travis-ci) (release)
 * win-builder (devel and release)
 
