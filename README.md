@@ -25,7 +25,7 @@ install.packages("survParamSim")
 
 ## Example
 
-[This GitHub pages](https://yoshidk6.github.io/survParamSim) contains
+[This GitHub pages](https://yoshidk6.github.io/survParamSim/) contains
 function references and
 [vignette](https://yoshidk6.github.io/survParamSim/articles/survParamSim.html).
 The example below is a sneak peek of example outputs.

@@ -1,8 +1,15 @@
 
 
-# survParamSim 0.1.3 (in development)
+# survParamSim 0.1.4 (in development)
 
 ## Minor changes
+
+
+# survParamSim 0.1.3 
+
+## Minor changes
+
+* Bug fix - disable `options(lifecycle_verbosity = "error")` to avoid unnecessary errors
 
 
 # survParamSim 0.1.2
