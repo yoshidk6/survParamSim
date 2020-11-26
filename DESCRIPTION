@@ -1,7 +1,7 @@
 Package: survParamSim
 Type: Package
 Title: Parametric Survival Simulation with Parameter Uncertainty
-Version: 0.1.3.001
+Version: 0.1.3.9000
 Authors@R: c(
     person("Kenta", "Yoshida", , "6.kurabupasu@gmail.com", c("aut", "cre"), 
       comment = c(ORCID = "0000-0003-4967-3831")),
