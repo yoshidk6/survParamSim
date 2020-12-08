@@ -1,8 +1,15 @@
 
 
-# survParamSim 0.1.4 (in development)
+# survParamSim 0.1.5 (in development)
 
 ## Minor changes
+
+
+# survParamSim 0.1.4
+
+## Minor changes
+
+* Bug fix - use `vdiffr` conditionally on tests
 
 
 # survParamSim 0.1.3 
