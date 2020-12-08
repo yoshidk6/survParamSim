@@ -63,18 +63,18 @@ test_that("predicted KM and median time per group", {
 
 test_that("grouping and trt", {
   plot.km.sex <- plot_km_pi(calc_km_pi(sim, trt = "sex"))
-  vdiffr::expect_doppelganger("km plot with sex as trt", plot.km.sex)
+  expect_doppelganger("km plot with sex as trt", plot.km.sex)
 
   plot.km.sex.ecog <- plot_km_pi(calc_km_pi(sim, group = c("sex", "ph.ecog")))
-  vdiffr::expect_doppelganger("km plot with sex and ph.ecog as group", plot.km.sex.ecog)
+  expect_doppelganger("km plot with sex and ph.ecog as group", plot.km.sex.ecog)
 })
 
 
 test_that("long simulation time", {
   km.pi.longsim <- calc_km_pi(sim, group = "sex", simtimelast = 2000)
 
-  vdiffr::expect_doppelganger("long sim time, not truncating with censor", plot_km_pi(km.pi.longsim, trunc.sim.censor = FALSE))
-  vdiffr::expect_doppelganger("long sim time, truncating with censor", plot_km_pi(km.pi.longsim))
+  expect_doppelganger("long sim time, not truncating with censor", plot_km_pi(km.pi.longsim, trunc.sim.censor = FALSE))
+  expect_doppelganger("long sim time, truncating with censor", plot_km_pi(km.pi.longsim))
 })
 
 
@@ -90,7 +90,7 @@ test_that("no group or trt", {
 
 
 test_that("not calculating observed KM", {
-  vdiffr::expect_doppelganger("no observed KM curves", plot_km_pi(calc_km_pi(sim, group = "sex", calc.obs = FALSE)))
+  expect_doppelganger("no observed KM curves", plot_km_pi(calc_km_pi(sim, group = "sex", calc.obs = FALSE)))
 
 })
 
