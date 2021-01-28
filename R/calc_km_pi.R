@@ -94,6 +94,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
     obs.km <-
       obs.km.nested %>%
+      dplyr::select(-data, -kmfit) %>%
       unnest2(km) %>%
       dplyr::ungroup() %>%
       dplyr::filter(!is.na(surv)) %>%
