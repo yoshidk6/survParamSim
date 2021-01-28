@@ -21,7 +21,7 @@ Imports:
     purrr,
     forcats,
     dplyr,
-    tidyr,
+    tidyr (>= 1.1),
     tibble,
     ggplot2,
     survival (>= 2.43),
