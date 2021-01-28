@@ -161,7 +161,7 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html">expand_limits</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-km_pi_group-1.png" width="100%"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/extract_km_pi.html">extract_median_surv</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="reference/extract_hr_pi.html">extract_median_surv_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 32 x 7</span>
 <span class="co">#&gt;    rx    node4 depth     n description median quantile</span>
 <span class="co">#&gt;    &lt;fct&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;</span>
@@ -195,7 +195,7 @@
 <span class="fu"><a href="reference/plot_hr_pi.html">plot_hr_pi</a></span><span class="op">(</span><span class="va">hr.pi</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-hr_pi-1.png" width="100%"></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/extract_km_pi.html">extract_hr_pi</a></span><span class="op">(</span><span class="va">hr.pi</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="reference/extract_hr_pi.html">extract_hr_pi</a></span><span class="op">(</span><span class="va">hr.pi</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 8 x 4</span>
 <span class="co">#&gt;   depth description    HR quantile</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;</span>
@@ -240,7 +240,6 @@
   <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://travis-ci.org/yoshidk6/survParamSim"><img src="https://travis-ci.org/yoshidk6/survParamSim.svg?branch=master" alt="Travis build status"></a></li>
 <li><a href="https://github.com/yoshidk6/survParamSim/actions"><img src="https://github.com/yoshidk6/survParamSim/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 <li><a href="https://cran.r-project.org/package=survParamSim"><img src="https://www.r-pkg.org/badges/version/survParamSim" alt="CRAN status"></a></li>
 <li><a href="https://CRAN.R-project.org/package=survParamSim"><img src="https://cranlogs.r-pkg.org/badges/grand-total/survParamSim" alt="downloads"></a></li>

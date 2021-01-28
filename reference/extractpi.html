@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Functions to extract prediction intervals and observed data — extract_km_pi • survParamSim</title>
+<title>Functions to extract prediction intervals and observed data — extract_hr_pi • survParamSim</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Functions to extract prediction intervals and observed data — extract_km_pi" />
+<meta property="og:title" content="Functions to extract prediction intervals and observed data — extract_hr_pi" />
 <meta property="og:description" content="Functions to extract prediction intervals and observed data" />
 
 
@@ -123,15 +123,25 @@
     <p>Functions to extract prediction intervals and observed data</p>
     </div>
 
-    <pre class="usage"><span class='fu'>extract_km_pi</span><span class='op'>(</span><span class='va'>km.pi</span>, trunc.sim.censor <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>extract_hr_pi</span><span class='op'>(</span><span class='va'>hr.pi</span>, outtype <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"long"</span>, <span class='st'>"wide"</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>extract_median_surv</span><span class='op'>(</span><span class='va'>km.pi</span>, outtype <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"long"</span>, <span class='st'>"wide"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>extract_km_pi</span><span class='op'>(</span><span class='va'>km.pi</span>, trunc.sim.censor <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
-<span class='fu'>extract_hr_pi</span><span class='op'>(</span><span class='va'>hr.pi</span>, outtype <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"long"</span>, <span class='st'>"wide"</span><span class='op'>)</span><span class='op'>)</span></pre>
+<span class='fu'>extract_median_surv_pi</span><span class='op'>(</span><span class='va'>km.pi</span>, outtype <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"long"</span>, <span class='st'>"wide"</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='fu'>extract_median_surv_delta_pi</span><span class='op'>(</span><span class='va'>km.pi</span>, outtype <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"long"</span>, <span class='st'>"wide"</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>hr.pi</th>
+      <td><p>a return object from <code><a href='calc_hr_pi.html'>calc_hr_pi</a></code> function.</p></td>
+    </tr>
+    <tr>
+      <th>outtype</th>
+      <td><p>Specifies whether output will be in long or wide format.</p></td>
+    </tr>
     <tr>
       <th>km.pi</th>
       <td><p>A return object from <code><a href='calc_km_pi.html'>calc_km_pi</a></code> function.</p></td>
@@ -141,23 +151,17 @@
       <td><p>A logical specifying whether to truncate the simulated
 curve at the last time of `censor.dur`` specified in <code><a href='surv_param_sim.html'>surv_param_sim</a></code>.</p></td>
     </tr>
-    <tr>
-      <th>outtype</th>
-      <td><p>Specifies whether output will be in long or wide format.</p></td>
-    </tr>
-    <tr>
-      <th>hr.pi</th>
-      <td><p>a return object from <code><a href='calc_hr_pi.html'>calc_hr_pi</a></code> function.</p></td>
-    </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>extract_km_pi</code> extracts prediction intervals of simulated Kaplan-Meier curves.</p>
-<p><code>extract_median_surv</code> extracts prediction intervals of
-median survival times and and the corresponding observed values.</p>
-<p><code>extract_hr_pi</code> extracts prediction intervals of simulated
+    <p><code>extract_hr_pi</code> extracts prediction intervals of simulated
 hazard ratios and the corresponding observed values.</p>
+<p><code>extract_km_pi</code> extracts prediction intervals of simulated Kaplan-Meier curves.</p>
+<p><code>extract_median_surv_pi</code> extracts prediction intervals of
+median survival times and and the corresponding observed values.</p>
+<p><code>extract_median_surv_delta_pi</code> extracts prediction intervals of
+delta of median survival times between treatment groups</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
