@@ -3,6 +3,36 @@
 #'
 #' @rdname extractpi
 #' @export
+#' @param hr.pi a return object from \code{\link{calc_hr_pi}} function.
+#' @details
+#' \code{\link{extract_hr_pi}} extracts prediction intervals of simulated
+#' hazard ratios and the corresponding observed values.
+extract_hr_pi <- function(hr.pi, outtype = c("long", "wide")) {
+
+  outtype <- match.arg(outtype)
+
+  out <- hr.pi$hr.pi.quantile
+
+  if(outtype == "wide"){
+    out <-
+      out %>%
+      dplyr::select(-quantile) %>%
+      tidyr::spread(description, HR)
+
+    if(hr.pi$calc.obs){
+      out <- dplyr::select(out, pi_low, pi_med, pi_high, obs, dplyr::everything())
+    } else {
+      out <- dplyr::select(out, pi_low, pi_med, pi_high, dplyr::everything())
+    }
+  }
+
+  return(out)
+
+}
+
+
+#' @rdname extractpi
+#' @export
 #' @param km.pi A return object from \code{\link{calc_km_pi}} function.
 #' @param trunc.sim.censor A logical specifying whether to truncate the simulated
 #' curve at the last time of `censor.dur`` specified in \code{\link{surv_param_sim}}.
@@ -103,35 +133,6 @@ extract_median_surv_pi <- function(km.pi, outtype = c("long", "wide")) {
 
 #' @rdname extractpi
 #' @export
-#' @param hr.pi a return object from \code{\link{calc_hr_pi}} function.
-#' @details
-#' \code{\link{extract_hr_pi}} extracts prediction intervals of simulated
-#' hazard ratios and the corresponding observed values.
-extract_hr_pi <- function(hr.pi, outtype = c("long", "wide")) {
-
-  outtype <- match.arg(outtype)
-
-  out <- hr.pi$hr.pi.quantile
-
-  if(outtype == "wide"){
-    out <-
-      out %>%
-      dplyr::select(-quantile) %>%
-      tidyr::spread(description, HR)
-
-    if(hr.pi$calc.obs){
-      out <- dplyr::select(out, pi_low, pi_med, pi_high, obs, dplyr::everything())
-    } else {
-      out <- dplyr::select(out, pi_low, pi_med, pi_high, dplyr::everything())
-    }
-  }
-
-  return(out)
-
-}
-
-#' @rdname extractpi
-#' @export
 #' @param outtype Specifies whether output will be in long or wide format.
 #' @details
 #' \code{\link{extract_median_surv_delta_pi}} extracts prediction intervals of
@@ -162,7 +163,7 @@ extract_median_surv_delta_pi <- function(km.pi, outtype = c("long", "wide")) {
   out <-
     km.pi$sim.median.time %>%
     dplyr::select(-n) %>%
-    tidyr::pivot_wider(names_from = sex, values_from = median) %>%
+    tidyr::pivot_wider(names_from = !!trt.sym, values_from = median) %>%
     dplyr::mutate(.delta =
                     !!rlang::sym(as.character(trt.vec[2]))  -
                     !!rlang::sym(as.character(trt.vec[1]))) %>%

@@ -76,7 +76,16 @@ test_that("grouping and trt", {
 
 test_that("median survival delta", {
   sim.newdata2 <- suppressWarnings(surv_param_sim(object, newdata2, n.rep, censor.dur))
-  km.pi<- calc_km_pi(sim.newdata2, trt = "sex", group = "ph.ecog")
+  km.pi.newdata2 <- calc_km_pi(sim.newdata2, trt = "sex", group = "ph.ecog")
+
+  extract_median_surv_delta_pi(km.pi.newdata2, outtype = "wide") %>%
+    dplyr::select(pi_low, pi_high) %>%
+    as.data.frame() %>%
+    dplyr::mutate(pi_low  = unname(pi_low),
+                  pi_high = unname(pi_high)) %>%
+    expect_equal(data.frame(pi_low  = c(-32, 32, -54),
+                            pi_high = c(647, 325, 235)),
+                 tolerance = 0.01)
 
 })
 
@@ -95,7 +104,7 @@ test_that("no group or trt", {
 
   summary(km.pi.no.group.trt) %>%
     dplyr::pull(median) %>%
-    expect_equal(c(279, 320, 363, 310), tolerance = 1)
+    expect_equal(c(279, 320, 363, 310), tolerance = 0.01)
 
 })
 

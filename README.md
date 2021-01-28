@@ -3,8 +3,6 @@
 
 # survParamSim
 
-[![Travis build
-status](https://travis-ci.org/yoshidk6/survParamSim.svg?branch=master)](https://travis-ci.org/yoshidk6/survParamSim)
 [![R build
 status](https://github.com/yoshidk6/survParamSim/workflows/R-CMD-check/badge.svg)](https://github.com/yoshidk6/survParamSim/actions)
 [![CRAN
@@ -114,7 +112,7 @@ plot_km_pi(km.pi) +
 <img src="man/figures/README-km_pi_group-1.png" width="100%" />
 
 ``` r
-extract_median_surv(km.pi)
+extract_median_surv_pi(km.pi)
 #> # A tibble: 32 x 7
 #>    rx    node4 depth     n description median quantile
 #>    <fct> <dbl> <dbl> <dbl> <chr>        <dbl>    <dbl>
