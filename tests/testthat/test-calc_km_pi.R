@@ -8,6 +8,10 @@ fit.lung <- survreg(Surv(time, status) ~ sex + ph.ecog, data = lung)
 object <- fit.lung
 n.rep  <-  30
 newdata <- tibble::as_tibble(dplyr::select(lung, time, status, sex, ph.ecog))
+## ph.ecog == 3 only has one subject
+newdata2 <-
+  tibble::as_tibble(dplyr::select(lung, time, status, sex, ph.ecog)) %>%
+  dplyr::filter(ph.ecog != 3)
 censor.dur <- c(200, 1100)
 
 
@@ -67,6 +71,13 @@ test_that("grouping and trt", {
 
   plot.km.sex.ecog <- plot_km_pi(calc_km_pi(sim, group = c("sex", "ph.ecog")))
   expect_doppelganger("km plot with sex and ph.ecog as group", plot.km.sex.ecog)
+})
+
+
+test_that("median survival delta", {
+  sim.newdata2 <- suppressWarnings(surv_param_sim(object, newdata2, n.rep, censor.dur))
+  km.pi<- calc_km_pi(sim.newdata2, trt = "sex", group = "ph.ecog")
+
 })
 
 

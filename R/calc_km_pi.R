@@ -139,6 +139,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   ## Calc quantile for survival curves
   sim.km.quantile <-
     sim.km %>%
+    dplyr::select(-data, -kmfit) %>%
     unnest2(km) %>%
     dplyr::group_by(!!!trt.syms, !!!group.syms, n, time) %>%
     nest2() %>%
@@ -155,7 +156,8 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   ## Calc quantiles for median survival time
   sim.median.time <-
     sim.km %>%
-    dplyr::select(rep, !!!trt.syms, !!!group.syms, median, n)
+    dplyr::select(rep, !!!trt.syms, !!!group.syms, median, n) %>%
+    dplyr::ungroup()
 
   quantiles <-
     tibble::tibble(description = c("pi_low", "pi_med", "pi_high"),
