@@ -77,9 +77,9 @@ extract_km_pi <- function(km.pi, trunc.sim.censor = TRUE) {
 #' @export
 #' @param outtype Specifies whether output will be in long or wide format.
 #' @details
-#' \code{\link{extract_median_surv}} extracts prediction intervals of
+#' \code{\link{extract_median_surv_pi}} extracts prediction intervals of
 #' median survival times and and the corresponding observed values.
-extract_median_surv <- function(km.pi, outtype = c("long", "wide")) {
+extract_median_surv_pi <- function(km.pi, outtype = c("long", "wide")) {
 
   outtype <- match.arg(outtype)
 

@@ -27,7 +27,7 @@ test_that("observed median time per group", {
 })
 
 test_that("Extract median quantile in wide format", {
-  median.pi.quantile <- extract_median_surv(km.pi, outtype ="wide")
+  median.pi.quantile <- extract_median_surv_pi(km.pi, outtype ="wide")
   expect_equal(dim(median.pi.quantile), c(2, 6))
   expect_equal(names(median.pi.quantile), c("pi_low", "pi_med", "pi_high", "obs", "sex", "n"))
 

@@ -2,6 +2,13 @@
 
 # survParamSim 0.1.5 (in development)
 
+## Breaking change
+
+The original `extract_median_surv` function was renamed to `extract_median_surv_pi` for consistent name conventions  
+The new `extract_median_surv` function will return raw median survival time per simulation instead of prediction interval  
+
+
+
 ## Minor changes
 
 

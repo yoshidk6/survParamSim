@@ -317,7 +317,7 @@ print.survparamsim.kmpi <- function(x, ...){
 #' @export
 summary.survparamsim.kmpi <- function(object, ...) {
 
-  return(extract_median_surv(object))
+  return(extract_median_surv_pi(object))
 }
 
 

@@ -83,7 +83,7 @@ plot_km_pi(km.pi) +
   theme(legend.position = "bottom") +
   labs(y = "Recurrence free rate") +
   expand_limits(y = 0)
-extract_median_surv(km.pi)
+extract_median_surv_pi(km.pi)
 ```
 
 Calculate hazard ratios with prediction intervals:
