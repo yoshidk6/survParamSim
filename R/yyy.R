@@ -15,7 +15,8 @@ if(getRversion() >= "2.15.1"){
 
   # extract sim
   utils::globalVariables(c('n.resample', 'covec50', 'cove0', 'covemaxstr', 'covec50str', 'cove0str',
-                           'covemaxfct', 'covec50fct', 'cove0fct', 'Covariates'))
+                           'covemaxfct', 'covec50fct', 'cove0fct', 'Covariates',
+                           '.delta'))
 
   # replace_prm_names
   utils::globalVariables(c('prmname', 'prmname2', 'index', 'prm', 'level'))
