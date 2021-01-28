@@ -51,3 +51,12 @@ extract_hr <- function(hr.pi) {
 extract_km_obs <- function(km.pi) {
   return(km.pi$obs.km)
 }
+
+#' @rdname extractrawsim
+#' @export
+#' @param km.pi A return object from \code{\link{calc_km_pi}} function.
+#' @details
+#' \code{\link{extract_median_surv}} extracts simulated median survival times for all repeated simulations
+extract_median_surv <- function(km.pi) {
+  return(km.pi$sim.median.time)
+}

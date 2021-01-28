@@ -185,13 +185,6 @@ extract_median_surv_delta_pi <- function(km.pi, outtype = c("long", "wide")) {
       dplyr::arrange(!!!group.syms, quantile)
   }
 
-  # out <- km.pi$median.pi
-  #
-  # if(outtype == "wide"){
-  #   out <-
-  #     out %>%
-  #     dplyr::select(-quantile) %>%
-  #     tidyr::spread(description, median)
   #
   #   if(km.pi$calc.obs){
   #     out <- dplyr::select(out, pi_low, pi_med, pi_high, obs, dplyr::everything())
