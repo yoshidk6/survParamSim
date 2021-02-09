@@ -146,7 +146,7 @@
 
 <span class="va">km.pi</span>
 <span class="co">#&gt; ---- Simulated and observed (if calculated) survival curves ----</span>
-<span class="co">#&gt; * Use `extract_median_surv()` to extract median survival times</span>
+<span class="co">#&gt; * Use `extract_medsurv_pi()` to extract prediction intervals of median survival times</span>
 <span class="co">#&gt; * Use `extract_km_pi()` to extract prediction intervals of K-M curves</span>
 <span class="co">#&gt; * Use `plot_km_pi()` to draw survival curves</span>
 <span class="co">#&gt; </span>
@@ -161,7 +161,7 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html">expand_limits</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-km_pi_group-1.png" width="100%"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/extract_hr_pi.html">extract_median_surv_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="reference/extract_hr_pi.html">extract_medsurv_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 32 x 7</span>
 <span class="co">#&gt;    rx    node4 depth     n description median quantile</span>
 <span class="co">#&gt;    &lt;fct&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;</span>

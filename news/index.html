@@ -121,15 +121,14 @@
 <h1 class="page-header" data-toc-text="0.1.5">
 <a href="#survparamsim-015-in-development" class="anchor"></a>survParamSim 0.1.5 (in development)<small> Unreleased </small>
 </h1>
-<div id="breaking-changes" class="section level2">
-<h2 class="hasAnchor">
-<a href="#breaking-changes" class="anchor"></a>Breaking changes</h2>
-<p>The original <code>extract_median_surv</code> function was renamed to <code>extract_median_surv_pi</code> for consistent name conventions<br>
-The new <code>extract_median_surv</code> function will return raw median survival time per simulation instead of prediction interval</p>
-</div>
 <div id="minor-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#minor-changes" class="anchor"></a>Minor changes</h2>
+<ul>
+<li><p>New function <code><a href="../reference/extract_hr_pi.html">extract_medsurv_delta_pi()</a></code> will return prediction intervals of the difference of median survival time between treatment</p></li>
+<li><p>The <code><a href="../reference/extract_median_surv.html">extract_median_surv()</a></code> function was deprecated and superseded by <code><a href="../reference/extract_hr_pi.html">extract_medsurv_pi()</a></code> for consistent name conventions</p></li>
+<li><p>New function <code><a href="../reference/extract_sim.html">extract_medsurv()</a></code> will return raw median survival time per simulation</p></li>
+</ul>
 </div>
 </div>
     <div id="survparamsim-014" class="section level1">
