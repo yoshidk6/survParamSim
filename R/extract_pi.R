@@ -202,7 +202,8 @@ extract_medsurv_delta_pi <- function(km.pi, outtype = c("long", "wide")) {
 #' Functions to extract prediction intervals and observed data
 #'
 #' \lifecycle{deprecated}
-#' Please use [extract_medsurv_pi()] instead.
+#'
+#' `extract_median_surv()` was renamed to \code{\link{extract_medsurv_pi}} for function name consistency.
 #'
 #' @rdname extractpi_deprecated
 #' @export

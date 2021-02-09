@@ -13,9 +13,10 @@ extract_median_surv(km.pi, outtype = c("long", "wide"))
 }
 \description{
 \lifecycle{deprecated}
-Please use \code{\link[=extract_medsurv_pi]{extract_medsurv_pi()}} instead.
 }
 \details{
+\code{extract_median_surv()} was renamed to \code{\link{extract_medsurv_pi}} for function name consistency.
+
 \code{\link{extract_median_surv}} extracts prediction intervals of
 median survival times and and the corresponding observed values.
 }
