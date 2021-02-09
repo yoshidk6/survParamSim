@@ -201,7 +201,7 @@ extract_medsurv_delta_pi <- function(km.pi, outtype = c("long", "wide")) {
 
 #' Functions to extract prediction intervals and observed data
 #'
-#' \Sexpr[results=rd, stage=render]{lifecycle::badge("deprecated")}
+#' \lifecycle{deprecated}
 #' Please use [tibble::as_tibble()] instead.
 #'
 #' @rdname deprecated

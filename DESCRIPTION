@@ -39,3 +39,4 @@ Language: en-US
 URL: https://github.com/yoshidk6/survParamSim
 BugReports: https://github.com/yoshidk6/survParamSim/issues
 VignetteBuilder: knitr
+RdMacros: lifecycle

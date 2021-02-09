@@ -10,7 +10,7 @@ extract_median_surv(km.pi, outtype = c("long", "wide"))
 \item{outtype}{Specifies whether output will be in long or wide format.}
 }
 \description{
-\Sexpr[results=rd, stage=render]{lifecycle::badge("deprecated")}
+\lifecycle{deprecated}
 Please use \code{\link[tibble:as_tibble]{tibble::as_tibble()}} instead.
 }
 \details{
