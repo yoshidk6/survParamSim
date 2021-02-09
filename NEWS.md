@@ -7,7 +7,9 @@
 The original `extract_median_surv` function was renamed to `extract_median_surv_pi` for consistent name conventions  
 The new `extract_median_surv` function will return raw median survival time per simulation instead of prediction interval  
 
+## Major changes
 
+The new `extract_median_surv_delta_pi` function will return prediction intervals of the difference of median survival time between treatment  
 
 ## Minor changes
 
