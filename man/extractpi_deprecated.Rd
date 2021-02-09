@@ -7,6 +7,8 @@
 extract_median_surv(km.pi, outtype = c("long", "wide"))
 }
 \arguments{
+\item{km.pi}{A return object from \code{\link{calc_km_pi}} function.}
+
 \item{outtype}{Specifies whether output will be in long or wide format.}
 }
 \description{

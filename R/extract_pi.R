@@ -206,6 +206,7 @@ extract_medsurv_delta_pi <- function(km.pi, outtype = c("long", "wide")) {
 #'
 #' @rdname extractpi_deprecated
 #' @export
+#' @param km.pi A return object from \code{\link{calc_km_pi}} function.
 #' @param outtype Specifies whether output will be in long or wide format.
 #' @details
 #' \code{\link{extract_median_surv}} extracts prediction intervals of
