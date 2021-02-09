@@ -15,24 +15,25 @@ Encoding: UTF-8
 LazyData: true
 Depends: R (>= 3.4.0),
 Imports: 
-    magrittr (>= 1.5),
-    mvtnorm,
-    rlang,
-    purrr,
-    forcats,
     dplyr,
-    lifecycle (>= 0.2.0),
-    tidyr (>= 1.1),
-    tibble,
+    forcats,
     ggplot2,
+    lifecycle (>= 0.2.0),
+    magrittr (>= 1.5),
+    methods,
+    mvtnorm,
+    purrr,
+    rlang,
     survival (>= 2.43),
-    methods
+    tibble,
+    tidyr (>= 1.1),
 Suggests: 
-    testthat (>= 2.1.0),
-    vdiffr,
     knitr,
     rmarkdown,
-    survminer
+    survminer,
+    testthat (>= 2.1.0),
+    vdiffr,
+    withr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Language: en-US
