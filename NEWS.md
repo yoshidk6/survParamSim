@@ -2,16 +2,13 @@
 
 # survParamSim 0.1.5 (in development)
 
-## Breaking changes
-
-The original `extract_median_surv` function was renamed to `extract_median_surv_pi` for consistent name conventions  
-The new `extract_median_surv` function will return raw median survival time per simulation instead of prediction interval  
-
-## Major changes
-
-The new `extract_median_surv_delta_pi` function will return prediction intervals of the difference of median survival time between treatment  
-
 ## Minor changes
+
+* New function `extract_medsurv_delta_pi()` will return prediction intervals of the difference of median survival time between treatment  
+
+* The `extract_median_surv()` function was deprecated and superseded by `extract_medsurv_pi()` for consistent name conventions  
+
+* New function `extract_medsurv()` will return raw median survival time per simulation
 
 
 # survParamSim 0.1.4

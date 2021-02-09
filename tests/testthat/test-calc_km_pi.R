@@ -27,7 +27,7 @@ test_that("observed median time per group", {
 })
 
 test_that("Extract median quantile in wide format", {
-  median.pi.quantile <- extract_median_surv_pi(km.pi, outtype ="wide")
+  median.pi.quantile <- extract_medsurv_pi(km.pi, outtype ="wide")
   expect_equal(dim(median.pi.quantile), c(2, 6))
   expect_equal(names(median.pi.quantile), c("pi_low", "pi_med", "pi_high", "obs", "sex", "n"))
 
@@ -78,7 +78,7 @@ test_that("median survival delta", {
   sim.newdata2 <- suppressWarnings(surv_param_sim(object, newdata2, n.rep, censor.dur))
   km.pi.newdata2 <- calc_km_pi(sim.newdata2, trt = "sex", group = "ph.ecog")
 
-  extract_median_surv_delta_pi(km.pi.newdata2, outtype = "wide") %>%
+  extract_medsurv_delta_pi(km.pi.newdata2, outtype = "wide") %>%
     dplyr::select(pi_low, pi_high) %>%
     as.data.frame() %>%
     dplyr::mutate(pi_low  = unname(pi_low),

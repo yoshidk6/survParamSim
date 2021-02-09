@@ -300,7 +300,7 @@ plot_km_pi <- function(km.pi, show.obs = TRUE, trunc.sim.censor = TRUE){
 #' @export
 print.survparamsim.kmpi <- function(x, ...){
   cat("---- Simulated and observed (if calculated) survival curves ----\n")
-  cat("* Use `extract_median_surv_pi()` to extract prediction intervals of median survival times\n")
+  cat("* Use `extract_medsurv_pi()` to extract prediction intervals of median survival times\n")
   cat("* Use `extract_km_pi()` to extract prediction intervals of K-M curves\n")
   cat("* Use `plot_km_pi()` to draw survival curves\n\n")
   cat("* Settings:\n")
@@ -317,7 +317,7 @@ print.survparamsim.kmpi <- function(x, ...){
 #' @export
 summary.survparamsim.kmpi <- function(object, ...) {
 
-  return(extract_median_surv_pi(object))
+  return(extract_medsurv_pi(object))
 }
 
 

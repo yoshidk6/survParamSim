@@ -3,17 +3,17 @@
 \name{extract_hr_pi}
 \alias{extract_hr_pi}
 \alias{extract_km_pi}
-\alias{extract_median_surv_pi}
-\alias{extract_median_surv_delta_pi}
+\alias{extract_medsurv_pi}
+\alias{extract_medsurv_delta_pi}
 \title{Functions to extract prediction intervals and observed data}
 \usage{
 extract_hr_pi(hr.pi, outtype = c("long", "wide"))
 
 extract_km_pi(km.pi, trunc.sim.censor = TRUE)
 
-extract_median_surv_pi(km.pi, outtype = c("long", "wide"))
+extract_medsurv_pi(km.pi, outtype = c("long", "wide"))
 
-extract_median_surv_delta_pi(km.pi, outtype = c("long", "wide"))
+extract_medsurv_delta_pi(km.pi, outtype = c("long", "wide"))
 }
 \arguments{
 \item{hr.pi}{a return object from \code{\link{calc_hr_pi}} function.}
@@ -34,9 +34,9 @@ hazard ratios and the corresponding observed values.
 
 \code{\link{extract_km_pi}} extracts prediction intervals of simulated Kaplan-Meier curves.
 
-\code{\link{extract_median_surv_pi}} extracts prediction intervals of
+\code{\link{extract_medsurv_pi}} extracts prediction intervals of
 median survival times and and the corresponding observed values.
 
-\code{\link{extract_median_surv_delta_pi}} extracts prediction intervals of
+\code{\link{extract_medsurv_delta_pi}} extracts prediction intervals of
 delta of median survival times between treatment groups
 }

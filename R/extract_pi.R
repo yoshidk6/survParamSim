@@ -107,9 +107,9 @@ extract_km_pi <- function(km.pi, trunc.sim.censor = TRUE) {
 #' @export
 #' @param outtype Specifies whether output will be in long or wide format.
 #' @details
-#' \code{\link{extract_median_surv_pi}} extracts prediction intervals of
+#' \code{\link{extract_medsurv_pi}} extracts prediction intervals of
 #' median survival times and and the corresponding observed values.
-extract_median_surv_pi <- function(km.pi, outtype = c("long", "wide")) {
+extract_medsurv_pi <- function(km.pi, outtype = c("long", "wide")) {
 
   outtype <- match.arg(outtype)
 
@@ -131,13 +131,14 @@ extract_median_surv_pi <- function(km.pi, outtype = c("long", "wide")) {
   return(out)
 }
 
+
 #' @rdname extractpi
 #' @export
 #' @param outtype Specifies whether output will be in long or wide format.
 #' @details
-#' \code{\link{extract_median_surv_delta_pi}} extracts prediction intervals of
+#' \code{\link{extract_medsurv_delta_pi}} extracts prediction intervals of
 #' delta of median survival times between treatment groups
-extract_median_surv_delta_pi <- function(km.pi, outtype = c("long", "wide")) {
+extract_medsurv_delta_pi <- function(km.pi, outtype = c("long", "wide")) {
 
   pi.range   <- km.pi$pi.range
 
@@ -195,4 +196,22 @@ extract_median_surv_delta_pi <- function(km.pi, outtype = c("long", "wide")) {
   # }
 
   return(out)
+}
+
+
+#' Functions to extract prediction intervals and observed data
+#'
+#' \Sexpr[results=rd, stage=render]{lifecycle::badge("deprecated")}
+#' Please use [tibble::as_tibble()] instead.
+#'
+#' @rdname deprecated
+#' @export
+#' @param outtype Specifies whether output will be in long or wide format.
+#' @details
+#' \code{\link{extract_median_surv}} extracts prediction intervals of
+#' median survival times and and the corresponding observed values.
+extract_median_surv <- function(km.pi, outtype = c("long", "wide")) {
+  lifecycle::deprecate_warn("0.1.5", "extract_median_surv()", "extract_medsurv_pi()")
+
+  return(extract_medsurv_pi(km.pi, outtype))
 }

@@ -56,7 +56,7 @@ extract_km_obs <- function(km.pi) {
 #' @export
 #' @param km.pi A return object from \code{\link{calc_km_pi}} function.
 #' @details
-#' \code{\link{extract_median_surv}} extracts simulated median survival times for all repeated simulations
-extract_median_surv <- function(km.pi) {
+#' \code{\link{extract_medsurv}} extracts simulated median survival times for all repeated simulations
+extract_medsurv <- function(km.pi) {
   return(km.pi$sim.median.time)
 }

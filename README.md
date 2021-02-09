@@ -94,7 +94,7 @@ km.pi <- calc_km_pi(sim, trt = "rx", group = c("node4", "depth"))
 
 km.pi
 #> ---- Simulated and observed (if calculated) survival curves ----
-#> * Use `extract_median_surv()` to extract median survival times
+#> * Use `extract_medsurv_pi()` to extract prediction intervals of median survival times
 #> * Use `extract_km_pi()` to extract prediction intervals of K-M curves
 #> * Use `plot_km_pi()` to draw survival curves
 #> 
@@ -112,7 +112,7 @@ plot_km_pi(km.pi) +
 <img src="man/figures/README-km_pi_group-1.png" width="100%" />
 
 ``` r
-extract_median_surv_pi(km.pi)
+extract_medsurv_pi(km.pi)
 #> # A tibble: 32 x 7
 #>    rx    node4 depth     n description median quantile
 #>    <fct> <dbl> <dbl> <dbl> <chr>        <dbl>    <dbl>

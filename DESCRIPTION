@@ -21,6 +21,7 @@ Imports:
     purrr,
     forcats,
     dplyr,
+    lifecycle (>= 0.2.0),
     tidyr (>= 1.1),
     tibble,
     ggplot2,
