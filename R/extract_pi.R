@@ -202,9 +202,9 @@ extract_medsurv_delta_pi <- function(km.pi, outtype = c("long", "wide")) {
 #' Functions to extract prediction intervals and observed data
 #'
 #' \lifecycle{deprecated}
-#' Please use [tibble::as_tibble()] instead.
+#' Please use [extract_medsurv_pi()] instead.
 #'
-#' @rdname deprecated
+#' @rdname extractpi_deprecated
 #' @export
 #' @param outtype Specifies whether output will be in long or wide format.
 #' @details

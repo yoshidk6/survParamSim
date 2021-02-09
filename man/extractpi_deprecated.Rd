@@ -11,7 +11,7 @@ extract_median_surv(km.pi, outtype = c("long", "wide"))
 }
 \description{
 \lifecycle{deprecated}
-Please use \code{\link[tibble:as_tibble]{tibble::as_tibble()}} instead.
+Please use \code{\link[=extract_medsurv_pi]{extract_medsurv_pi()}} instead.
 }
 \details{
 \code{\link{extract_median_surv}} extracts prediction intervals of

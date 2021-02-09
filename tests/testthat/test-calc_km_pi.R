@@ -30,8 +30,15 @@ test_that("Extract median quantile in wide format", {
   median.pi.quantile <- extract_medsurv_pi(km.pi, outtype ="wide")
   expect_equal(dim(median.pi.quantile), c(2, 6))
   expect_equal(names(median.pi.quantile), c("pi_low", "pi_med", "pi_high", "obs", "sex", "n"))
-
+  expect_equal(median.pi.quantile$pi_med, c(281.2, 414.8), tolerance = 0.01)
 })
+
+test_that("`extract_median_surv()` still works", {
+  withr::local_options(list(lifecycle_verbosity = "quiet"))
+  median.pi.quantile <- extract_median_surv(km.pi)
+  expect_equal(median.pi.quantile$median[1:2], c(213.2723, 281.2060), tolerance = 0.01)
+})
+
 
 test_that("summary of prediction intervals for median survival time", {
   expect_equal(summary(km.pi)$median,
