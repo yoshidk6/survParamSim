@@ -98,6 +98,7 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/yoshidk6/survParamSim">survParamSim</a></span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span></code></pre></div>
+<p>The goal of survParamSim is to perform survival simulation with parametric survival model generated from ‘survreg’ function in ‘survival’ package. In each simulation, coefficients are resampled from variance-covariance matrix of parameter estimates, in order to capture uncertainty in model parameters.</p>
 <div id="fit-model-with-survreg-function" class="section level2">
 <h2 class="hasAnchor">
 <a href="#fit-model-with-survreg-function" class="anchor"></a>Fit model with <code>survreg()</code> function</h2>
@@ -114,9 +115,9 @@ In this vignette, we will be using <code>colon</code> dataset available in <code
   <span class="co"># Same definition as Lin et al, 1994</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>rx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">rx</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Obs"</span>, <span class="st">"Lev+5FU"</span><span class="op">)</span><span class="op">)</span>,
          depth <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">extent</span> <span class="op">&lt;=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>Generating Kaplan-Meier curves for visually checking the data.<br>
+<p>Shown below are Kaplan-Meier curves for visually checking the data.<br>
 The second plot is looking at how many censoring we have over time.<br>
-Looks like we have a fairly uniform censoring between 1800 to 3000 days.</p>
+Looks like we have a fairly uniform censoring between 1800 to 3000 days - this is attributable to a steady clinical study enrollment.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">survfit.colon</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/survfit.html">survfit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">rx</span>, data <span class="op">=</span> <span class="va">colon2</span><span class="op">)</span>
 <span class="fu">survminer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survminer/man/ggsurvplot.html">ggsurvplot</a></span><span class="op">(</span><span class="va">survfit.colon</span><span class="op">)</span></code></pre></div>
@@ -200,29 +201,14 @@ It also require you to supply <code>newdata</code>, which is required even if it
 <span class="co">#&gt;     calc.obs: TRUE</span></code></pre></div>
 <p>Similar to the raw simulated object, you can have a few options for further processing - one of them is plotting prediction intervals with <code><a href="../reference/plot_km_pi.html">plot_km_pi()</a></code> function.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">km.pi</span>
-<span class="co">#&gt; ---- Simulated and observed (if calculated) survival curves ----</span>
-<span class="co">#&gt; * Use `extract_medsurv_pi()` to extract prediction intervals of median survival times</span>
-<span class="co">#&gt; * Use `extract_km_pi()` to extract prediction intervals of K-M curves</span>
-<span class="co">#&gt; * Use `plot_km_pi()` to draw survival curves</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; * Settings:</span>
-<span class="co">#&gt;     trt: rx </span>
-<span class="co">#&gt;     group: (NULL) </span>
-<span class="co">#&gt;     pi.range: 0.95 </span>
-<span class="co">#&gt;     calc.obs: TRUE</span>
-<span class="fu"><a href="../reference/plot_km_pi.html">plot_km_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span> <span class="op">+</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot_km_pi.html">plot_km_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Recurrence free rate"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html">expand_limits</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <p><img src="survParamSim_files/figure-html/km_pi_plot-1.png" width="700"></p>
-<p>Or providing median survival summary table with <code><a href="../reference/extract_median_surv.html">extract_median_surv()</a></code> function.</p>
+<p>Or providing median survival summary table with <code><a href="../reference/extract_hr_pi.html">extract_medsurv_pi()</a></code> function.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/extract_median_surv.html">extract_median_surv</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span>
-<span class="co">#&gt; Warning: `extract_median_surv()` is deprecated as of survParamSim 0.1.5.</span>
-<span class="co">#&gt; Please use `extract_medsurv_pi()` instead.</span>
-<span class="co">#&gt; This warning is displayed once every 8 hours.</span>
-<span class="co">#&gt; Call `lifecycle::last_warnings()` to see where this warning was generated.</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/extract_hr_pi.html">extract_medsurv_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 8 x 5</span>
 <span class="co">#&gt;   rx          n description median quantile</span>
 <span class="co">#&gt;   &lt;fct&gt;   &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;</span>
