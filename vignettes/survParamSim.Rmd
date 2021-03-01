@@ -23,6 +23,9 @@ library(survParamSim)
 set.seed(12345)
 ```
 
+The goal of survParamSim is to perform survival simulation with parametric survival model generated from 'survreg' function in 'survival' package. 
+In each simulation, coefficients are resampled from variance-covariance matrix of parameter estimates, in order to capture uncertainty in model parameters.
+
 ## Fit model with `survreg()` function
 
 Before running a parametric survival simulation, you need to fit a model to your data using `survreg()` function of `survival` package.  
@@ -42,9 +45,9 @@ colon2 <-
          depth = as.numeric(extent <= 2))
 ```
 
-Generating Kaplan-Meier curves for visually checking the data.  
+Shown below are Kaplan-Meier curves for visually checking the data.  
 The second plot is looking at how many censoring we have over time.  
-Looks like we have a fairly uniform censoring between 1800 to 3000 days.
+Looks like we have a fairly uniform censoring between 1800 to 3000 days - this is attributable to a steady clinical study enrollment.
 
 ```{r plot_raw_data}
 survfit.colon <- survfit(Surv(time, status) ~ rx, data = colon2)
@@ -103,17 +106,16 @@ km.pi
 Similar to the raw simulated object, you can have a few options for further processing - one of them is plotting prediction intervals with `plot_km_pi()` function.
 
 ```{r km_pi_plot}
-km.pi
 plot_km_pi(km.pi) +
   theme(legend.position = "bottom") +
   labs(y = "Recurrence free rate") +
   expand_limits(y = 0)
 ```
 
-Or providing median survival summary table with `extract_median_surv()` function.
+Or providing median survival summary table with `extract_medsurv_pi()` function.
 
 ```{r km_pi_table}
-extract_median_surv(km.pi)
+extract_medsurv_pi(km.pi)
 ```
 
 Plot can also be made for subgroups.  
