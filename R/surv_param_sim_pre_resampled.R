@@ -25,20 +25,12 @@
 surv_param_sim_pre_resampled <- function(object, newdata.orig, newdata.resampled, censor.dur = NULL){
 
 
-
-
-  ###############
-  ###############
-  # test_that("Check N consistent across reps", {
-  # })
-  #
   check_data_n_per_resample(newdata.resampled)
 
   check_data_na_resample(newdata.orig, object)
   check_data_na_resample(newdata.resampled, object)
 
-  ###############
-  ###############
+
 
   newdata.resampled <-
     newdata.resampled %>%

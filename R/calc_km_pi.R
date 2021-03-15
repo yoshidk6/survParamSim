@@ -130,7 +130,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     sim.km %>%
     dplyr::select(-data, -kmfit) %>%
     unnest2(km) %>%
-    dplyr::group_by(!!!trt.syms, !!!group.syms, n, time) %>%
+    dplyr::group_by(!!!trt.syms, !!!group.syms, time) %>%
     nest2() %>%
     dplyr::mutate(quantiles = purrr::map(data, function(x)
       dplyr::summarize(x,
@@ -154,13 +154,25 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
   sim.median.pi <-
     sim.median.time %>%
-    dplyr::group_by(!!!trt.syms, !!!group.syms, n) %>%
+    dplyr::group_by(!!!trt.syms, !!!group.syms) %>%
     dplyr::summarize(pi_low = as.numeric(stats::quantile(median, probs = 0.5 - pi.range/2, na.rm = TRUE)),
                      pi_med = as.numeric(stats::quantile(median, probs = 0.5, na.rm = TRUE)),
-                     pi_high= as.numeric(stats::quantile(median, probs = 0.5 + pi.range/2, na.rm = TRUE))) %>%
+                     pi_high= as.numeric(stats::quantile(median, probs = 0.5 + pi.range/2, na.rm = TRUE)),
+                     n_min = min(n),
+                     n_max = max(n)) %>%
     dplyr::ungroup() %>%
     tidyr::gather(description, median, pi_low:pi_high) %>%
     dplyr::left_join(quantiles, by = "description")
+
+  if(identical(sim.median.pi$n_min, sim.median.pi$n_max)) {
+    sim.median.pi <-
+      sim.median.pi %>%
+      dplyr::mutate(n = n_min) %>%
+      dplyr::select(-n_min, -n_max)
+  } else {
+    warning("N of subjects in subgroups are not consistent across simulation replications.
+            Consider stratified resampling e.g. by `strat.resample` in `surv_param_sim_resample()`")
+  }
 
   if(calc.obs){
     obs.median <-
