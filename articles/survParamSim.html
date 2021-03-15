@@ -188,6 +188,10 @@ It also require you to supply <code>newdata</code>, which is required even if it
 <p>To calculate survival curves for each simulated dataset, <code><a href="../reference/calc_km_pi.html">calc_km_pi()</a></code> can be used on the simulated object above.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">km.pi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_km_pi.html">calc_km_pi</a></span><span class="op">(</span><span class="va">sim</span>, trt <span class="op">=</span> <span class="st">"rx"</span><span class="op">)</span>
+<span class="co">#&gt; Warning in calc_km_pi(sim, trt = "rx"): 70 of 200 simulations (#rep * #trt</span>
+<span class="co">#&gt; * #group) did not reach median survival time and these are not included for</span>
+<span class="co">#&gt; prediction interval calculation. You may want to delay the `censor.dur` in</span>
+<span class="co">#&gt; simulation.</span>
 <span class="va">km.pi</span>
 <span class="co">#&gt; ---- Simulated and observed (if calculated) survival curves ----</span>
 <span class="co">#&gt; * Use `extract_medsurv_pi()` to extract prediction intervals of median survival times</span>
@@ -210,20 +214,24 @@ It also require you to supply <code>newdata</code>, which is required even if it
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/extract_hr_pi.html">extract_medsurv_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 8 x 5</span>
-<span class="co">#&gt;   rx      description median quantile     n</span>
-<span class="co">#&gt;   &lt;fct&gt;   &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 Obs     pi_low       1108.    0.025   315</span>
-<span class="co">#&gt; 2 Obs     pi_med       1538.    0.5     315</span>
-<span class="co">#&gt; 3 Obs     pi_high      2113.    0.975   315</span>
-<span class="co">#&gt; 4 Obs     obs          1236    NA       315</span>
-<span class="co">#&gt; 5 Lev+5FU pi_low       2126.    0.025   304</span>
-<span class="co">#&gt; 6 Lev+5FU pi_med       2697.    0.5     304</span>
-<span class="co">#&gt; 7 Lev+5FU pi_high      2927.    0.975   304</span>
-<span class="co">#&gt; 8 Lev+5FU obs            NA    NA       304</span></code></pre></div>
+<span class="co">#&gt;   rx          n description median quantile</span>
+<span class="co">#&gt;   &lt;fct&gt;   &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Obs       315 pi_low       1108.    0.025</span>
+<span class="co">#&gt; 2 Obs       315 pi_med       1538.    0.5  </span>
+<span class="co">#&gt; 3 Obs       315 pi_high      2113.    0.975</span>
+<span class="co">#&gt; 4 Obs       315 obs          1236    NA    </span>
+<span class="co">#&gt; 5 Lev+5FU   304 pi_low       2126.    0.025</span>
+<span class="co">#&gt; 6 Lev+5FU   304 pi_med       2697.    0.5  </span>
+<span class="co">#&gt; 7 Lev+5FU   304 pi_high      2927.    0.975</span>
+<span class="co">#&gt; 8 Lev+5FU   304 obs            NA    NA</span></code></pre></div>
 <p>Plot can also be made for subgroups.<br>
 You can see that prediction interval is wide for (depth: 1 &amp; nodes4: 1) group, mainly due to small number of subjects</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">km.pi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_km_pi.html">calc_km_pi</a></span><span class="op">(</span><span class="va">sim</span>, trt <span class="op">=</span> <span class="st">"rx"</span>, group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"node4"</span>, <span class="st">"depth"</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; Warning in calc_km_pi(sim, trt = "rx", group = c("node4", "depth")): 339 of 800</span>
+<span class="co">#&gt; simulations (#rep * #trt * #group) did not reach median survival time and these</span>
+<span class="co">#&gt; are not included for prediction interval calculation. You may want to delay the</span>
+<span class="co">#&gt; `censor.dur` in simulation.</span>
 
 <span class="fu"><a href="../reference/plot_km_pi.html">plot_km_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">+</span>

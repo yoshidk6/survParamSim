@@ -141,14 +141,12 @@ lognormal, weibull, loglogistic, and gaussian distributions.</p></td>
     <tr>
       <th>newdata.orig</th>
       <td><p>A required data frame for simulation that contain covariates in
-the survival model. Subjects with NA for covariates in <code>survreg</code> model are not allowed for this
-function.</p></td>
+the survival model.</p></td>
     </tr>
     <tr>
       <th>newdata.resampled</th>
-      <td><p>A required input, the already resampled dataset for simulation. This dataset must have:
-- <code>rep</code> variable indicating the #simulation groups
-- The same number of subjects per each <code>rep</code></p></td>
+      <td><p>A required input, the already resampled dataset for simulation.
+This dataset must have: (a) <code>rep</code> variable indicating the #simulation groups, and (b) the same number of subjects per each <code>rep</code></p></td>
     </tr>
     <tr>
       <th>censor.dur</th>
