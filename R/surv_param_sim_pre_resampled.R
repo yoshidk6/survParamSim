@@ -1,25 +1,22 @@
+#' Simulation of parametric survival model with an already-resampled dataset
+#'
 #' @rdname survparamsim_pre_resampled
 #' @export
 #' @param object A `survreg` class object. Currently accept exponential,
 #'   lognormal, weibull, loglogistic, and gaussian distributions.
-#' @param newdata.orig AAAA
-#'
-#'   Subjects with NA for covariates in `survreg` model are not allowed for this
+#' @param newdata.orig  A required data frame for simulation that contain covariates in
+#'   the survival model. Subjects with NA for covariates in `survreg` model are not allowed for this
 #'   function.
-#' @param newdata.resampled AAAA
-#'   already resampled
-#'   Some specifications:
-#'     - rep must be used
-#'     - Same number of subjects per rep (if subgroup in HR or KM, stratify for these variables too)
+#' @param newdata.resampled A required input, the already resampled dataset for simulation. This dataset must have:
+#'     - `rep` variable indicating the #simulation groups
+#'     - The same number of subjects per each `rep`
 #' @param censor.dur A two elements vector specifying duration of events
 #'   censoring. Censoring time will be calculated with uniform distribution
 #'   between two numbers. No censoring will be applied if NULL is provided.
 #' @return A `survparamsim` object that contains the original `survreg` class
 #'   object, newdata, and a data frame for predicted survival profiles.
 #' @details
-#' See \code{\link{surv_param_sim}} for additional details.
-#' \code{\link{surv_param_sim_pre_resampled}} performs simulations on an already-
-#'  resampled dataset.
+#' See `surv_param_sim()` for additional details.
 #'
 #'
 surv_param_sim_pre_resampled <- function(object, newdata.orig, newdata.resampled, censor.dur = NULL){

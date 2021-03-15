@@ -38,7 +38,8 @@ long enough so that simulated KM plot will be long enough for
 \code{\link{plot_km_pi}} to draw simulated survival curves.
 
 Subjects with NA for covariates in \code{survreg} model will be removed from
-the simulation and subsequent plotting of observed data.}
+the simulation and subsequent plotting of observed data. Subjects with NA
+are not allowed in \code{surv_param_sim_resmple()} function.}
 
 \item{n.rep}{An integer defining numbers of parametric bootstrap runs}
 
@@ -59,7 +60,8 @@ If \code{strat.resample} is provided, this needs to be a vector of the length
 equal to the number of categories in the stratification variable.}
 
 \item{strat.resample}{String specifying stratification variable for
-resampling.}
+resampling. Currently only one variable is allowed. If you need more than one,
+create a new variable e.g. by `interaction()``}
 }
 \value{
 A \code{survparamsim} object that contains the original \code{survreg} class
