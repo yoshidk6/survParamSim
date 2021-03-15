@@ -210,16 +210,16 @@ It also require you to supply <code>newdata</code>, which is required even if it
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/extract_hr_pi.html">extract_medsurv_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 8 x 5</span>
-<span class="co">#&gt;   rx          n description median quantile</span>
-<span class="co">#&gt;   &lt;fct&gt;   &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 Obs       315 pi_low       1108.    0.025</span>
-<span class="co">#&gt; 2 Obs       315 pi_med       1538.    0.5  </span>
-<span class="co">#&gt; 3 Obs       315 pi_high      2113.    0.975</span>
-<span class="co">#&gt; 4 Obs       315 obs          1236    NA    </span>
-<span class="co">#&gt; 5 Lev+5FU   304 pi_low       2126.    0.025</span>
-<span class="co">#&gt; 6 Lev+5FU   304 pi_med       2697.    0.5  </span>
-<span class="co">#&gt; 7 Lev+5FU   304 pi_high      2927.    0.975</span>
-<span class="co">#&gt; 8 Lev+5FU   304 obs            NA    NA</span></code></pre></div>
+<span class="co">#&gt;   rx      description median quantile     n</span>
+<span class="co">#&gt;   &lt;fct&gt;   &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Obs     pi_low       1108.    0.025   315</span>
+<span class="co">#&gt; 2 Obs     pi_med       1538.    0.5     315</span>
+<span class="co">#&gt; 3 Obs     pi_high      2113.    0.975   315</span>
+<span class="co">#&gt; 4 Obs     obs          1236    NA       315</span>
+<span class="co">#&gt; 5 Lev+5FU pi_low       2126.    0.025   304</span>
+<span class="co">#&gt; 6 Lev+5FU pi_med       2697.    0.5     304</span>
+<span class="co">#&gt; 7 Lev+5FU pi_high      2927.    0.975   304</span>
+<span class="co">#&gt; 8 Lev+5FU obs            NA    NA       304</span></code></pre></div>
 <p>Plot can also be made for subgroups.<br>
 You can see that prediction interval is wide for (depth: 1 &amp; nodes4: 1) group, mainly due to small number of subjects</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">

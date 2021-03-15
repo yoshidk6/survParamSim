@@ -162,7 +162,8 @@ observed data. Survival information can be dummy data, but time need to be
 long enough so that simulated KM plot will be long enough for
 <code><a href='plot_km_pi.html'>plot_km_pi</a></code> to draw simulated survival curves.</p>
 <p>Subjects with NA for covariates in <code>survreg</code> model will be removed from
-the simulation and subsequent plotting of observed data.</p></td>
+the simulation and subsequent plotting of observed data. Subjects with NA
+are not allowed in <code>surv_param_sim_resmple()</code> function.</p></td>
     </tr>
     <tr>
       <th>n.rep</th>
@@ -195,7 +196,8 @@ equal to the number of categories in the stratification variable.</p></td>
     <tr>
       <th>strat.resample</th>
       <td><p>String specifying stratification variable for
-resampling.</p></td>
+resampling. Currently only one variable is allowed. If you need more than one,
+create a new variable e.g. by `interaction()``</p></td>
     </tr>
     </table>
 
