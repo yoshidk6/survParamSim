@@ -19,9 +19,8 @@ lognormal, weibull, loglogistic, and gaussian distributions.}
 the survival model. Subjects with NA for covariates in \code{survreg} model are not allowed for this
 function.}
 
-\item{newdata.resampled}{A required input, the already resampled dataset for simulation. This dataset must have:
-- \code{rep} variable indicating the #simulation groups
-- The same number of subjects per each \code{rep}}
+\item{newdata.resampled}{A required input, the already resampled dataset for simulation.
+This dataset must have: (a) \code{rep} variable indicating the #simulation groups, and (b) the same number of subjects per each \code{rep}}
 
 \item{censor.dur}{A two elements vector specifying duration of events
 censoring. Censoring time will be calculated with uniform distribution

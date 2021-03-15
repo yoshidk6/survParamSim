@@ -7,9 +7,8 @@
 #' @param newdata.orig  A required data frame for simulation that contain covariates in
 #'   the survival model. Subjects with NA for covariates in `survreg` model are not allowed for this
 #'   function.
-#' @param newdata.resampled A required input, the already resampled dataset for simulation. This dataset must have:
-#'     - `rep` variable indicating the #simulation groups
-#'     - The same number of subjects per each `rep`
+#' @param newdata.resampled A required input, the already resampled dataset for simulation.
+#'  This dataset must have: (a) `rep` variable indicating the #simulation groups, and (b) the same number of subjects per each `rep`
 #' @param censor.dur A two elements vector specifying duration of events
 #'   censoring. Censoring time will be calculated with uniform distribution
 #'   between two numbers. No censoring will be applied if NULL is provided.
