@@ -24,6 +24,11 @@
 #'
 surv_param_sim_pre_resampled <- function(object, newdata.orig, newdata.resampled, censor.dur = NULL){
 
+  # Replace nest with packageVersion("tidyr") == '1.0.0' for a speed issue
+  # See https://github.com/tidyverse/tidyr/issues/751
+  nest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::nest_legacy, tidyr::nest)
+  unnest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
+
 
   check_data_n_per_resample(newdata.resampled)
 
@@ -35,18 +40,31 @@ surv_param_sim_pre_resampled <- function(object, newdata.orig, newdata.resampled
   newdata.resampled <-
     newdata.resampled %>%
     dplyr::arrange(rep) %>%
-    dplyr::rename(.rep.pre.resample = rep) %>%
     dplyr::mutate(subj.sim.all = dplyr::row_number())
 
-  sim <-
-    surv_param_sim(object, newdata = newdata.resampled, n.rep = 1, censor.dur = censor.dur,  na.warning = TRUE)
 
-  sim.sim <-
-    sim$sim %>%
-    dplyr::left_join(dplyr::select(extract_sim(sim), subj.sim, .rep.pre.resample, subj.sim.all), by = "subj.sim") %>%
-    dplyr::select(-rep, -subj.sim) %>%
-    dplyr::rename(rep = .rep.pre.resample,
-                  subj.sim = subj.sim.all)
+  newdata.resampled.nested <-
+    newdata.resampled %>%
+    dplyr::group_by(rep) %>%
+    nest2()
+
+
+  simulate_each <- function(data, object, censor.dur){
+    sim.each <- surv_param_sim(object, data, n.rep = 1, censor.dur = censor.dur,  na.warning = FALSE)
+
+    sim.each.sim <-
+      sim.each$sim %>%
+      dplyr::left_join(dplyr::select(sim.each$newdata.nona.sim, subj.sim, subj.sim.all), by = "subj.sim") %>%
+      dplyr::mutate(subj.sim = subj.sim.all) %>%
+      dplyr::select(-subj.sim.all, -rep)
+  }
+
+  sim <-
+    newdata.resampled.nested %>%
+    dplyr::mutate(sim = purrr::map(data, simulate_each, object = object, censor.dur = censor.dur)) %>%
+    dplyr::select(-data) %>%
+    unnest2(sim) %>%
+    dplyr::ungroup()
 
 
   # Generate newdata.nona.obs and t.last.orig.new from non-resample data
@@ -60,9 +78,8 @@ surv_param_sim_pre_resampled <- function(object, newdata.orig, newdata.resampled
   out$t.last.orig.new <- sim.wo.resample$t.last.orig.new
   out$newdata.nona.obs <- sim.wo.resample$newdata.nona.obs
   out$newdata.nona.sim <- dplyr::rename(newdata.resampled,
-                                        rep = .rep.pre.resample,
                                         subj.sim = subj.sim.all) # Used for grouping assignment in sim HR & K-M
-  out$sim <- sim.sim
+  out$sim <- sim
   out$censor.dur <- censor.dur
 
   structure(out, class = c("survparamsim_pre_resampled", "survparamsim"))

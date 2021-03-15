@@ -170,8 +170,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
       dplyr::mutate(n = n_min) %>%
       dplyr::select(-n_min, -n_max)
   } else {
-    warning("N of subjects in subgroups are not consistent across simulation replications.
-            Consider stratified resampling e.g. by `strat.resample` in `surv_param_sim_resample()`")
+    warning("N of subjects in subgroups are not consistent across simulation replications. Consider stratified resampling e.g. by `strat.resample` in `surv_param_sim_resample()`")
   }
 
   if(calc.obs){

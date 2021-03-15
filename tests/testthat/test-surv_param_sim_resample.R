@@ -36,3 +36,8 @@ test_that("Extracted HR size matches", {
                c(n.rep, 2))
 })
 
+test_that("Warning with n per subgroup not consistent", {
+  expect_warning(calc_km_pi(sim.resample, trt = "sex", group = "ph.ecog"))
+})
+
+
