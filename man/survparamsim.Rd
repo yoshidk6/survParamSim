@@ -38,8 +38,7 @@ long enough so that simulated KM plot will be long enough for
 \code{\link{plot_km_pi}} to draw simulated survival curves.
 
 Subjects with NA for covariates in \code{survreg} model will be removed from
-the simulation and subsequent plotting of observed data. Subjects with NA
-are not allowed in \code{surv_param_sim_resmple()} function.}
+the simulation and subsequent plotting of observed data.}
 
 \item{n.rep}{An integer defining numbers of parametric bootstrap runs}
 

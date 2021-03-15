@@ -18,8 +18,7 @@
 #'   \code{\link{plot_km_pi}} to draw simulated survival curves.
 #'
 #'   Subjects with NA for covariates in `survreg` model will be removed from
-#'   the simulation and subsequent plotting of observed data. Subjects with NA
-#'   are not allowed in `surv_param_sim_resmple()` function.
+#'   the simulation and subsequent plotting of observed data.
 #' @param n.rep An integer defining numbers of parametric bootstrap runs
 #' @param censor.dur A two elements vector specifying duration of events
 #'   censoring. Censoring time will be calculated with uniform distribution
