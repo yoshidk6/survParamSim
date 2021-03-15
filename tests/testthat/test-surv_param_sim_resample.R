@@ -19,10 +19,10 @@ sim.resample <- surv_param_sim_resample(object, newdata, n.rep, censor.dur, n.re
 sim.resample.nostrat <- surv_param_sim_resample(object, newdata, n.rep, censor.dur, n.resample = 100)
 
 
-test_that("Error if NA present in covariates", {
-  expect_error(surv_param_sim_resample(object,
-                                       newdata = tibble::as_tibble(dplyr::select(lung, time, status, sex, ph.ecog))))
-})
+# test_that("Error if NA present in covariates", {
+#   expect_error(surv_param_sim_resample(object,
+#                                        newdata = tibble::as_tibble(dplyr::select(lung, time, status, sex, ph.ecog))))
+# })
 
 test_that("Simulated data fame size matches", {
   expect_equal(dim(sim.resample$sim),
@@ -40,4 +40,11 @@ test_that("Warning with n per subgroup not consistent", {
   expect_warning(calc_km_pi(sim.resample, trt = "sex", group = "ph.ecog"))
 })
 
+
+test_that("Expect warning for unbalanced subjects due to NA", {
+  newdata.withna <- tibble::as_tibble(dplyr::select(lung, time, status, sex, ph.ecog))
+
+  sim.resample.withna <- suppressWarnings(surv_param_sim_resample(object, newdata.withna, n.rep, censor.dur, n.resample, strat.resample = c("sex")))
+  expect_warning(calc_km_pi(sim.resample.withna))
+})
 

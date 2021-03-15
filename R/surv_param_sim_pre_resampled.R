@@ -5,8 +5,7 @@
 #' @param object A `survreg` class object. Currently accept exponential,
 #'   lognormal, weibull, loglogistic, and gaussian distributions.
 #' @param newdata.orig  A required data frame for simulation that contain covariates in
-#'   the survival model. Subjects with NA for covariates in `survreg` model are not allowed for this
-#'   function.
+#'   the survival model.
 #' @param newdata.resampled A required input, the already resampled dataset for simulation.
 #'  This dataset must have: (a) `rep` variable indicating the #simulation groups, and (b) the same number of subjects per each `rep`
 #' @param censor.dur A two elements vector specifying duration of events
@@ -28,8 +27,8 @@ surv_param_sim_pre_resampled <- function(object, newdata.orig, newdata.resampled
 
   check_data_n_per_resample(newdata.resampled)
 
-  check_data_na_resample(newdata.orig, object)
-  check_data_na_resample(newdata.resampled, object)
+  # check_data_na_resample(newdata.orig, object)
+  # check_data_na_resample(newdata.resampled, object)
 
 
 

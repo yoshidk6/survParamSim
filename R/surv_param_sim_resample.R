@@ -14,7 +14,7 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
   nest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::nest_legacy, tidyr::nest)
   unnest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
 
-  check_data_na_resample(newdata, object)
+  # check_data_na_resample(newdata, object)
 
   resample_per_strat <- function(data, n.resample, n.rep){
     dplyr::sample_n(data, n.resample * n.rep, replace = TRUE) %>%
@@ -98,7 +98,7 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
 
 
 
-
+# Currently not in use
 check_data_na_resample <- function(data, object) {
 
   # Prep data matrix for simulation

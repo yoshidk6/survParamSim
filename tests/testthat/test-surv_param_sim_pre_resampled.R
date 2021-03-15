@@ -34,13 +34,30 @@ test_that("Check N consistent across reps", {
                                             censor.dur = censor.dur))
 })
 
+test_that("Expect warning for unbalanced subjects due to NA", {
+  newdata.withna <- tibble::as_tibble(dplyr::select(lung, time, status, sex, ph.ecog))
 
-test_that("Error if NA present in covariates", {
-  expect_error(surv_param_sim_pre_resampled(object,
-                                            newdata.orig = tibble::as_tibble(dplyr::select(lung, time, status, sex, ph.ecog)),
-                                            newdata.resampled = newdata.resampled,
-                                            censor.dur = censor.dur))
+  sim.resample.withna <- suppressWarnings(surv_param_sim_resample(object, newdata.withna, n.rep=100, censor.dur, n.resample, strat.resample = c("sex")))
+  newdata.resampled.withna <-
+    sim.resample.withna$newdata.nona.sim %>%
+    dplyr::select(-subj.sim, -n.resample)
+
+  sim.pre.resample.withna <-
+    expect_warning(surv_param_sim_pre_resampled(object,
+                                                newdata.orig = newdata.withna,
+                                                newdata.resampled = newdata.resampled.withna,
+                                                censor.dur = censor.dur))
+
+  expect_warning(calc_km_pi(sim.pre.resample.withna))
 })
+
+
+# test_that("Error if NA present in covariates", {
+#   expect_error(surv_param_sim_pre_resampled(object,
+#                                             newdata.orig = tibble::as_tibble(dplyr::select(lung, time, status, sex, ph.ecog)),
+#                                             newdata.resampled = newdata.resampled,
+#                                             censor.dur = censor.dur))
+# })
 
 
 
