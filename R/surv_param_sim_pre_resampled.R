@@ -4,8 +4,7 @@
 #' @export
 #' @param object A `survreg` class object. Currently accept exponential,
 #'   lognormal, weibull, loglogistic, and gaussian distributions.
-#' @param newdata.orig  A required data frame for simulation that contain covariates in
-#'   the survival model.
+#' @param newdata.orig  A required input needed for calculating KM and HR for the observed data.
 #' @param newdata.resampled A required input, the already resampled dataset for simulation.
 #'  This dataset must have: (a) `rep` variable indicating the #simulation groups, and (b) the same number of subjects per each `rep`
 #' @param censor.dur A two elements vector specifying duration of events
