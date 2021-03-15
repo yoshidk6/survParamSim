@@ -29,23 +29,12 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   trt.syms   <- rlang::syms(trt)
   group.syms <- rlang::syms(group)
 
-  # Calc time for output
-  formula <-
-    paste(attributes(formula(sim$survreg))$variables,"~1")[2] %>%
-    stats::as.formula()
-
-  ## Last observed time
-  ## Calculate last time from original dataset just in case newdata's survival data is dummy
-  t.last.newdata  <- survival::survfit(formula, data = sim$newdata) %>% .$time
-  t.last.origdata <- as.numeric(sim$survreg$y[,1])
-
-  t.last <-max(c(t.last.newdata, t.last.origdata))
 
   ## time for output
   if(is.null(simtimelast)){
-    t.out <- seq(0, t.last, length.out = 100)
+    t.out <- seq(0, sim$t.last.orig.new, length.out = 100)
   } else {
-    t.out <- seq(0, simtimelast, length.out = round(100 * max(simtimelast/t.last, 1)))
+    t.out <- seq(0, simtimelast, length.out = round(100 * max(simtimelast/sim$t.last.orig.new, 1)))
   }
 
 
@@ -199,7 +188,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   out$trt   <- trt
 
   out$simtimelast <- simtimelast
-  out$t.last <- t.last
+  out$t.last <- sim$t.last.orig.new
   out$censor.dur <- sim$censor.dur
 
   out$obs.km <- obs.km

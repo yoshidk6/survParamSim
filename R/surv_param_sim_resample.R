@@ -13,6 +13,8 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
   nest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::nest_legacy, tidyr::nest)
   unnest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
 
+  check_data_na_resample(newdata, object)
+
   resample_per_strat <- function(data, n.resample, n.rep){
     dplyr::sample_n(data, n.resample * n.rep, replace = TRUE) %>%
       dplyr::mutate(rep = rep(1:n.rep, each = n.resample))
@@ -84,12 +86,32 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
   out <- list()
 
   out$survreg <- object
-  out$newdata <- newdata
+  out$t.last.orig.new <- sim.wo.resample$t.last.orig.new
   out$newdata.nona.obs <- sim.wo.resample$newdata.nona.obs
-  ## Currently NA is not removed in out$newdata.nona.sim, should be fine for now
   out$newdata.nona.sim <- dplyr::rename(newdata.resampled, subj.sim = subj.sim.all)
   out$sim <- sim
   out$censor.dur <- censor.dur
 
   structure(out, class = c("survparamsim_resample", "survparamsim"))
 }
+
+
+
+
+check_data_na_resample <- function(data, object) {
+
+  # Prep data matrix for simulation
+  mf <- stats::model.frame(object, data = data)
+  rdata <- stats::model.matrix(object, mf)
+  ## Get #subjects and subject IDs, after NA excluded by model.frame()
+  n.subj <- nrow(mf)
+
+  if(n.subj == 0) {
+    stop("No subjects present in `newdata` for simulation. It might be because all subjects has NA in model variables (including survival and censoring status)")
+  }
+  if(n.subj < nrow(data)) {
+    stop("`surv_param_sim_resample()` and `surv_param_sim_pre_resample()` do not allow subjects with NA for model variables")
+  }
+
+}
+

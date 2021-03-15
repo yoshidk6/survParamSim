@@ -20,6 +20,13 @@ extract_sim <- function(sim) {
       dplyr::left_join(sim$sim, ., by = c("rep", "subj.sim")) %>%
       dplyr::select(rep, subj.sim, time, event, dplyr::everything())
 
+  } else if(methods::is(sim, "survparamsim_pre_resampled")){
+    sim.merged.with.cov <-
+      sim$newdata.nona.sim %>%
+      dplyr::select(-time.var, -status.var) %>%
+      dplyr::left_join(sim$sim, ., by = c("rep", "subj.sim")) %>%
+      dplyr::select(rep, subj.sim, time, event, dplyr::everything())
+
   } else {
     sim.merged.with.cov <-
       sim$newdata.nona.sim %>%

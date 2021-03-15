@@ -7,7 +7,9 @@ fit.lung <- survreg(Surv(time, status) ~ sex + ph.ecog, data = lung)
 
 object <- fit.lung
 n.rep  <-  30
-newdata <- tibble::as_tibble(dplyr::select(lung, time, status, sex, ph.ecog))
+newdata <-
+  tibble::as_tibble(dplyr::select(lung, time, status, sex, ph.ecog)) %>%
+  dplyr::mutate(.id.orig = dplyr::row_number())
 censor.dur <- c(200, 1100)
 
 
@@ -21,4 +23,10 @@ test_that("have NA in dataset", {
                  "Not all subjects in `newdata`")
 })
 
+
+
+test_that("make sure missing NA subjects were removed", {
+  ids.in.sim <- extract_sim(sim) %>% dplyr::pull(.id.orig) %>% unique()
+  expect_false(14 %in% ids.in.sim) # 14 is subject with NA in ph.ecog
+})
 

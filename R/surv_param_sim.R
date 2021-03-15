@@ -174,13 +174,24 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
     dplyr::filter(subj.sim %in% subj.sim.id)
 
 
+  ## Last observed time to be used for KM calculations
+  ### Calculate last time from original dataset just in case newdata's survival data is dummy
+  formula <-
+    paste(attributes(formula(object))$variables,"~1")[2] %>%
+    stats::as.formula()
+
+  t.last.newdata  <- survival::survfit(formula, data = newdata) %>% .$time
+  t.last.origdata <- as.numeric(object$y[,1])
+
+  t.last.orig.new <-max(c(t.last.newdata, t.last.origdata))
+
   # Create a list for output
   out <- list()
 
   out$survreg <- object
-  out$newdata <- newdata
-  out$newdata.nona.obs <- newdata.nona
-  out$newdata.nona.sim <- newdata.nona
+  out$t.last.orig.new <- t.last.orig.new
+  out$newdata.nona.obs <- newdata.nona # Used for obs HR & KM calculation
+  out$newdata.nona.sim <- newdata.nona # Used for grouping assignment in sim HR & K-M
   out$sim <- sim
   out$censor.dur <- censor.dur
 
