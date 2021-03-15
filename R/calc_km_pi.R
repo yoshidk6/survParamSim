@@ -22,7 +22,6 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   unnest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
 
   ###### Need to throw an error if grouping variable is not present in newdata
-# browser()
 
   if(length(trt) > 1) stop("`trt` can only take one string")
 
@@ -163,6 +162,30 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     dplyr::ungroup() %>%
     tidyr::gather(description, median, pi_low:pi_high) %>%
     dplyr::left_join(quantiles, by = "description")
+
+  # Check NA in median time and give warning
+  median.time.na.detail <-
+    sim.median.time %>%
+    dplyr::mutate(is.median.na = is.na(median)) %>%
+    dplyr::group_by(!!!trt.syms, !!!group.syms) %>%
+    dplyr::summarize(N.median.NA = sum(is.median.na),
+                    N.all = dplyr::n()) %>%
+    dplyr::ungroup()
+
+  median.time.na.overall <-
+    median.time.na.detail %>%
+    dplyr:: summarize(N.median.NA = sum(N.median.NA),
+                      N.all = sum(N.all))
+
+  if (median.time.na.overall$N.median.NA > 0) {
+    warning(paste0(median.time.na.overall$N.median.NA, " of ", median.time.na.overall$N.all,
+                   " simulations (#rep * #trt * #group) did not reach median survival time and",
+                   " these are not included for prediction interval calculation. You may",
+                   " want to delay the `censor.dur` in simulation."))
+  }
+
+
+
 
   if(identical(sim.median.pi$n_min, sim.median.pi$n_max)) {
     sim.median.pi <-

@@ -14,7 +14,6 @@ newdata2 <-
   dplyr::filter(ph.ecog != 3)
 censor.dur <- c(200, 1100)
 
-
 sim <- suppressWarnings(surv_param_sim(object, newdata, n.rep, censor.dur))
 km.pi <- calc_km_pi(sim, group = "sex")
 
@@ -76,7 +75,8 @@ test_that("grouping and trt", {
   plot.km.sex <- plot_km_pi(calc_km_pi(sim, trt = "sex"))
   expect_doppelganger("km plot with sex as trt", plot.km.sex)
 
-  plot.km.sex.ecog <- plot_km_pi(calc_km_pi(sim, group = c("sex", "ph.ecog")))
+  km.pi.sex.ecog <- suppressWarnings(calc_km_pi(sim, group = c("sex", "ph.ecog")))
+  plot.km.sex.ecog <- plot_km_pi(km.pi.sex.ecog)
   expect_doppelganger("km plot with sex and ph.ecog as group", plot.km.sex.ecog)
 })
 
@@ -97,15 +97,6 @@ test_that("median survival delta", {
 })
 
 
-test_that("long simulation time", {
-  km.pi.longsim <- calc_km_pi(sim, group = "sex", simtimelast = 2000)
-
-  expect_doppelganger("long sim time, not truncating with censor", plot_km_pi(km.pi.longsim, trunc.sim.censor = FALSE))
-  expect_doppelganger("long sim time, truncating with censor", plot_km_pi(km.pi.longsim))
-})
-
-
-
 test_that("no group or trt", {
   km.pi.no.group.trt <- calc_km_pi(sim)
 
@@ -118,6 +109,12 @@ test_that("no group or trt", {
 
 test_that("not calculating observed KM", {
   expect_doppelganger("no observed KM curves", plot_km_pi(calc_km_pi(sim, group = "sex", calc.obs = FALSE)))
+
+})
+
+test_that("warning with immature median time simulations", {
+  sim <- suppressWarnings(surv_param_sim(object, newdata, n.rep, censor.dur = c(50, 100)))
+  expect_warning(calc_km_pi(sim, group = "sex"))
 
 })
 
