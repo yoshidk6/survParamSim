@@ -23,6 +23,13 @@ You can install the package from CRAN.
 install.packages("survParamSim")
 ```
 
+Alternatively, you can install the development version from GitHub.
+
+``` r
+# install.packages("devtools")
+devtools::install_github("yoshidk6/survParamSim")
+```
+
 ## Example
 
 [This GitHub pages](https://yoshidk6.github.io/survParamSim/) contains

@@ -26,8 +26,15 @@ In each simulation, coefficients are resampled from variance-covariance matrix o
 
 You can install the package from CRAN.
 
-``` r
+```{r, eval = FALSE}
 install.packages("survParamSim")
+```
+
+Alternatively, you can install the development version from GitHub.
+
+```{r, eval = FALSE}
+# install.packages("devtools")
+devtools::install_github("yoshidk6/survParamSim")
 ```
 
 ## Example
