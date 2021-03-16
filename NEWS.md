@@ -1,6 +1,6 @@
 
 
-# survParamSim 0.1.5 (in development)
+# survParamSim 0.1.5
 
 ## Minor changes
 
@@ -9,6 +9,10 @@
 * The `extract_median_surv()` function was deprecated and superseded by `extract_medsurv_pi()` for consistent name conventions  
 
 * New function `extract_medsurv()` will return raw median survival time per simulation
+
+* New function `surv_param_sim_pre_resampled()` enables simulation with an already resampled dataset
+
+* New function `calc_km_pi()` shows warning when there are survival simulations for which median survival times were not reached
 
 
 # survParamSim 0.1.4

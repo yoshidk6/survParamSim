@@ -10,6 +10,12 @@
 #' @param censor.dur A two elements vector specifying duration of events
 #'   censoring. Censoring time will be calculated with uniform distribution
 #'   between two numbers. No censoring will be applied if NULL is provided.
+#' @param coef.var Boolean specifying whether parametric bootstrap are
+#' performed on survival model coefficients, based on variance-covariance
+#' matrix. If FALSE, prediction interval only reflects inherent variability
+#' from survival events.
+#' @param na.warning Boolean specifying whether warning will be shown if
+#' `newdata` contain subjects with missing model variables.
 #' @return A `survparamsim` object that contains the original `survreg` class
 #'   object, newdata, and a data frame for predicted survival profiles.
 #' @details
