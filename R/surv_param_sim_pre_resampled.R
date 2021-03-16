@@ -16,7 +16,8 @@
 #' See `surv_param_sim()` for additional details.
 #'
 #'
-surv_param_sim_pre_resampled <- function(object, newdata.orig, newdata.resampled, censor.dur = NULL){
+surv_param_sim_pre_resampled <- function(object, newdata.orig, newdata.resampled, censor.dur = NULL,
+                                         coef.var = TRUE, na.warning = TRUE){
 
   # Replace nest with packageVersion("tidyr") == '1.0.0' for a speed issue
   # See https://github.com/tidyverse/tidyr/issues/751
@@ -44,7 +45,8 @@ surv_param_sim_pre_resampled <- function(object, newdata.orig, newdata.resampled
 
 
   simulate_each <- function(data, object, censor.dur){
-    sim.each <- surv_param_sim(object, data, n.rep = 1, censor.dur = censor.dur,  na.warning = FALSE)
+    sim.each <- surv_param_sim(object, data, n.rep = 1, censor.dur = censor.dur,
+                               coef.var = coef.var, na.warning = FALSE)
 
     sim.each.sim <-
       sim.each$sim %>%
@@ -62,7 +64,8 @@ surv_param_sim_pre_resampled <- function(object, newdata.orig, newdata.resampled
 
 
   # Generate newdata.nona.obs and t.last.orig.new from non-resample data
-  sim.wo.resample <- surv_param_sim(object, newdata.orig, n.rep = 1, censor.dur = censor.dur)
+  sim.wo.resample <- surv_param_sim(object, newdata.orig, n.rep = 1, censor.dur = censor.dur,
+                                    coef.var = coef.var, na.warning = na.warning)
 
 
   # Create a list for output

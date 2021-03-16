@@ -19,11 +19,6 @@ sim.resample <- surv_param_sim_resample(object, newdata, n.rep, censor.dur, n.re
 sim.resample.nostrat <- surv_param_sim_resample(object, newdata, n.rep, censor.dur, n.resample = 100)
 
 
-# test_that("Error if NA present in covariates", {
-#   expect_error(surv_param_sim_resample(object,
-#                                        newdata = tibble::as_tibble(dplyr::select(lung, time, status, sex, ph.ecog))))
-# })
-
 test_that("Simulated data fame size matches", {
   expect_equal(dim(sim.resample$sim),
                c(n.rep * sum(n.resample), 4))

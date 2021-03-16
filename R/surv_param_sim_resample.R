@@ -7,7 +7,8 @@
 #' resampling. Currently only one variable is allowed. If you need more than one,
 #' create a new variable e.g. by `interaction()``
 surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
-                                    n.resample, strat.resample = NULL){
+                                    n.resample, strat.resample = NULL,
+                                    coef.var = TRUE, na.warning = TRUE){
 
   # Replace nest with packageVersion("tidyr") == '1.0.0' for a speed issue
   # See https://github.com/tidyverse/tidyr/issues/751
@@ -62,7 +63,8 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
 
 
   simulate_each <- function(data, object, censor.dur){
-    sim.each <- surv_param_sim(object, data, n.rep = 1, censor.dur = censor.dur,  na.warning = FALSE)
+    sim.each <- surv_param_sim(object, data, n.rep = 1, censor.dur = censor.dur,
+                               coef.var = coef.var, na.warning = FALSE)
 
     sim.each.sim <-
       sim.each$sim %>%
@@ -80,7 +82,8 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
 
 
   # Generate newdata.nona.obs from non-resample data
-  sim.wo.resample <- surv_param_sim(object, newdata, n.rep = 1, censor.dur = censor.dur)
+  sim.wo.resample <- surv_param_sim(object, newdata, n.rep = 1, censor.dur = censor.dur,
+                                    coef.var = coef.var, na.warning = na.warning)
 
 
   # Create a list for output
