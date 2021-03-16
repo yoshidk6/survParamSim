@@ -4,9 +4,9 @@
 #' @export
 #' @param object A `survreg` class object. Currently accept exponential,
 #'   lognormal, weibull, loglogistic, and gaussian distributions.
-#' @param newdata.orig  An optional input needed for calculating KM and HR for the observed data.
 #' @param newdata.resampled A required input, the already resampled dataset for simulation.
 #'  This dataset must have: (a) `rep` variable indicating the #simulation groups, and (b) the same number of subjects per each `rep`
+#' @param newdata.orig  An optional input needed for calculating KM and HR for the observed data.
 #' @param censor.dur A two elements vector specifying duration of events
 #'   censoring. Censoring time will be calculated with uniform distribution
 #'   between two numbers. No censoring will be applied if NULL is provided.
@@ -22,7 +22,7 @@
 #' See `surv_param_sim()` for additional details.
 #'
 #'
-surv_param_sim_pre_resampled <- function(object, newdata.orig = NULL, newdata.resampled, censor.dur = NULL,
+surv_param_sim_pre_resampled <- function(object, newdata.resampled, newdata.orig = NULL, censor.dur = NULL,
                                          coef.var = TRUE, na.warning = TRUE){
 
   # Replace nest with packageVersion("tidyr") == '1.0.0' for a speed issue
