@@ -54,6 +54,21 @@ test_that("Expect warning for unbalanced subjects due to NA", {
 
 
 
+test_that("Expect warning for missing obs and call calc_km_pi or calc_hr_pi", {
+
+  sim.pre.resampled.no.obs <-
+    surv_param_sim_pre_resampled(object, newdata.resampled = newdata.resampled, censor.dur = censor.dur)
+
+  calc_km_pi(sim.pre.resampled.no.obs, calc.obs = FALSE)
+  calc_hr_pi(sim.pre.resampled.no.obs, calc.obs = FALSE, trt = "sex")
+
+  expect_warning(calc_km_pi(sim.pre.resampled.no.obs))
+  expect_warning(calc_hr_pi(sim.pre.resampled.no.obs, trt = "sex"))
+})
+
+
+
+
 test_that("Check pre-resampled sim matches with surv_param_sim or surv_param_sim_resample results", {
 
   skip('Too heavy to run routinely')

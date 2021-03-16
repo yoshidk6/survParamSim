@@ -21,6 +21,15 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   nest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::nest_legacy, tidyr::nest)
   unnest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
 
+
+  if(methods::is(sim, "survparamsim_pre_resampled")){
+    if(sim$newdata.orig.missing & calc.obs) {
+      warning("Original observed data not provided in `surv_param_sim_pre_resampled()` and KM will not be estimated for the observed data. Speficy `calc.obs = FALSE` to avoid this warning.")
+      calc.obs = FALSE
+    }
+  }
+
+
   ###### Need to throw an error if grouping variable is not present in newdata
 
   if(length(trt) > 1) stop("`trt` can only take one string")

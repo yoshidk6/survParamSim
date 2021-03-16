@@ -190,7 +190,7 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
 
   out$survreg <- object
   out$t.last.orig.new <- t.last.orig.new
-  out$newdata.nona.obs <- newdata.nona # Used for obs HR & KM calculation
+  out$newdata.nona.obs <- newdata.nona # Used for obs HR & KM calculation and check TRT variables in calc_hr_pi
   out$newdata.nona.sim <- newdata.nona # Used for grouping assignment in sim HR & K-M
   out$sim <- sim
   out$censor.dur <- censor.dur

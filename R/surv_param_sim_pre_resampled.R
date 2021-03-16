@@ -4,7 +4,7 @@
 #' @export
 #' @param object A `survreg` class object. Currently accept exponential,
 #'   lognormal, weibull, loglogistic, and gaussian distributions.
-#' @param newdata.orig  A required input needed for calculating KM and HR for the observed data.
+#' @param newdata.orig  An optional input needed for calculating KM and HR for the observed data.
 #' @param newdata.resampled A required input, the already resampled dataset for simulation.
 #'  This dataset must have: (a) `rep` variable indicating the #simulation groups, and (b) the same number of subjects per each `rep`
 #' @param censor.dur A two elements vector specifying duration of events
@@ -22,7 +22,7 @@
 #' See `surv_param_sim()` for additional details.
 #'
 #'
-surv_param_sim_pre_resampled <- function(object, newdata.orig, newdata.resampled, censor.dur = NULL,
+surv_param_sim_pre_resampled <- function(object, newdata.orig = NULL, newdata.resampled, censor.dur = NULL,
                                          coef.var = TRUE, na.warning = TRUE){
 
   # Replace nest with packageVersion("tidyr") == '1.0.0' for a speed issue
@@ -30,6 +30,12 @@ surv_param_sim_pre_resampled <- function(object, newdata.orig, newdata.resampled
   nest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::nest_legacy, tidyr::nest)
   unnest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
 
+  if(is.null(newdata.orig)){
+    newdata.orig <- newdata.resampled
+    newdata.orig.missing <- TRUE
+  } else {
+    newdata.orig.missing <- FALSE
+  }
 
   check_data_n_per_resample(newdata.resampled)
 
@@ -84,6 +90,8 @@ surv_param_sim_pre_resampled <- function(object, newdata.orig, newdata.resampled
                                         subj.sim = subj.sim.all) # Used for grouping assignment in sim HR & K-M
   out$sim <- sim
   out$censor.dur <- censor.dur
+
+  out$newdata.orig.missing <- newdata.orig.missing
 
   structure(out, class = c("survparamsim_pre_resampled", "survparamsim"))
 }
