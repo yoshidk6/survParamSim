@@ -125,7 +125,7 @@
 
     <pre class="usage"><span class='fu'>surv_param_sim_pre_resampled</span><span class='op'>(</span>
   <span class='va'>object</span>,
-  <span class='va'>newdata.orig</span>,
+  newdata.orig <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>newdata.resampled</span>,
   censor.dur <span class='op'>=</span> <span class='cn'>NULL</span>,
   coef.var <span class='op'>=</span> <span class='cn'>TRUE</span>,
@@ -142,7 +142,7 @@ lognormal, weibull, loglogistic, and gaussian distributions.</p></td>
     </tr>
     <tr>
       <th>newdata.orig</th>
-      <td><p>A required input needed for calculating KM and HR for the observed data.</p></td>
+      <td><p>An optional input needed for calculating KM and HR for the observed data.</p></td>
     </tr>
     <tr>
       <th>newdata.resampled</th>
