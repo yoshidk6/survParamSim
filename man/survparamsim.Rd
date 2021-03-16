@@ -20,7 +20,9 @@ surv_param_sim_resample(
   n.rep = 1000,
   censor.dur = NULL,
   n.resample,
-  strat.resample = NULL
+  strat.resample = NULL,
+  coef.var = TRUE,
+  na.warning = TRUE
 )
 }
 \arguments{

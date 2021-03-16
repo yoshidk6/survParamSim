@@ -8,7 +8,9 @@ surv_param_sim_pre_resampled(
   object,
   newdata.orig,
   newdata.resampled,
-  censor.dur = NULL
+  censor.dur = NULL,
+  coef.var = TRUE,
+  na.warning = TRUE
 )
 }
 \arguments{
@@ -23,6 +25,14 @@ This dataset must have: (a) \code{rep} variable indicating the #simulation group
 \item{censor.dur}{A two elements vector specifying duration of events
 censoring. Censoring time will be calculated with uniform distribution
 between two numbers. No censoring will be applied if NULL is provided.}
+
+\item{coef.var}{Boolean specifying whether parametric bootstrap are
+performed on survival model coefficients, based on variance-covariance
+matrix. If FALSE, prediction interval only reflects inherent variability
+from survival events.}
+
+\item{na.warning}{Boolean specifying whether warning will be shown if
+\code{newdata} contain subjects with missing model variables.}
 }
 \value{
 A \code{survparamsim} object that contains the original \code{survreg} class
