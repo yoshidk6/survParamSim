@@ -127,7 +127,9 @@
   <span class='va'>object</span>,
   <span class='va'>newdata.orig</span>,
   <span class='va'>newdata.resampled</span>,
-  censor.dur <span class='op'>=</span> <span class='cn'>NULL</span>
+  censor.dur <span class='op'>=</span> <span class='cn'>NULL</span>,
+  coef.var <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  na.warning <span class='op'>=</span> <span class='cn'>TRUE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -152,6 +154,18 @@ This dataset must have: (a) <code>rep</code> variable indicating the #simulation
       <td><p>A two elements vector specifying duration of events
 censoring. Censoring time will be calculated with uniform distribution
 between two numbers. No censoring will be applied if NULL is provided.</p></td>
+    </tr>
+    <tr>
+      <th>coef.var</th>
+      <td><p>Boolean specifying whether parametric bootstrap are
+performed on survival model coefficients, based on variance-covariance
+matrix. If FALSE, prediction interval only reflects inherent variability
+from survival events.</p></td>
+    </tr>
+    <tr>
+      <th>na.warning</th>
+      <td><p>Boolean specifying whether warning will be shown if
+<code>newdata</code> contain subjects with missing model variables.</p></td>
     </tr>
     </table>
 
