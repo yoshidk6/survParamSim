@@ -11,7 +11,8 @@ if(getRversion() >= "2.15.1"){
   utils::globalVariables(c('coxfit', 'HR'))
 
   # calc_km
-  utils::globalVariables(c('kmfit', 'km', 'surv', 'time', 'cnsr'))
+  utils::globalVariables(c('kmfit', 'km', 'surv', 'time', 'cnsr',
+                           'is.median.na', 'N.median.NA', 'N.all', 'n_min', 'n_max'))
 
   # extract sim
   utils::globalVariables(c('n.resample', 'covec50', 'cove0', 'covemaxstr', 'covec50str', 'cove0str',
