@@ -258,27 +258,7 @@ check_trt <- function(newdata.nona.obs, trt.sym, group.syms){
   n.distinct.trt <- length(unique(trt.vec))
 
   if(sum(is.na(trt.vec)) > 0) stop("`trt` cannot has NA values")
-  # if(length(unique(trt.vec)) != 2) stop("`trt` should contain exactly two unique values")
   if(is.factor(trt.vec) & nlevels(trt.vec) != n.distinct.trt) warning("`trt` variable is factor and has unused levels, which is automatically dropped`")
-
-
-  # # Throw error if not all groups have all the treatment arms
-  # if(length(group.syms) != 0){
-  #   n.distinct.group <-
-  #     newdata.nona.obs %>%
-  #     dplyr::distinct(!!!group.syms) %>%
-  #     nrow()
-  # } else {
-  #   n.distinct.group <- 1
-  # }
-  #
-  # n.distinct.group.trt <-
-  #   newdata.nona.obs %>%
-  #   dplyr::distinct(!!!group.syms, !!trt.sym) %>%
-  #   nrow()
-  #
-  # if(n.distinct.group.trt != n.distinct.trt * n.distinct.group)
-  #   stop("All subgroups should contain at lease one subject for each `trt`")
 
   return(n.distinct.trt)
 
@@ -296,7 +276,7 @@ print.survparamsim.hrpi <- function(x, ...){
   cat("* Use `plot_hr_pi()` to draw histogram of predicted HR\n\n")
   cat("* Settings:\n")
   cat("    trt: ", x$trt, "\n", sep="")
-  cat("         (", x$trt.levels[[2]], " as test trt, ", x$trt.levels[[1]], " as control)\n", sep="")
+  cat("         ('", paste(x$trt.levels[-1], collapse = "', '"), "' as test trt, '", x$trt.levels[[1]], "' as control)\n", sep="")
   cat("    group:", ifelse(is.null(x$group), "(NULL)", x$group), "\n", sep=" ")
   cat("    pi.range:", x$pi.range, "\n", sep=" ")
   cat("    calc.obs:", x$calc.obs, "\n", sep=" ")
