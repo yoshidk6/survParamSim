@@ -46,6 +46,11 @@
 #' simulation based on resampled subjects from the dataset. The latter allows
 #' more flexibility in terms of simulating future trials with different number
 #' of subjects.
+#' Note that with `surv_param_sim_resample()`, there is no
+#' automatic safeguard to ensure certain number of subjects in each subgroup
+#' or treatment groups, which may result in inconsistent number of subjects per
+#' simulation or leads to Cox regression instability due to small N. Consider
+#' using stratified resampling in this case.
 #'
 #' Currently we have not tested whether this function work for a `survreg` model
 #' with stratification variables.

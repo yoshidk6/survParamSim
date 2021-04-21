@@ -19,6 +19,30 @@ sim <- suppressWarnings(surv_param_sim(object, newdata, n.rep, censor.dur))
 hr.pi <- calc_hr_pi(sim, trt = "sex")
 
 
+newdata.3trt <-
+  newdata %>%
+  dplyr::mutate(trt = rep(c("B", "A", "CC"), length.out = nrow(.)))
+# This will also test calculating grouping based on the variables not included in the model formula
+fit.lung.3trt <- survreg(Surv(time, status) ~ sex + ph.ecog, data = newdata.3trt)
+
+
+sim.3trt <- suppressWarnings(surv_param_sim(fit.lung.3trt, newdata.3trt, n.rep, censor.dur))
+# plot_km_pi(calc_km_pi(sim.3trt, trt = "trt"))
+# plot_hr_pi(calc_hr_pi(sim.3trt, trt = "sex", group = "trt"))
+hr.pi.3trt <- calc_hr_pi(sim.3trt, trt = "trt", group = "sex")
+
+
+## TODO: See what happens when one of the subgroups didn't have subjects in all trt levels
+newdata.3trt.2 <-
+  newdata.3trt %>%
+  dplyr::mutate(trt = ifelse(sex == 2 & ph.ecog == 2, "A", trt),
+                trt = ifelse(sex == 2 & ph.ecog == 1 & trt == "CC", "A", trt))
+
+sim.3trt.2 <- (surv_param_sim(fit.lung.3trt, newdata.3trt.2, n.rep, censor.dur))
+hr.pi.3trt.2 <- calc_hr_pi(sim.3trt.2, trt = "trt", group = c("sex", "ph.ecog"))
+
+
+
 
 # Check trt variable values
 
@@ -50,6 +74,7 @@ test_that("error if trt has more than 2 values", {
 
 })
 
+
 test_that("check if trt is factor with three or more levels", {
   newdata.with.trt.three.factor <-
     newdata %>%
@@ -58,8 +83,7 @@ test_that("check if trt is factor with three or more levels", {
   newdata.with.trt.three.factor$trt <- factor(newdata.with.trt.three.factor$trt, levels = c("1", "2", "3"))
 
   sim.tmp <- suppressWarnings(surv_param_sim(object, newdata.with.trt.three.factor, n.rep, censor.dur))
-  expect_error(calc_hr_pi(sim.tmp, trt = "trt"),
-               "`trt` should have only two factor levels")
+  expect_warning(calc_hr_pi(sim.tmp, trt = "trt"), "`trt` variable is factor and has unused levels")
 
 })
 
@@ -87,14 +111,14 @@ test_that("check HR calculation", {
 
 
   hr.pi.raw.group <- extract_hr(calc_hr_pi(sim, trt = "sex", group = "ph.ecog", trt.assign = "rev"))
-  expect_equal(dim(hr.pi.raw.group), c(90, 3))
+  expect_equal(dim(hr.pi.raw.group), c(90, 4))
   expect_equal(hr.pi.raw.group$HR[[1]], 1.3, tolerance = .01)
 })
 
 test_that("Extract HR quantile in wide format", {
   hr.pi.quantile <- extract_hr_pi(hr.pi, outtype ="wide")
-  expect_equal(dim(hr.pi.quantile), c(1, 4))
-  expect_equal(names(hr.pi.quantile), c("pi_low", "pi_med", "pi_high", "obs"))
+  expect_equal(dim(hr.pi.quantile), c(1, 5))
+  expect_equal(names(hr.pi.quantile), c("trtterm", "pi_low", "pi_med", "pi_high", "obs"))
 })
 
 test_that("check TRT levels assignment", {
@@ -106,7 +130,7 @@ test_that("check TRT levels assignment", {
 test_that("check summary", {
   hr.pi.summary <- summary(hr.pi)
 
-  expect_equal(dim(hr.pi.summary), c(4, 3))
+  expect_equal(dim(hr.pi.summary), c(4, 4))
   expect_equal(hr.pi.summary$HR, c(0.46, 0.624, 0.836, 0.596), tolerance = .001)
 
 })

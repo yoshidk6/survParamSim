@@ -32,7 +32,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
   trt.sym    <- rlang::sym(trt)
 
   # Check trt values
-  check_trt(newdata.nona.obs, trt.sym, group.syms)
+  n.distinct.trt <- check_trt(newdata.nona.obs, trt.sym, group.syms)
 
   # Convert trt to factor
   newdata.nona.obs <-
@@ -57,7 +57,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
   if(methods::is(sim, "survparamsim_pre_resampled")){
     if(sim$newdata.orig.missing & calc.obs) {
-      warning("Original observed data not provided in `surv_param_sim_pre_resampled()` and HR will not be estimated for the observed data. Speficy `calc.obs = FALSE` to avoid this warning.")
+      warning("Original observed data not provided in `surv_param_sim_pre_resampled()` and HR will not be estimated for the observed data. Speficy `calc.obs = FALSE` to suppress this warning.")
       calc.obs = FALSE
     }
   }
@@ -84,9 +84,8 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
         stats::as.formula()
 
       survival::coxph(formula, data=x) %>%
-        summary() %>%
-        .$coefficients %>%
-        .[2]
+        broom::tidy(exponentiate = TRUE) %>%
+        dplyr::select(trtterm = term, HR = estimate)
     }
     safe_calc_hr_each_obs <- purrr::safely(calc_hr_each_obs, otherwise = NA)
 
@@ -94,10 +93,15 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     obs.hr <-
       obs.nested %>%
       dplyr::mutate(coxfit = purrr::map(data, safe_calc_hr_each_obs),
-                    HR = purrr::map_dbl(coxfit, ~.$result),
+                    HR = purrr::map(coxfit, ~.$result),
                     description = "obs") %>%
+      unnest2(HR) %>%
       dplyr::select(-data, -coxfit) %>%
       dplyr::ungroup()
+
+    if(dplyr::filter(obs.hr, is.na(HR)) %>% nrow() > 0) {
+      warning("HR was not calculable in at least one subgroup for the observed data, likely due to small number of subjects.")
+    }
   } else {
     obs.hr <- NULL
   }
@@ -124,9 +128,8 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
       stats::as.formula()
 
     survival::coxph(formula, data=x) %>%
-      summary() %>%
-      .$coefficients %>%
-      .[,2]
+      broom::tidy(exponentiate = TRUE) %>%
+      dplyr::select(trtterm = term, HR = estimate)
   }
   safe_calc_hr_each_sim <- purrr::safely(calc_hr_each_sim, otherwise = NA)
 
@@ -134,12 +137,15 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
   sim.hr <-
     sim.nested %>%
     dplyr::mutate(coxfit = purrr::map(data, safe_calc_hr_each_sim),
-                  HR = purrr::map_dbl(coxfit, ~.$result),
+                  HR = purrr::map(coxfit, ~.$result),
                   description = "sim") %>%
+    unnest2(HR) %>%
     dplyr::select(-data, -coxfit) %>%
     dplyr::ungroup()
 
-
+  if(dplyr::filter(sim.hr, is.na(HR)) %>% nrow() > 0) {
+    warning("HR was not calculable in at least one subgroup for the simulated data, likely due to small number of subjects and this might results in biased estimates for prediction intervals.")
+  }
 
   ## Calc quantiles
   quantiles <-
@@ -148,7 +154,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
   sim.hr.pi <-
     sim.hr %>%
-    dplyr::group_by(!!!group.syms) %>%
+    dplyr::group_by(trtterm, !!!group.syms) %>%
     dplyr::summarize(pi_low = as.numeric(stats::quantile(HR, probs = 0.5 - pi.range/2, na.rm = TRUE)),
                      pi_med = as.numeric(stats::quantile(HR, probs = 0.5, na.rm = TRUE)),
                      pi_high= as.numeric(stats::quantile(HR, probs = 0.5 + pi.range/2, na.rm = TRUE))) %>%
@@ -198,6 +204,7 @@ plot_hr_pi <- function(hr.pi, show.obs = TRUE){
   obs.hr <- hr.pi$obs.hr
   sim.hr <- hr.pi$sim.hr
   hr.pi.quantile  <- hr.pi$hr.pi.quantile
+  trt.levels <- hr.pi$trt.levels
 
   group.syms <- rlang::syms(hr.pi$group)
 
@@ -220,13 +227,19 @@ plot_hr_pi <- function(hr.pi, show.obs = TRUE){
   }
 
   # Facet fig based on group
-  if(length(group.syms) == 1 || length(group.syms) >= 3 ) {
-    g <- g + ggplot2::facet_wrap(ggplot2::vars(!!!group.syms),
+  if(length(trt.levels) > 2) {
+    g <- g + ggplot2::facet_grid(ggplot2::vars(trtterm),
+                                 ggplot2::vars(!!!group.syms),
                                  labeller = ggplot2::label_both)
-  } else if (length(group.syms) == 2) {
-    g <- g + ggplot2::facet_grid(ggplot2::vars(!!group.syms[[1]]),
-                                 ggplot2::vars(!!group.syms[[2]]),
-                                 labeller = ggplot2::label_both)
+  } else {
+    if(length(group.syms) == 1 || length(group.syms) >= 3 ) {
+      g <- g + ggplot2::facet_wrap(ggplot2::vars(!!!group.syms),
+                                   labeller = ggplot2::label_both)
+    } else if (length(group.syms) == 2) {
+      g <- g + ggplot2::facet_grid(ggplot2::vars(!!group.syms[[1]]),
+                                   ggplot2::vars(!!group.syms[[2]]),
+                                   labeller = ggplot2::label_both)
+    }
   }
 
   return(g)
@@ -242,28 +255,32 @@ check_trt <- function(newdata.nona.obs, trt.sym, group.syms){
     dplyr::select(!!trt.sym) %>%
     .[[1]]
 
+  n.distinct.trt <- length(unique(trt.vec))
+
   if(sum(is.na(trt.vec)) > 0) stop("`trt` cannot has NA values")
-  if(length(unique(trt.vec)) != 2) stop("`trt` should contain exactly two unique values")
-  if(is.factor(trt.vec) & nlevels(trt.vec) != 2) stop("`trt` should have only two factor levels, consider using `droplevels()` to remove unused levels")
+  # if(length(unique(trt.vec)) != 2) stop("`trt` should contain exactly two unique values")
+  if(is.factor(trt.vec) & nlevels(trt.vec) != n.distinct.trt) warning("`trt` variable is factor and has unused levels, which is automatically dropped`")
 
 
-  # Throw error if not all groups have both treatment arms
-  if(length(group.syms) != 0){
-    n.distinct.group <-
-      newdata.nona.obs %>%
-      dplyr::distinct(!!!group.syms) %>%
-      nrow()
-  } else {
-    n.distinct.group <- 1
-  }
+  # # Throw error if not all groups have all the treatment arms
+  # if(length(group.syms) != 0){
+  #   n.distinct.group <-
+  #     newdata.nona.obs %>%
+  #     dplyr::distinct(!!!group.syms) %>%
+  #     nrow()
+  # } else {
+  #   n.distinct.group <- 1
+  # }
+  #
+  # n.distinct.group.trt <-
+  #   newdata.nona.obs %>%
+  #   dplyr::distinct(!!!group.syms, !!trt.sym) %>%
+  #   nrow()
+  #
+  # if(n.distinct.group.trt != n.distinct.trt * n.distinct.group)
+  #   stop("All subgroups should contain at lease one subject for each `trt`")
 
-  n.distinct.group.trt <-
-    newdata.nona.obs %>%
-    dplyr::distinct(!!!group.syms, !!trt.sym) %>%
-    nrow()
-
-  if(n.distinct.group.trt != 2 * n.distinct.group)
-    stop("All subgroups should contain at lease one subject for each `trt`")
+  return(n.distinct.trt)
 
 }
 

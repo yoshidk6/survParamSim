@@ -20,9 +20,9 @@ extract_hr_pi <- function(hr.pi, outtype = c("long", "wide")) {
       tidyr::spread(description, HR)
 
     if(hr.pi$calc.obs){
-      out <- dplyr::select(out, pi_low, pi_med, pi_high, obs, dplyr::everything())
+      out <- dplyr::select(out, trtterm, pi_low, pi_med, pi_high, obs, dplyr::everything())
     } else {
-      out <- dplyr::select(out, pi_low, pi_med, pi_high, dplyr::everything())
+      out <- dplyr::select(out, trtterm, pi_low, pi_med, pi_high, dplyr::everything())
     }
   }
 
