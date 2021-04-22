@@ -5,7 +5,7 @@
 #' equal to the number of categories in the stratification variable.
 #' @param strat.resample String specifying stratification variable for
 #' resampling. Currently only one variable is allowed. If you need more than one,
-#' create a new variable e.g. by `interaction()``
+#' create a new variable e.g. by [base::interaction()]
 surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
                                     n.resample, strat.resample = NULL,
                                     coef.var = TRUE, na.warning = TRUE){

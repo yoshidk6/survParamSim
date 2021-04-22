@@ -1,0 +1,35 @@
+reference:
+- title: "Step 1: Perform simulation"
+  desc: >
+    Perform simulation using a survival model and a provided dataset
+- contents:
+  - starts_with("surv_param_sim")
+
+- title: "Step 2: Generate K-M and/or HR"
+  desc: >
+    Calculate Kaplan-Meier estimates (with median survival time) and/or
+    hazard ratios
+- contents:
+  - starts_with("calc_")
+
+- title: "Step 3: Extract KM/HR or generate plots"
+- contents:
+  - starts_with("plot_")
+  - extract_hr_pi
+  - extract_km_pi
+  - extract_medsurv_pi
+  - extract_medsurv_delta_pi
+  - extract_sim
+  - extract_hr
+  - extract_km_obs
+  - extract_medsurv
+
+- title: S3 methods
+  contents:
+  - starts_with("print")
+  - starts_with("summary")
+
+- title: Superseded
+  desc: Superseded functions no longer needed
+  contents:
+  - extract_median_surv

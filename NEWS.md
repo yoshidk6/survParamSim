@@ -14,6 +14,8 @@
 
 * New function `calc_km_pi()` shows warning when there are survival simulations for which median survival times were not reached
 
+* `calc_hr_pi()` can now calculate hazard ratios for dataset with more than two treatment groups
+
 
 # survParamSim 0.1.4
 

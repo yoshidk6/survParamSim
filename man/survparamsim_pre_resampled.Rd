@@ -42,5 +42,5 @@ object, newdata, and a data frame for predicted survival profiles.
 Simulation of parametric survival model with an already-resampled dataset
 }
 \details{
-See \code{surv_param_sim()} for additional details.
+See \code{\link[=surv_param_sim]{surv_param_sim()}} for additional details.
 }
