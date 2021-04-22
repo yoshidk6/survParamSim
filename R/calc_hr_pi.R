@@ -85,7 +85,9 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
       survival::coxph(formula, data=x) %>%
         broom::tidy(exponentiate = TRUE) %>%
-        dplyr::select(trtterm = term, HR = estimate)
+        dplyr::mutate(!!trt.sym := factor(substr(term, nchar(trt)+1, nchar(term)),
+                                          levels = trt.levels))%>%
+        dplyr::select(!!trt.sym, HR = estimate)
     }
     safe_calc_hr_each_obs <- purrr::safely(calc_hr_each_obs, otherwise = NA)
 
@@ -129,7 +131,9 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
     survival::coxph(formula, data=x) %>%
       broom::tidy(exponentiate = TRUE) %>%
-      dplyr::select(trtterm = term, HR = estimate)
+      dplyr::mutate(!!trt.sym := factor(substr(term, nchar(trt)+1, nchar(term)),
+                                        levels = trt.levels))%>%
+      dplyr::select(!!trt.sym, HR = estimate)
   }
   safe_calc_hr_each_sim <- purrr::safely(calc_hr_each_sim, otherwise = NA)
 
@@ -154,7 +158,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
   sim.hr.pi <-
     sim.hr %>%
-    dplyr::group_by(trtterm, !!!group.syms) %>%
+    dplyr::group_by(!!!group.syms, !!trt.sym) %>%
     dplyr::summarize(pi_low = as.numeric(stats::quantile(HR, probs = 0.5 - pi.range/2, na.rm = TRUE)),
                      pi_med = as.numeric(stats::quantile(HR, probs = 0.5, na.rm = TRUE)),
                      pi_high= as.numeric(stats::quantile(HR, probs = 0.5 + pi.range/2, na.rm = TRUE))) %>%
@@ -165,12 +169,12 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
   if(calc.obs){
     hr.pi.quantile <-
       dplyr::bind_rows(sim.hr.pi, obs.hr) %>%
-      dplyr::arrange(!!!group.syms)
+      dplyr::arrange(!!!group.syms, !!trt.sym)
 
   } else {
     hr.pi.quantile <-
       sim.hr.pi %>%
-      dplyr::arrange(!!!group.syms)
+      dplyr::arrange(!!!group.syms, !!trt.sym)
   }
 
   # Output
@@ -207,6 +211,7 @@ plot_hr_pi <- function(hr.pi, show.obs = TRUE){
   trt.levels <- hr.pi$trt.levels
 
   group.syms <- rlang::syms(hr.pi$group)
+  trt.sym    <- rlang::sym(hr.pi$trt)
 
   g <-
     ggplot2::ggplot(sim.hr, ggplot2::aes(HR)) +
@@ -228,7 +233,7 @@ plot_hr_pi <- function(hr.pi, show.obs = TRUE){
 
   # Facet fig based on group
   if(length(trt.levels) > 2) {
-    g <- g + ggplot2::facet_grid(ggplot2::vars(trtterm),
+    g <- g + ggplot2::facet_grid(ggplot2::vars(!!trt.sym),
                                  ggplot2::vars(!!!group.syms),
                                  labeller = ggplot2::label_both)
   } else {

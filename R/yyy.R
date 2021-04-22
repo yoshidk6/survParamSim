@@ -8,7 +8,7 @@ if(getRversion() >= "2.15.1"){
                            'n', 'description', 'quantile', 'event'))
 
   # calc_hr
-  utils::globalVariables(c('coxfit', 'HR', 'trtterm'))
+  utils::globalVariables(c('coxfit', 'HR'))
 
   # calc_km
   utils::globalVariables(c('kmfit', 'km', 'surv', 'time', 'cnsr',

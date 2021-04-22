@@ -12,6 +12,8 @@ extract_hr_pi <- function(hr.pi, outtype = c("long", "wide")) {
   outtype <- match.arg(outtype)
 
   out <- hr.pi$hr.pi.quantile
+  trt.sym <- rlang::sym(hr.pi$trt)
+  group.syms <- rlang::syms(hr.pi$group)
 
   if(outtype == "wide"){
     out <-
@@ -20,9 +22,9 @@ extract_hr_pi <- function(hr.pi, outtype = c("long", "wide")) {
       tidyr::spread(description, HR)
 
     if(hr.pi$calc.obs){
-      out <- dplyr::select(out, trtterm, pi_low, pi_med, pi_high, obs, dplyr::everything())
+      out <- dplyr::select(out, !!!group.syms, !!trt.sym, pi_low, pi_med, pi_high, obs)
     } else {
-      out <- dplyr::select(out, trtterm, pi_low, pi_med, pi_high, dplyr::everything())
+      out <- dplyr::select(out, !!!group.syms, !!trt.sym, pi_low, pi_med, pi_high)
     }
   }
 
