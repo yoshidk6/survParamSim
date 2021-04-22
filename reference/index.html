@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">survParamSim</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4.9002</span>
       </span>
     </div>
 
@@ -127,8 +127,33 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-step-perform-simulation" class="hasAnchor"><a href="#section-step-perform-simulation" class="anchor"></a>Step 1: Perform simulation</h2>
+          <p class="section-desc"><p>Perform simulation using a survival model and a provided dataset</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="survparamsim.html">surv_param_sim()</a></code> <code><a href="survparamsim.html">surv_param_sim_resample()</a></code> </p>
+        </td>
+        <td><p>Simulation of parametric survival model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="survparamsim_pre_resampled.html">surv_param_sim_pre_resampled()</a></code> </p>
+        </td>
+        <td><p>Simulation of parametric survival model with an already-resampled dataset</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-step-generate-k-m-and-or-hr" class="hasAnchor"><a href="#section-step-generate-k-m-and-or-hr" class="anchor"></a>Step 2: Generate K-M and/or HR</h2>
+          <p class="section-desc"><p>Calculate Kaplan-Meier estimates (with median survival time) and/or hazard ratios</p></p>
         </th>
       </tr>
       
@@ -148,25 +173,20 @@
           <p><code><a href="calc_km_pi.html">calc_km_pi()</a></code> </p>
         </td>
         <td><p>Generate Kaplan-Meier curves with prediction intervals from parametric bootstrap simulation</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="extractpi.html">extract_hr_pi()</a></code> <code><a href="extractpi.html">extract_km_pi()</a></code> <code><a href="extractpi.html">extract_medsurv_pi()</a></code> <code><a href="extractpi.html">extract_medsurv_delta_pi()</a></code> </p>
-        </td>
-        <td><p>Functions to extract prediction intervals and observed data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="extractpi_deprecated.html">extract_median_surv()</a></code> </p>
-        </td>
-        <td><p>Functions to extract prediction intervals and observed data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="extractrawsim.html">extract_sim()</a></code> <code><a href="extractrawsim.html">extract_hr()</a></code> <code><a href="extractrawsim.html">extract_km_obs()</a></code> <code><a href="extractrawsim.html">extract_medsurv()</a></code> </p>
-        </td>
-        <td><p>Functions to extract raw simulated samples</p></td>
-      </tr><tr>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-step-extract-km-hr-or-generate-plots" class="hasAnchor"><a href="#section-step-extract-km-hr-or-generate-plots" class="anchor"></a>Step 3: Extract KM/HR or generate plots</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
         
         <td>
           <p><code><a href="plot_hr_pi.html">plot_hr_pi()</a></code> </p>
@@ -181,21 +201,53 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="extractpi.html">extract_hr_pi()</a></code> <code><a href="extractpi.html">extract_km_pi()</a></code> <code><a href="extractpi.html">extract_medsurv_pi()</a></code> <code><a href="extractpi.html">extract_medsurv_delta_pi()</a></code> </p>
+        </td>
+        <td><p>Functions to extract prediction intervals and observed data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="extractrawsim.html">extract_sim()</a></code> <code><a href="extractrawsim.html">extract_hr()</a></code> <code><a href="extractrawsim.html">extract_km_obs()</a></code> <code><a href="extractrawsim.html">extract_medsurv()</a></code> </p>
+        </td>
+        <td><p>Functions to extract raw simulated samples</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-s-methods" class="hasAnchor"><a href="#section-s-methods" class="anchor"></a>S3 methods</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
           <p><code><a href="survparamsim-methods.html">print(<i>&lt;survparamsim.hrpi&gt;</i>)</a></code> <code><a href="survparamsim-methods.html">summary(<i>&lt;survparamsim.hrpi&gt;</i>)</a></code> <code><a href="survparamsim-methods.html">print(<i>&lt;survparamsim.kmpi&gt;</i>)</a></code> <code><a href="survparamsim-methods.html">summary(<i>&lt;survparamsim.kmpi&gt;</i>)</a></code> <code><a href="survparamsim-methods.html">print(<i>&lt;survparamsim&gt;</i>)</a></code> </p>
         </td>
         <td><p>Methods for S3 objects in the package</p></td>
-      </tr><tr>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-superseded" class="hasAnchor"><a href="#section-superseded" class="anchor"></a>Superseded</h2>
+          <p class="section-desc"><p>Superseded functions no longer needed</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
         
         <td>
-          <p><code><a href="survparamsim.html">surv_param_sim()</a></code> <code><a href="survparamsim.html">surv_param_sim_resample()</a></code> </p>
+          <p><code><a href="extractpi_deprecated.html">extract_median_surv()</a></code> </p>
         </td>
-        <td><p>Simulation of parametric survival model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="survparamsim_pre_resampled.html">surv_param_sim_pre_resampled()</a></code> </p>
-        </td>
-        <td><p>Simulation of parametric survival model with an already-resampled dataset</p></td>
+        <td><p>Functions to extract prediction intervals and observed data</p></td>
       </tr>
     </tbody>
     </table>

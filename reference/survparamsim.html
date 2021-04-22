@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Simulation of parametric survival model — surv_param_sim" />
 <meta property="og:description" content="The main function to generate predicted survival using a model object
-generated with survreg function." />
+generated with survival::survreg() function." />
 
 
 
@@ -73,7 +73,7 @@ generated with survreg function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">survParamSim</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4.9002</span>
       </span>
     </div>
 
@@ -122,7 +122,7 @@ generated with survreg function." />
 
     <div class="ref-description">
     <p>The main function to generate predicted survival using a model object
-generated with <code><a href='https://rdrr.io/pkg/survival/man/survreg.html'>survreg</a></code> function.</p>
+generated with <code><a href='https://rdrr.io/pkg/survival/man/survreg.html'>survival::survreg()</a></code> function.</p>
     </div>
 
     <pre class="usage"><span class='fu'>surv_param_sim</span><span class='op'>(</span>
@@ -157,12 +157,12 @@ lognormal, weibull, loglogistic, and gaussian distributions.</p></td>
       <th>newdata</th>
       <td><p>A required data frame for simulation that contain covariates in
 the survival model. It is required even if this is the same as the one used
-for <code><a href='https://rdrr.io/pkg/survival/man/survreg.html'>survreg</a></code> function.</p>
+for <a href='https://rdrr.io/pkg/survival/man/survreg.html'>survival::survreg</a> function.</p>
 <p>It also has to contain columns for survival information. These can be used
-in <code><a href='plot_km_pi.html'>plot_km_pi</a></code> and <code><a href='plot_hr_pi.html'>plot_hr_pi</a></code> function as
+in <code><a href='plot_km_pi.html'>plot_km_pi()</a></code> and <code><a href='plot_hr_pi.html'>plot_hr_pi()</a></code> function as
 observed data. Survival information can be dummy data, but time need to be
 long enough so that simulated KM plot will be long enough for
-<code><a href='plot_km_pi.html'>plot_km_pi</a></code> to draw simulated survival curves.</p>
+<code><a href='plot_km_pi.html'>plot_km_pi()</a></code> to draw simulated survival curves.</p>
 <p>Subjects with NA for covariates in <code>survreg</code> model will be removed from
 the simulation and subsequent plotting of observed data.</p></td>
     </tr>
@@ -198,7 +198,7 @@ equal to the number of categories in the stratification variable.</p></td>
       <th>strat.resample</th>
       <td><p>String specifying stratification variable for
 resampling. Currently only one variable is allowed. If you need more than one,
-create a new variable e.g. by `interaction()``</p></td>
+create a new variable e.g. by <code><a href='https://rdrr.io/r/base/interaction.html'>base::interaction()</a></code></p></td>
     </tr>
     </table>
 
@@ -216,11 +216,16 @@ as 1:nrow(newdata))</p></li>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>surv_param_sim</code> returns simulation using the provided subject
+    <p><code>surv_param_sim()</code> returns simulation using the provided subject
 in <code>newdata</code> as it is, while <code>surv_param_sim_resample</code> perform
 simulation based on resampled subjects from the dataset. The latter allows
 more flexibility in terms of simulating future trials with different number
-of subjects.</p>
+of subjects.
+Note that with <code>surv_param_sim_resample()</code>, there is no
+automatic safeguard to ensure certain number of subjects in each subgroup
+or treatment groups, which may result in inconsistent number of subjects per
+simulation or leads to Cox regression instability due to small N. Consider
+using stratified resampling in this case.</p>
 <p>Currently we have not tested whether this function work for a <code>survreg</code> model
 with stratification variables.</p>
 
