@@ -3,9 +3,9 @@
 #'
 #' @rdname extractpi
 #' @export
-#' @param hr.pi a return object from \code{\link{calc_hr_pi}} function.
+#' @param hr.pi a return object from [calc_hr_pi()] function.
 #' @details
-#' \code{\link{extract_hr_pi}} extracts prediction intervals of simulated
+#' [extract_hr_pi()] extracts prediction intervals of simulated
 #' hazard ratios and the corresponding observed values.
 extract_hr_pi <- function(hr.pi, outtype = c("long", "wide")) {
 
@@ -35,11 +35,11 @@ extract_hr_pi <- function(hr.pi, outtype = c("long", "wide")) {
 
 #' @rdname extractpi
 #' @export
-#' @param km.pi A return object from \code{\link{calc_km_pi}} function.
+#' @param km.pi A return object from [calc_km_pi()] function.
 #' @param trunc.sim.censor A logical specifying whether to truncate the simulated
-#' curve at the last time of `censor.dur`` specified in \code{\link{surv_param_sim}}.
+#' curve at the last time of `censor.dur`` specified in [surv_param_sim()].
 #' @details
-#' \code{\link{extract_km_pi}} extracts prediction intervals of simulated Kaplan-Meier curves.
+#' [extract_km_pi()] extracts prediction intervals of simulated Kaplan-Meier curves.
 extract_km_pi <- function(km.pi, trunc.sim.censor = TRUE) {
 
   group <- km.pi$group
@@ -109,7 +109,7 @@ extract_km_pi <- function(km.pi, trunc.sim.censor = TRUE) {
 #' @export
 #' @param outtype Specifies whether output will be in long or wide format.
 #' @details
-#' \code{\link{extract_medsurv_pi}} extracts prediction intervals of
+#' [extract_medsurv_pi()] extracts prediction intervals of
 #' median survival times and and the corresponding observed values.
 extract_medsurv_pi <- function(km.pi, outtype = c("long", "wide")) {
 
@@ -138,7 +138,7 @@ extract_medsurv_pi <- function(km.pi, outtype = c("long", "wide")) {
 #' @export
 #' @param outtype Specifies whether output will be in long or wide format.
 #' @details
-#' \code{\link{extract_medsurv_delta_pi}} extracts prediction intervals of
+#' [extract_medsurv_delta_pi()] extracts prediction intervals of
 #' delta of median survival times between treatment groups
 extract_medsurv_delta_pi <- function(km.pi, outtype = c("long", "wide")) {
 
@@ -205,14 +205,14 @@ extract_medsurv_delta_pi <- function(km.pi, outtype = c("long", "wide")) {
 #'
 #' \lifecycle{deprecated}
 #'
-#' `extract_median_surv()` was renamed to \code{\link{extract_medsurv_pi}} for function name consistency.
+#' `extract_median_surv()` was renamed to [extract_medsurv_pi()] for function name consistency.
 #'
 #' @rdname extractpi_deprecated
 #' @export
-#' @param km.pi A return object from \code{\link{calc_km_pi}} function.
+#' @param km.pi A return object from [calc_km_pi()] function.
 #' @param outtype Specifies whether output will be in long or wide format.
 #' @details
-#' \code{\link{extract_median_surv}} extracts prediction intervals of
+#' [extract_median_surv()] extracts prediction intervals of
 #' median survival times and and the corresponding observed values.
 extract_median_surv <- function(km.pi, outtype = c("long", "wide")) {
   lifecycle::deprecate_warn("0.1.5", "extract_median_surv()", "extract_medsurv_pi()")

@@ -1,7 +1,7 @@
 #' Simulation of parametric survival model
 #'
 #' The main function to generate predicted survival using a model object
-#' generated with \code{\link[survival]{survreg}} function.
+#' generated with [survival::survreg()] function.
 #'
 #' @rdname survparamsim
 #' @export
@@ -9,13 +9,13 @@
 #'   lognormal, weibull, loglogistic, and gaussian distributions.
 #' @param newdata A required data frame for simulation that contain covariates in
 #'   the survival model. It is required even if this is the same as the one used
-#'   for \code{\link[survival]{survreg}} function.
+#'   for [survival::survreg] function.
 #'
 #'   It also has to contain columns for survival information. These can be used
-#'   in \code{\link{plot_km_pi}} and \code{\link{plot_hr_pi}} function as
+#'   in [plot_km_pi()] and [plot_hr_pi()] function as
 #'   observed data. Survival information can be dummy data, but time need to be
 #'   long enough so that simulated KM plot will be long enough for
-#'   \code{\link{plot_km_pi}} to draw simulated survival curves.
+#'   [plot_km_pi()] to draw simulated survival curves.
 #'
 #'   Subjects with NA for covariates in `survreg` model will be removed from
 #'   the simulation and subsequent plotting of observed data.
@@ -41,12 +41,12 @@
 #'   }
 #'
 #' @details
-#' \code{\link{surv_param_sim}} returns simulation using the provided subject
+#' [surv_param_sim()] returns simulation using the provided subject
 #' in `newdata` as it is, while \code{\link{surv_param_sim_resample}} perform
 #' simulation based on resampled subjects from the dataset. The latter allows
 #' more flexibility in terms of simulating future trials with different number
 #' of subjects.
-#' Note that with `surv_param_sim_resample()`, there is no
+#' Note that with [surv_param_sim_resample()], there is no
 #' automatic safeguard to ensure certain number of subjects in each subgroup
 #' or treatment groups, which may result in inconsistent number of subjects per
 #' simulation or leads to Cox regression instability due to small N. Consider

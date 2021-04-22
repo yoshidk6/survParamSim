@@ -31,13 +31,13 @@ lognormal, weibull, loglogistic, and gaussian distributions.}
 
 \item{newdata}{A required data frame for simulation that contain covariates in
 the survival model. It is required even if this is the same as the one used
-for \code{\link[survival]{survreg}} function.
+for \link[survival:survreg]{survival::survreg} function.
 
 It also has to contain columns for survival information. These can be used
-in \code{\link{plot_km_pi}} and \code{\link{plot_hr_pi}} function as
+in \code{\link[=plot_km_pi]{plot_km_pi()}} and \code{\link[=plot_hr_pi]{plot_hr_pi()}} function as
 observed data. Survival information can be dummy data, but time need to be
 long enough so that simulated KM plot will be long enough for
-\code{\link{plot_km_pi}} to draw simulated survival curves.
+\code{\link[=plot_km_pi]{plot_km_pi()}} to draw simulated survival curves.
 
 Subjects with NA for covariates in \code{survreg} model will be removed from
 the simulation and subsequent plotting of observed data.}
@@ -62,7 +62,7 @@ equal to the number of categories in the stratification variable.}
 
 \item{strat.resample}{String specifying stratification variable for
 resampling. Currently only one variable is allowed. If you need more than one,
-create a new variable e.g. by `interaction()``}
+create a new variable e.g. by \code{\link[base:interaction]{base::interaction()}}}
 }
 \value{
 A \code{survparamsim} object that contains the original \code{survreg} class
@@ -78,14 +78,19 @@ as 1:nrow(newdata))
 }
 \description{
 The main function to generate predicted survival using a model object
-generated with \code{\link[survival]{survreg}} function.
+generated with \code{\link[survival:survreg]{survival::survreg()}} function.
 }
 \details{
-\code{\link{surv_param_sim}} returns simulation using the provided subject
+\code{\link[=surv_param_sim]{surv_param_sim()}} returns simulation using the provided subject
 in \code{newdata} as it is, while \code{\link{surv_param_sim_resample}} perform
 simulation based on resampled subjects from the dataset. The latter allows
 more flexibility in terms of simulating future trials with different number
 of subjects.
+Note that with \code{\link[=surv_param_sim_resample]{surv_param_sim_resample()}}, there is no
+automatic safeguard to ensure certain number of subjects in each subgroup
+or treatment groups, which may result in inconsistent number of subjects per
+simulation or leads to Cox regression instability due to small N. Consider
+using stratified resampling in this case.
 
 Currently we have not tested whether this function work for a \code{survreg} model
 with stratification variables.

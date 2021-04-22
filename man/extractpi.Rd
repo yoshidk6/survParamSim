@@ -16,27 +16,27 @@ extract_medsurv_pi(km.pi, outtype = c("long", "wide"))
 extract_medsurv_delta_pi(km.pi, outtype = c("long", "wide"))
 }
 \arguments{
-\item{hr.pi}{a return object from \code{\link{calc_hr_pi}} function.}
+\item{hr.pi}{a return object from \code{\link[=calc_hr_pi]{calc_hr_pi()}} function.}
 
 \item{outtype}{Specifies whether output will be in long or wide format.}
 
-\item{km.pi}{A return object from \code{\link{calc_km_pi}} function.}
+\item{km.pi}{A return object from \code{\link[=calc_km_pi]{calc_km_pi()}} function.}
 
 \item{trunc.sim.censor}{A logical specifying whether to truncate the simulated
-curve at the last time of `censor.dur`` specified in \code{\link{surv_param_sim}}.}
+curve at the last time of `censor.dur`` specified in \code{\link[=surv_param_sim]{surv_param_sim()}}.}
 }
 \description{
 Functions to extract prediction intervals and observed data
 }
 \details{
-\code{\link{extract_hr_pi}} extracts prediction intervals of simulated
+\code{\link[=extract_hr_pi]{extract_hr_pi()}} extracts prediction intervals of simulated
 hazard ratios and the corresponding observed values.
 
-\code{\link{extract_km_pi}} extracts prediction intervals of simulated Kaplan-Meier curves.
+\code{\link[=extract_km_pi]{extract_km_pi()}} extracts prediction intervals of simulated Kaplan-Meier curves.
 
-\code{\link{extract_medsurv_pi}} extracts prediction intervals of
+\code{\link[=extract_medsurv_pi]{extract_medsurv_pi()}} extracts prediction intervals of
 median survival times and and the corresponding observed values.
 
-\code{\link{extract_medsurv_delta_pi}} extracts prediction intervals of
+\code{\link[=extract_medsurv_delta_pi]{extract_medsurv_delta_pi()}} extracts prediction intervals of
 delta of median survival times between treatment groups
 }

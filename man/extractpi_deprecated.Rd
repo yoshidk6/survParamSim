@@ -7,7 +7,7 @@
 extract_median_surv(km.pi, outtype = c("long", "wide"))
 }
 \arguments{
-\item{km.pi}{A return object from \code{\link{calc_km_pi}} function.}
+\item{km.pi}{A return object from \code{\link[=calc_km_pi]{calc_km_pi()}} function.}
 
 \item{outtype}{Specifies whether output will be in long or wide format.}
 }
@@ -15,8 +15,8 @@ extract_median_surv(km.pi, outtype = c("long", "wide"))
 \lifecycle{deprecated}
 }
 \details{
-\code{extract_median_surv()} was renamed to \code{\link{extract_medsurv_pi}} for function name consistency.
+\code{extract_median_surv()} was renamed to \code{\link[=extract_medsurv_pi]{extract_medsurv_pi()}} for function name consistency.
 
-\code{\link{extract_median_surv}} extracts prediction intervals of
+\code{\link[=extract_median_surv]{extract_median_surv()}} extracts prediction intervals of
 median survival times and and the corresponding observed values.
 }

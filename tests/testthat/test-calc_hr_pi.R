@@ -113,12 +113,12 @@ test_that("check summary", {
 
 test_that("test trt with >2 levels", {
 
-  hr.pi.3trt <- calc_hr_pi(sim.3trt, trt = "trt", group = "sex")
+  hr.pi.3trt <- calc_hr_pi(sim.3trt, trt = "trt", group = "sex", trt.assign = "reverse")
 
   hr.pi.quantile <- extract_hr_pi(hr.pi.3trt)
   expect_equal(dim(hr.pi.quantile), c(16, 5))
-  expect_equal(hr.pi.quantile$HR[[5]], 0.621, tolerance = .001)
-  expect_equal(hr.pi.quantile$trt[[5]], factor("CC", levels = c("B", "A", "CC")))
+  expect_equal(hr.pi.quantile$HR[[5]], 0.758, tolerance = .001)
+  expect_equal(hr.pi.quantile$trt[[5]], factor("A", levels = c("B", "A", "CC")))
 
 })
 

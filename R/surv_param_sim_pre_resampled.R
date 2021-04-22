@@ -19,7 +19,7 @@
 #' @return A `survparamsim` object that contains the original `survreg` class
 #'   object, newdata, and a data frame for predicted survival profiles.
 #' @details
-#' See `surv_param_sim()` for additional details.
+#' See [surv_param_sim()] for additional details.
 #'
 #'
 surv_param_sim_pre_resampled <- function(object, newdata.resampled, newdata.orig = NULL, censor.dur = NULL,
