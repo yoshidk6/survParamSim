@@ -45,6 +45,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
   if(length(trt) > 1) stop("`trt` can only take one string")
 
+  # This needs to be kept as syms - rlang::sym() fails with trt=NULL
   trt.syms   <- rlang::syms(trt)
   group.syms <- rlang::syms(group)
 
@@ -243,8 +244,8 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   out$calc.obs <- calc.obs
   out$pi.range   <- pi.range
 
-  out$group <- group
-  out$trt   <- trt
+  out$group.syms <- group.syms
+  out$trt.syms    <- trt.syms
   out$trt.assign <- trt.assign
 
   out$simtimelast <- simtimelast
@@ -277,18 +278,11 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 #'
 plot_km_pi <- function(km.pi, show.obs = TRUE, trunc.sim.censor = TRUE){
 
-  group <- km.pi$group
-  trt   <- km.pi$trt
-
-  color.lab <- trt
-
   obs.km <- km.pi$obs.km
   sim.km.quantile.plot <- extract_km_pi(km.pi, trunc.sim.censor = trunc.sim.censor)
 
-
-  group.syms <- rlang::syms(group)
-  trt.syms   <- rlang::syms(trt)
-
+  group.syms <- km.pi$group.syms
+  trt.syms    <- km.pi$trt.syms
 
 
   # Plot
@@ -302,6 +296,7 @@ plot_km_pi <- function(km.pi, show.obs = TRUE, trunc.sim.censor = TRUE){
       ggplot2::ggplot(sim.km.quantile.plot,
                       ggplot2::aes(time, color = factor(!!!trt.syms),
                                    fill = factor(!!!trt.syms)))
+    color.lab <- as.character(trt.syms[[1]])
   }
 
   ## Observed
@@ -348,13 +343,16 @@ plot_km_pi <- function(km.pi, show.obs = TRUE, trunc.sim.censor = TRUE){
 #' @rdname survparamsim-methods
 #' @export
 print.survparamsim.kmpi <- function(x, ...){
+  trt <- as.character(x$trt.syms)
+  group <- as.character(x$group.syms)
+
   cat("---- Simulated and observed (if calculated) survival curves ----\n")
   cat("* Use `extract_medsurv_pi()` to extract prediction intervals of median survival times\n")
   cat("* Use `extract_km_pi()` to extract prediction intervals of K-M curves\n")
   cat("* Use `plot_km_pi()` to draw survival curves\n\n")
   cat("* Settings:\n")
-  cat("    trt:", ifelse(is.null(x$trt), "(NULL)", x$trt), "\n", sep=" ")
-  cat("    group:", ifelse(is.null(x$group), "(NULL)", x$group), "\n", sep=" ")
+  cat("    trt:", ifelse(is.null(trt), "(NULL)", trt), "\n", sep=" ")
+  cat("    group:", ifelse(is.null(group), "(NULL)", group), "\n", sep=" ")
   cat("    pi.range:", x$pi.range, "\n", sep=" ")
   cat("    calc.obs:", x$calc.obs, "\n", sep=" ")
 

@@ -203,8 +203,8 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
   out$calc.obs <- calc.obs
   out$pi.range   <- pi.range
 
-  out$group <- group
-  out$trt   <- trt
+  out$group.syms <- group.syms
+  out$trt.sym    <- trt.sym
 
   out$obs.hr <- obs.hr
   out$sim.hr <- sim.hr
@@ -230,8 +230,8 @@ plot_hr_pi <- function(hr.pi, show.obs = TRUE){
   hr.pi.quantile  <- hr.pi$hr.pi.quantile
   trt.levels <- hr.pi$trt.levels
 
-  group.syms <- rlang::syms(hr.pi$group)
-  trt.sym    <- rlang::sym(hr.pi$trt)
+  group.syms <- hr.pi$group.syms
+  trt.sym    <- hr.pi$trt.sym
 
   g <-
     ggplot2::ggplot(sim.hr, ggplot2::aes(HR)) +
@@ -295,14 +295,17 @@ check_trt <- function(newdata.nona.obs, trt.sym, group.syms){
 #' @rdname survparamsim-methods
 #' @export
 print.survparamsim.hrpi <- function(x, ...){
+  trt <- as.character(x$trt.sym)
+  group <- as.character(x$group.syms)
+
   cat("---- Simulated and observed (if calculated) hazard ratio ----\n")
   cat("* Use `extract_hr_pi()` to extract prediction intervals and observed HR\n")
   cat("* Use `extract_hr()` to extract individual simulated HRs\n")
   cat("* Use `plot_hr_pi()` to draw histogram of predicted HR\n\n")
   cat("* Settings:\n")
-  cat("    trt: ", x$trt, "\n", sep="")
+  cat("    trt: ", trt, "\n", sep="")
   cat("         ('", paste(x$trt.levels[-1], collapse = "', '"), "' as test trt, '", x$trt.levels[[1]], "' as control)\n", sep="")
-  cat("    group:", ifelse(is.null(x$group), "(NULL)", x$group), "\n", sep=" ")
+  cat("    group:", ifelse(is.null(group), "(NULL)", group), "\n", sep=" ")
   cat("    pi.range:", x$pi.range, "\n", sep=" ")
   cat("    calc.obs:", x$calc.obs, "\n", sep=" ")
 

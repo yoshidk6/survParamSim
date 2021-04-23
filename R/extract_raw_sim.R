@@ -79,11 +79,11 @@ extract_medsurv_delta <- function(km.pi) {
   trt.assign <- km.pi$trt.assign
   sim.median.time <- km.pi$sim.median.time
 
-  if(is.null(km.pi$trt)) stop("`trt` needs to be specified in `calc_km_pi()`")
-  if(length(km.pi$trt) > 1) stop("`trt` can only take one string in `calc_km_pi()")
+  if(length(km.pi$trt.syms) == 0) stop("`trt` needs to be specified in `calc_km_pi()`")
+  if(length(km.pi$trt.syms) > 1) stop("`trt` can only take one string in `calc_km_pi()")
 
-  group.syms <- rlang::syms(km.pi$group)
-  trt.sym    <- rlang::sym(km.pi$trt)
+  group.syms <- km.pi$group.syms
+  trt.sym    <- km.pi$trt.syms[[1]]
 
   # Check trt values
   check_trt(km.pi$median.pi, trt.sym, group.syms)

@@ -96,7 +96,7 @@ test_that("median survival delta", {
   medsurv.delta <- extract_medsurv_delta(km.pi.ph.ecog)
 
   expect_equal(dim(medsurv.delta), c(180, 4))
-  expect_equal(medsurv.delta[[2, "median_delta"]], 182,
+  expect_equal(medsurv.delta[[2, "median_delta"]], 70,
                tolerance = 1)
 })
 

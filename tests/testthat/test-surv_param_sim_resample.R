@@ -35,6 +35,14 @@ test_that("Warning with n per subgroup not consistent", {
   expect_warning(calc_km_pi(sim.resample, trt = "sex", group = "ph.ecog"))
 })
 
+test_that("Extracted median surv size matches", {
+  km.pi <- suppressWarnings(calc_km_pi(sim.resample, trt = "sex", group = "ph.ecog"))
+
+  expect_equal(dim(extract_medsurv(km.pi)),
+               c(181, 5))
+  expect_equal(dim(extract_medsurv_pi(km.pi)),
+               c(nrow(dplyr::distinct(dplyr::select(newdata, sex, ph.ecog)))*4, 8))
+})
 
 test_that("Expect warning for unbalanced subjects due to NA", {
   newdata.withna <- tibble::as_tibble(dplyr::select(lung, time, status, sex, ph.ecog))

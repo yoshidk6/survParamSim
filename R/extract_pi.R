@@ -12,8 +12,8 @@ extract_hr_pi <- function(hr.pi, outtype = c("long", "wide")) {
   outtype <- match.arg(outtype)
 
   out <- hr.pi$hr.pi.quantile
-  trt.sym <- rlang::sym(hr.pi$trt)
-  group.syms <- rlang::syms(hr.pi$group)
+  group.syms <- hr.pi$group.syms
+  trt.sym    <- hr.pi$trt.sym
 
   if(outtype == "wide"){
     out <-
@@ -42,14 +42,11 @@ extract_hr_pi <- function(hr.pi, outtype = c("long", "wide")) {
 #' [extract_km_pi()] extracts prediction intervals of simulated Kaplan-Meier curves.
 extract_km_pi <- function(km.pi, trunc.sim.censor = TRUE) {
 
-  group <- km.pi$group
-  trt   <- km.pi$trt
-
   obs.km <- km.pi$obs.km
   sim.km.quantile <- km.pi$sim.km.quantile
 
-  group.syms <- rlang::syms(group)
-  trt.syms   <- rlang::syms(trt)
+  group.syms <- km.pi$group.syms
+  trt.syms   <- km.pi$trt.syms
 
 
   #### Below will not work if simtimelast is missing and obs.km is not calculated ####
@@ -67,7 +64,7 @@ extract_km_pi <- function(km.pi, trunc.sim.censor = TRUE) {
       dplyr::ungroup() %>%
       dplyr::select(!!!trt.syms, !!!group.syms, timelast = time)
 
-    if(is.null(c(group, trt))){
+    if(length(c(group.syms, trt.syms)) == 0){
       sim.km.quantile.plot <-
         sim.km.quantile %>%
         tidyr::crossing(timelast) %>%
@@ -77,7 +74,7 @@ extract_km_pi <- function(km.pi, trunc.sim.censor = TRUE) {
     } else {
       sim.km.quantile.plot <-
         sim.km.quantile %>%
-        dplyr::full_join(timelast, by = c(group, trt)) %>%
+        dplyr::full_join(timelast, by = as.character(c(group.syms, trt.syms))) %>%
         dplyr::filter(time <= timelast) %>%
         dplyr::select(-timelast)
     }
@@ -143,8 +140,8 @@ extract_medsurv_pi <- function(km.pi, outtype = c("long", "wide")) {
 extract_medsurv_delta_pi <- function(km.pi, outtype = c("long", "wide")) {
 
   pi.range   <- km.pi$pi.range
-  trt.sym    <- rlang::sym(km.pi$trt)
-  group.syms <- rlang::syms(km.pi$group)
+  group.syms <- km.pi$group.syms
+  trt.sym    <- km.pi$trt.syms[[1]]
 
   outtype <- match.arg(outtype)
 
