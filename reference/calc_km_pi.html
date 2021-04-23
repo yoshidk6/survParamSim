@@ -129,7 +129,8 @@
   group <span class='op'>=</span> <span class='cn'>NULL</span>,
   pi.range <span class='op'>=</span> <span class='fl'>0.95</span>,
   calc.obs <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  simtimelast <span class='op'>=</span> <span class='cn'>NULL</span>
+  simtimelast <span class='op'>=</span> <span class='cn'>NULL</span>,
+  trt.assign <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"default"</span>, <span class='st'>"reverse"</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -163,8 +164,19 @@ for the observed data. Need be set as FALSE if survival information in the <code
       <td><p>An optional numeric to specify last simulation time for survival curve.
 If NULL (default), the last observation time in the <code>newdata</code> will be used.</p></td>
     </tr>
+    <tr>
+      <th>trt.assign</th>
+      <td><p>Specify which of the categories of <code>trt</code> need to be considered as control group.
+See details below if you have more than two categories. Only applicable if you will use
+<code><a href='extract_hr_pi.html'>extract_medsurv_delta_pi()</a></code> to extract delta of median survival times.</p></td>
+    </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>If your <code>trt</code> has more than two categories/levels and want to specify which one to use as a
+reference group, you can convert the column into a factor in the <code>newdata</code> input for
+<code><a href='surv_param_sim.html'>surv_param_sim()</a></code>. The first level will be used as a reference group.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
