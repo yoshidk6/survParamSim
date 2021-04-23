@@ -67,3 +67,68 @@ extract_km_obs <- function(km.pi) {
 extract_medsurv <- function(km.pi) {
   return(km.pi$sim.median.time)
 }
+
+#' @rdname extractrawsim
+#' @export
+#' @param km.pi A return object from [calc_km_pi()] function.
+#' @details
+#' [extract_medsurv_delta()] extracts delta of median survival times between treatment groups
+extract_medsurv_delta <- function(km.pi) {
+
+  pi.range   <- km.pi$pi.range
+  trt.assign <- km.pi$trt.assign
+  sim.median.time <- km.pi$sim.median.time
+
+  if(is.null(km.pi$trt)) stop("`trt` needs to be specified in `calc_km_pi()`")
+  if(length(km.pi$trt) > 1) stop("`trt` can only take one string in `calc_km_pi()")
+
+  group.syms <- rlang::syms(km.pi$group)
+  trt.sym    <- rlang::sym(km.pi$trt)
+
+  # Check trt values
+  check_trt(km.pi$median.pi, trt.sym, group.syms)
+
+  # Convert trt to factor
+  sim.median.time <-
+    sim.median.time %>%
+    dplyr::mutate(!!trt.sym := factor(!!trt.sym))
+
+  # Reverse control vs trt
+  if(trt.assign == "reverse"){
+    sim.median.time <-
+      sim.median.time %>%
+      dplyr::mutate(!!trt.sym := forcats::fct_rev(!!trt.sym))
+  }
+
+  sim.median.time <-
+    sim.median.time %>%
+    dplyr::mutate(.trt.group.index = as.integer(!!trt.sym),
+                  .trt.group.index = paste0(".trt.group.", .trt.group.index))
+
+  trt.group.index.map <-
+    sim.median.time %>%
+    dplyr::select(!!trt.sym, .trt.group.index) %>%
+    dplyr::distinct()
+
+  # Calculate delta
+  sim.median.time.delta <-
+    sim.median.time %>%
+    # Change to wide data
+    dplyr::select(!(!!trt.sym)) %>%
+    dplyr::select(!n) %>%
+    tidyr::pivot_wider(names_from = .trt.group.index,
+                       values_from = median) %>%
+    # Calc delta for all the non-control groups
+    dplyr::rename(.trt.control.group = .trt.group.1) %>%
+    dplyr::mutate(dplyr::across(dplyr::starts_with(".trt.group."), ~.x-.trt.control.group)) %>%
+    dplyr::select(!.trt.control.group) %>%
+    # Convert back to long data and recover the original trt variables
+    tidyr::pivot_longer(dplyr::starts_with(".trt.group."),
+                        names_to = ".trt.group.index",
+                        values_to = ".delta") %>%
+    dplyr::left_join(trt.group.index.map, by = ".trt.group.index") %>%
+    dplyr::select(!.trt.group.index)
+
+  return(sim.median.time.delta)
+}
+

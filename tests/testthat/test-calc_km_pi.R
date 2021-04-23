@@ -8,14 +8,23 @@ fit.lung <- survreg(Surv(time, status) ~ sex + ph.ecog, data = lung)
 object <- fit.lung
 n.rep  <-  30
 newdata <- tibble::as_tibble(dplyr::select(lung, time, status, sex, ph.ecog))
-## ph.ecog == 3 only has one subject
+## ph.ecog == 3 only has one subject, also remove ph.ecog==NA
 newdata2 <-
   tibble::as_tibble(dplyr::select(lung, time, status, sex, ph.ecog)) %>%
   dplyr::filter(ph.ecog != 3)
 censor.dur <- c(200, 1100)
+## Test for trt with more than 2 categories
+newdata3 <-
+  tibble::as_tibble(dplyr::select(lung, time, status, sex, ph.ecog)) %>%
+  dplyr::filter(!is.na(ph.ecog)) %>%
+  dplyr::mutate(ph.ecog = factor(ph.ecog, levels = c(3, 1, 2, 0)))
+fit.lung.3 <- survreg(Surv(time, status) ~ sex, data = newdata3)
 
 sim <- suppressWarnings(surv_param_sim(object, newdata, n.rep, censor.dur))
 km.pi <- calc_km_pi(sim, group = "sex")
+
+sim.newdata2 <- suppressWarnings(surv_param_sim(object, newdata2, n.rep, censor.dur))
+sim.newdata3 <- suppressWarnings(surv_param_sim(fit.lung.3, newdata3, n.rep, censor.dur))
 
 test_that("setting last obs time for simulation", {
   expect_equal(km.pi$t.last, 1022)
@@ -82,8 +91,9 @@ test_that("grouping and trt", {
 
 
 test_that("median survival delta", {
-  sim.newdata2 <- suppressWarnings(surv_param_sim(object, newdata2, n.rep, censor.dur))
-  km.pi.newdata2 <- calc_km_pi(sim.newdata2, trt = "sex", group = "ph.ecog")
+  km.pi.ph.ecog <- suppressWarnings(calc_km_pi(sim.newdata3, trt = "ph.ecog", group = "sex", trt.assign = "reverse"))
+
+  extract_medsurv_delta(km.pi.ph.ecog)
 
   extract_medsurv_delta_pi(km.pi.newdata2, outtype = "wide") %>%
     dplyr::select(pi_low, pi_high) %>%
@@ -95,6 +105,23 @@ test_that("median survival delta", {
                  tolerance = 0.01)
 
 })
+
+test_that("median survival delta prediction interval", {
+  km.pi.newdata2 <- calc_km_pi(sim.newdata2, trt = "sex", group = "ph.ecog")
+
+  extract_medsurv_delta(km.pi.newdata2)
+
+  extract_medsurv_delta_pi(km.pi.newdata2, outtype = "wide") %>%
+    dplyr::select(pi_low, pi_high) %>%
+    as.data.frame() %>%
+    dplyr::mutate(pi_low  = unname(pi_low),
+                  pi_high = unname(pi_high)) %>%
+    expect_equal(data.frame(pi_low  = c(-32, 32, -54),
+                            pi_high = c(647, 325, 235)),
+                 tolerance = 0.01)
+
+})
+
 
 
 test_that("no group or trt", {

@@ -12,7 +12,7 @@ reference:
 - contents:
   - starts_with("calc_")
 
-- title: "Step 3: Extract KM/HR or generate plots"
+- title: "Step 3: Extract K-M/HR or generate plots"
 - contents:
   - starts_with("plot_")
   - extract_hr_pi

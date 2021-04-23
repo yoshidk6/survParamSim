@@ -11,16 +11,27 @@
 #' for the observed data. Need be set as FALSE if survival information in the `newdata` is dummy.
 #' @param simtimelast An optional numeric to specify last simulation time for survival curve.
 #' If NULL (default), the last observation time in the `newdata` will be used.
+#' @param trt.assign Specify which of the categories of `trt` need to be considered as control group.
+#' See details below if you have more than two categories. Only applicable if you will use
+#' [extract_medsurv_delta_pi()] to extract delta of median survival times.
+#'
+#' @details
+#' If your `trt` has more than two categories/levels and want to specify which one to use as a
+#' reference group, you can convert the column into a factor in the `newdata` input for
+#' [surv_param_sim()]. The first level will be used as a reference group.
+#'
 #'
 #'
 calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
-                       calc.obs = TRUE, simtimelast = NULL){
+                       calc.obs = TRUE, simtimelast = NULL,
+                       trt.assign = c("default", "reverse")){
 
   # Replace nest with packageVersion("tidyr") == '1.0.0' for a speed issue
   # See https://github.com/tidyverse/tidyr/issues/751
   nest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::nest_legacy, tidyr::nest)
   unnest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
 
+  trt.assign <- match.arg(trt.assign)
 
   if(methods::is(sim, "survparamsim_pre_resampled")){
     if(sim$newdata.orig.missing & calc.obs) {
@@ -233,6 +244,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
   out$group <- group
   out$trt   <- trt
+  out$trt.assign <- trt.assign
 
   out$simtimelast <- simtimelast
   out$t.last <- sim$t.last.orig.new
@@ -279,7 +291,7 @@ plot_km_pi <- function(km.pi, show.obs = TRUE, trunc.sim.censor = TRUE){
 
 
   # Plot
-  ## Simulations 1
+  ## Generate ggplot object with aes specified using simulated data
   if(length(trt.syms) == 0) {
     g <-
       ggplot2::ggplot(sim.km.quantile.plot,
@@ -301,7 +313,7 @@ plot_km_pi <- function(km.pi, show.obs = TRUE, trunc.sim.censor = TRUE){
                           ggplot2::aes(y = surv), shape = "|", size = 3)
   }
 
-  ## Simulations 2
+  ## Simulated
   if(length(trt.syms) == 0) {
     g <-
       g + ggplot2::geom_ribbon(ggplot2::aes(ymin = pi_low, ymax = pi_high),
