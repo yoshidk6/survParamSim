@@ -93,23 +93,15 @@ test_that("grouping and trt", {
 test_that("median survival delta", {
   km.pi.ph.ecog <- suppressWarnings(calc_km_pi(sim.newdata3, trt = "ph.ecog", group = "sex", trt.assign = "reverse"))
 
-  extract_medsurv_delta(km.pi.ph.ecog)
+  medsurv.delta <- extract_medsurv_delta(km.pi.ph.ecog)
 
-  extract_medsurv_delta_pi(km.pi.newdata2, outtype = "wide") %>%
-    dplyr::select(pi_low, pi_high) %>%
-    as.data.frame() %>%
-    dplyr::mutate(pi_low  = unname(pi_low),
-                  pi_high = unname(pi_high)) %>%
-    expect_equal(data.frame(pi_low  = c(-32, 32, -54),
-                            pi_high = c(647, 325, 235)),
-                 tolerance = 0.01)
-
+  expect_equal(dim(medsurv.delta), c(180, 4))
+  expect_equal(medsurv.delta[[2, "median_delta"]], 182,
+               tolerance = 1)
 })
 
 test_that("median survival delta prediction interval", {
   km.pi.newdata2 <- calc_km_pi(sim.newdata2, trt = "sex", group = "ph.ecog")
-
-  extract_medsurv_delta(km.pi.newdata2)
 
   extract_medsurv_delta_pi(km.pi.newdata2, outtype = "wide") %>%
     dplyr::select(pi_low, pi_high) %>%

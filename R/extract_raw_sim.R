@@ -125,10 +125,20 @@ extract_medsurv_delta <- function(km.pi) {
     # Convert back to long data and recover the original trt variables
     tidyr::pivot_longer(dplyr::starts_with(".trt.group."),
                         names_to = ".trt.group.index",
-                        values_to = ".delta") %>%
+                        values_to = "median_delta") %>%
     dplyr::left_join(trt.group.index.map, by = ".trt.group.index") %>%
     dplyr::select(!.trt.group.index)
 
-  return(sim.median.time.delta)
-}
+  # Reverse back control vs trt
+  if(trt.assign == "reverse"){
+    sim.median.time.delta <-
+      sim.median.time.delta %>%
+      dplyr::mutate(!!trt.sym := forcats::fct_rev(!!trt.sym))
+  }
+
+  sim.median.time.delta %>%
+    dplyr::select(!!trt.sym, dplyr::everything()) %>%
+    dplyr::arrange(!!trt.sym) %>%
+    return()
+  }
 

@@ -143,62 +143,38 @@ extract_medsurv_pi <- function(km.pi, outtype = c("long", "wide")) {
 extract_medsurv_delta_pi <- function(km.pi, outtype = c("long", "wide")) {
 
   pi.range   <- km.pi$pi.range
-
-  if(is.null(km.pi$trt)) stop("`trt` needs to be specified")
-  if(length(km.pi$trt) > 1) stop("`trt` can only take one string")
-
-  group.syms <- rlang::syms(km.pi$group)
   trt.sym    <- rlang::sym(km.pi$trt)
-
-  # Check trt values
-  check_trt(km.pi$median.pi, trt.sym, group.syms)
+  group.syms <- rlang::syms(km.pi$group)
 
   outtype <- match.arg(outtype)
 
-  km.pi$sim.median.time
-
-  trt.vec <-
-    km.pi$median.pi %>%
-    dplyr::select(!!trt.sym) %>%
-    .[[1]] %>%
-    unique()
+  sim.median.time.delta <- extract_medsurv_delta(km.pi)
 
   out <-
-    km.pi$sim.median.time %>%
-    dplyr::select(-n) %>%
-    tidyr::pivot_wider(names_from = !!trt.sym, values_from = median) %>%
-    dplyr::mutate(.delta =
-                    !!rlang::sym(as.character(trt.vec[2]))  -
-                    !!rlang::sym(as.character(trt.vec[1]))) %>%
-    dplyr::group_by(!!!group.syms) %>%
-    dplyr::summarize(pi_low = as.numeric(stats::quantile(.delta, probs = 0.5 - pi.range/2, na.rm = TRUE)),
-                     pi_med = as.numeric(stats::quantile(.delta, probs = 0.5, na.rm = TRUE)),
-                     pi_high= as.numeric(stats::quantile(.delta, probs = 0.5 + pi.range/2, na.rm = TRUE)),
+    sim.median.time.delta %>%
+    dplyr::group_by(!!trt.sym, !!!group.syms) %>%
+    dplyr::summarize(pi_low = as.numeric(stats::quantile(median_delta, probs = 0.5 - pi.range/2, na.rm = TRUE)),
+                     pi_med = as.numeric(stats::quantile(median_delta, probs = 0.5, na.rm = TRUE)),
+                     pi_high= as.numeric(stats::quantile(median_delta, probs = 0.5 + pi.range/2, na.rm = TRUE)),
                      .groups = "drop")
 
   quantiles <-
     tibble::tibble(description = c("pi_low", "pi_med", "pi_high"),
                    quantile = c(0.5 - pi.range/2, 0.5, 0.5 + pi.range/2))
 
-
   if(outtype == "long"){
     out <-
       out %>%
-      tidyr::gather(description, median, pi_low:pi_high) %>%
+      tidyr::gather(description, median_delta, pi_low:pi_high) %>%
       dplyr::left_join(quantiles, by = "description") %>%
-      dplyr::arrange(!!!group.syms, quantile)
+      dplyr::arrange(!!trt.sym, !!!group.syms, quantile)
   }
-
-  #
-  #   if(km.pi$calc.obs){
-  #     out <- dplyr::select(out, pi_low, pi_med, pi_high, obs, dplyr::everything())
-  #   } else {
-  #     out <- dplyr::select(out, pi_low, pi_med, pi_high, dplyr::everything())
-  #   }
-  # }
 
   return(out)
 }
+
+
+
 
 
 #' Functions to extract prediction intervals and observed data
