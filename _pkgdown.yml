@@ -23,6 +23,7 @@ reference:
   - extract_hr
   - extract_km_obs
   - extract_medsurv
+  - extract_medsurv_delta
 
 - title: S3 methods
   contents:

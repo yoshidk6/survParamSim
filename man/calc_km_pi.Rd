@@ -10,7 +10,8 @@ calc_km_pi(
   group = NULL,
   pi.range = 0.95,
   calc.obs = TRUE,
-  simtimelast = NULL
+  simtimelast = NULL,
+  trt.assign = c("default", "reverse")
 )
 }
 \arguments{
@@ -29,7 +30,16 @@ for the observed data. Need be set as FALSE if survival information in the \code
 
 \item{simtimelast}{An optional numeric to specify last simulation time for survival curve.
 If NULL (default), the last observation time in the \code{newdata} will be used.}
+
+\item{trt.assign}{Specify which of the categories of \code{trt} need to be considered as control group.
+See details below if you have more than two categories. Only applicable if you will use
+\code{\link[=extract_medsurv_delta_pi]{extract_medsurv_delta_pi()}} to extract delta of median survival times.}
 }
 \description{
 Generate Kaplan-Meier curves with prediction intervals from parametric bootstrap simulation
+}
+\details{
+If your \code{trt} has more than two categories/levels and want to specify which one to use as a
+reference group, you can convert the column into a factor in the \code{newdata} input for
+\code{\link[=surv_param_sim]{surv_param_sim()}}. The first level will be used as a reference group.
 }
