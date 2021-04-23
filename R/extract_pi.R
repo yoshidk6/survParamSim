@@ -152,7 +152,7 @@ extract_medsurv_delta_pi <- function(km.pi, outtype = c("long", "wide")) {
 
   out <-
     sim.median.time.delta %>%
-    dplyr::group_by(!!trt.sym, !!!group.syms) %>%
+    dplyr::group_by(!!!group.syms, !!trt.sym) %>%
     dplyr::summarize(pi_low = as.numeric(stats::quantile(median_delta, probs = 0.5 - pi.range/2, na.rm = TRUE)),
                      pi_med = as.numeric(stats::quantile(median_delta, probs = 0.5, na.rm = TRUE)),
                      pi_high= as.numeric(stats::quantile(median_delta, probs = 0.5 + pi.range/2, na.rm = TRUE)),
@@ -167,7 +167,7 @@ extract_medsurv_delta_pi <- function(km.pi, outtype = c("long", "wide")) {
       out %>%
       tidyr::gather(description, median_delta, pi_low:pi_high) %>%
       dplyr::left_join(quantiles, by = "description") %>%
-      dplyr::arrange(!!trt.sym, !!!group.syms, quantile)
+      dplyr::arrange(!!!group.syms, !!trt.sym, quantile)
   }
 
   return(out)

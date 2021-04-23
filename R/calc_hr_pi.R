@@ -132,7 +132,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
   sim.nested <-
     sim$sim %>%
     dplyr::left_join(newdata.trt.group, by = "subj.sim") %>%
-    dplyr::group_by(!!!group.syms, rep) %>%
+    dplyr::group_by(rep, !!!group.syms) %>%
     nest2()
 
 

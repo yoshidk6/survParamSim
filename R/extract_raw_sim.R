@@ -137,8 +137,8 @@ extract_medsurv_delta <- function(km.pi) {
   }
 
   sim.median.time.delta %>%
-    dplyr::select(!!trt.sym, dplyr::everything()) %>%
-    dplyr::arrange(!!trt.sym) %>%
+    dplyr::select(rep, !!!group.syms, !!trt.sym, dplyr::everything()) %>%
+    dplyr::arrange(rep, !!!group.syms, !!trt.sym) %>%
     return()
   }
 

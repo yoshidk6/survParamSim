@@ -74,7 +74,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     # Fit K-M curve to observed data
     obs.grouped <-
       sim$newdata.nona.obs %>%
-      dplyr::group_by(!!!trt.syms, !!!group.syms)
+      dplyr::group_by(!!!group.syms, !!!trt.syms)
 
     if(length(dplyr::group_vars(obs.grouped)) == 0 &
        utils::packageVersion("tidyr") >= '1.0.0') {
@@ -110,7 +110,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
     obs.median.time <-
       obs.km.nested %>%
-      dplyr::select(!!!trt.syms, !!!group.syms, median, n)
+      dplyr::select(!!!group.syms, !!!trt.syms, median, n)
 
   } else {
     obs.km <- NULL
@@ -124,12 +124,12 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
   newdata.group <-
     sim$newdata.nona.sim %>%
-    dplyr::select(subj.sim, !!!trt.syms, !!!group.syms)
+    dplyr::select(subj.sim, !!!group.syms, !!!trt.syms)
 
   sim.grouped <-
     sim$sim %>%
     dplyr::left_join(newdata.group, by = "subj.sim") %>%
-    dplyr::group_by(rep, !!!trt.syms, !!!group.syms)
+    dplyr::group_by(rep, !!!group.syms, !!!trt.syms)
 
   sim.nested <- nest2(sim.grouped)
 
@@ -141,7 +141,8 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     # Calc median and KM curve
     dplyr::mutate(median = purrr::map_dbl(kmfit, function(x) summary(x)$table["median"]),
                   n      = purrr::map_dbl(kmfit, function(x) summary(x)$table["records"]),
-                  km = purrr::map(kmfit, approx_km))
+                  km = purrr::map(kmfit, approx_km)) %>%
+    dplyr::arrange(rep, !!!group.syms, !!!trt.syms)
 
 
   ## Calc quantile for survival curves
@@ -149,7 +150,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     sim.km %>%
     dplyr::select(-data, -kmfit) %>%
     unnest2(km) %>%
-    dplyr::group_by(!!!trt.syms, !!!group.syms, time) %>%
+    dplyr::group_by(!!!group.syms, !!!trt.syms, time) %>%
     nest2() %>%
     dplyr::mutate(quantiles = purrr::map(data, function(x)
       dplyr::summarize(x,
@@ -164,7 +165,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   ## Calc quantiles for median survival time
   sim.median.time <-
     sim.km %>%
-    dplyr::select(rep, !!!trt.syms, !!!group.syms, median, n) %>%
+    dplyr::select(rep, !!!group.syms, !!!trt.syms, median, n) %>%
     dplyr::ungroup()
 
   quantiles <-
@@ -173,7 +174,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
   sim.median.pi <-
     sim.median.time %>%
-    dplyr::group_by(!!!trt.syms, !!!group.syms) %>%
+    dplyr::group_by(!!!group.syms, !!!trt.syms) %>%
     dplyr::summarize(pi_low = as.numeric(stats::quantile(median, probs = 0.5 - pi.range/2, na.rm = TRUE)),
                      pi_med = as.numeric(stats::quantile(median, probs = 0.5, na.rm = TRUE)),
                      pi_high= as.numeric(stats::quantile(median, probs = 0.5 + pi.range/2, na.rm = TRUE)),
@@ -184,11 +185,12 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     tidyr::gather(description, median, pi_low:pi_high) %>%
     dplyr::left_join(quantiles, by = "description")
 
+
   # Check NA in median time and give warning
   median.time.na.detail <-
     sim.median.time %>%
     dplyr::mutate(is.median.na = is.na(median)) %>%
-    dplyr::group_by(!!!trt.syms, !!!group.syms) %>%
+    dplyr::group_by(!!!group.syms, !!!trt.syms) %>%
     dplyr::summarize(N.median.NA = sum(is.median.na),
                     N.all = dplyr::n()) %>%
     dplyr::ungroup()
@@ -204,7 +206,6 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
                    " these are not included for prediction interval calculation. You may",
                    " want to delay the `censor.dur` in simulation."))
   }
-
 
 
 
@@ -227,12 +228,12 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
     median.pi <-
       dplyr::bind_rows(sim.median.pi, obs.median) %>%
-      dplyr::arrange(!!!trt.syms, !!!group.syms)
+      dplyr::arrange(!!!group.syms, !!!trt.syms)
 
   } else {
     median.pi <-
       sim.median.pi %>%
-      dplyr::arrange(!!!trt.syms, !!!group.syms)
+      dplyr::arrange(!!!group.syms, !!!trt.syms)
   }
 
 

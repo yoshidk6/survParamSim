@@ -162,10 +162,12 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
     .$subj.sim %>%
     as.integer()
 
-  sim <- data.frame(time = as.vector(preds),
-                    event= as.vector(event.status),
-                    rep  = rep(1:n.rep,  times=n.subj),
-                    subj.sim = rep(subj.sim.id,  each =n.rep))
+  sim <-
+    data.frame(time = as.vector(preds),
+               event= as.vector(event.status),
+               rep  = rep(1:n.rep,  times=n.subj),
+               subj.sim = rep(subj.sim.id,  each =n.rep)) %>%
+    dplyr::arrange(rep, subj.sim)
 
   newdata <-
     newdata %>%
