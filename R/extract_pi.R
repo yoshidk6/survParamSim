@@ -40,7 +40,7 @@ extract_hr_pi <- function(hr.pi, outtype = c("long", "wide")) {
 #' @export
 #' @param km.pi A return object from [calc_km_pi()] function.
 #' @param trunc.sim.censor A logical specifying whether to truncate the simulated
-#' curve at the last time of `censor.dur`` specified in [surv_param_sim()].
+#' curve at the last time of `censor.dur` specified in [surv_param_sim()].
 #' @details
 #' [extract_km_pi()] extracts prediction intervals of simulated Kaplan-Meier curves.
 extract_km_pi <- function(km.pi, trunc.sim.censor = TRUE) {

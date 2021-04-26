@@ -24,7 +24,7 @@ extract_medsurv_delta_pi(km.pi, outtype = c("long", "wide"))
 \item{km.pi}{A return object from \code{\link[=calc_km_pi]{calc_km_pi()}} function.}
 
 \item{trunc.sim.censor}{A logical specifying whether to truncate the simulated
-curve at the last time of `censor.dur`` specified in \code{\link[=surv_param_sim]{surv_param_sim()}}.}
+curve at the last time of \code{censor.dur} specified in \code{\link[=surv_param_sim]{surv_param_sim()}}.}
 }
 \description{
 Functions to extract prediction intervals and observed data
