@@ -1,8 +1,12 @@
 #' Simulation of parametric survival model
 #'
-#' The main function to generate predicted survival using a model object
+#' The main function(s) to generate predicted survival using a model object
 #' generated with [survival::survreg()] function.
 #'
+#' @name survparamsim
+NULL
+
+
 #' @rdname survparamsim
 #' @export
 #' @param object A `survreg` class object. Currently accept exponential,

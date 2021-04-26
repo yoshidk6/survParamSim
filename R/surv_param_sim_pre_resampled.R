@@ -1,6 +1,5 @@
 #' Simulation of parametric survival model with an already-resampled dataset
 #'
-#' @rdname survparamsim_pre_resampled
 #' @export
 #' @param object A `survreg` class object. Currently accept exponential,
 #'   lognormal, weibull, loglogistic, and gaussian distributions.

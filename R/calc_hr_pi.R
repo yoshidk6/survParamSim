@@ -216,7 +216,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 }
 
 
-#' Plot HR
+#' Plot simulated HR histogram(s) overlayed with prediction intervals
 #'
 #' @export
 #' @param hr.pi a return object from \code{\link{calc_hr_pi}} function.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_hr_pi.R
 \name{plot_hr_pi}
 \alias{plot_hr_pi}
-\title{Plot HR}
+\title{Plot simulated HR histogram(s) overlayed with prediction intervals}
 \usage{
 plot_hr_pi(hr.pi, show.obs = TRUE)
 }
@@ -13,5 +13,5 @@ plot_hr_pi(hr.pi, show.obs = TRUE)
 This will have no effect if \code{calc.obs} was set to \code{FALSE} in \code{\link{calc_hr_pi}}.}
 }
 \description{
-Plot HR
+Plot simulated HR histogram(s) overlayed with prediction intervals
 }

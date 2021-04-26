@@ -1,6 +1,9 @@
 #' Functions to extract prediction intervals and observed data
 #'
-#'
+#' @name extractpi
+NULL
+
+
 #' @rdname extractpi
 #' @export
 #' @param hr.pi a return object from [calc_hr_pi()] function.
