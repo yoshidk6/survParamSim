@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">survParamSim</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4.9003</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
       </span>
     </div>
 
@@ -147,6 +147,10 @@
 <p>Calculate survival curves with prediction intervals:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">km.pi</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/calc_km_pi.html">calc_km_pi</a></span><span class="op">(</span><span class="va">sim</span>, trt <span class="op">=</span> <span class="st">"rx"</span>, group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"node4"</span>, <span class="st">"depth"</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; Warning in calc_km_pi(sim, trt = "rx", group = c("node4", "depth")): 339 of 800</span>
+<span class="co">#&gt; simulations (#rep * #trt * #group) did not reach median survival time and these</span>
+<span class="co">#&gt; are not included for prediction interval calculation. You may want to delay the</span>
+<span class="co">#&gt; `censor.dur` in simulation.</span>
 
 <span class="va">km.pi</span>
 <span class="co">#&gt; ---- Simulated and observed (if calculated) survival curves ----</span>
@@ -167,18 +171,18 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/extractpi.html">extract_medsurv_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 32 x 7</span>
-<span class="co">#&gt;    rx    node4 depth     n description median quantile</span>
-<span class="co">#&gt;    &lt;fct&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 Obs       0     0   193 pi_low       1257.    0.025</span>
-<span class="co">#&gt;  2 Obs       0     0   193 pi_med       1895.    0.5  </span>
-<span class="co">#&gt;  3 Obs       0     0   193 pi_high      2713.    0.975</span>
-<span class="co">#&gt;  4 Obs       0     0   193 obs          1436    NA    </span>
-<span class="co">#&gt;  5 Obs       0     1    35 pi_low       1539.    0.025</span>
-<span class="co">#&gt;  6 Obs       0     1    35 pi_med       2558.    0.5  </span>
-<span class="co">#&gt;  7 Obs       0     1    35 pi_high      2913.    0.975</span>
-<span class="co">#&gt;  8 Obs       0     1    35 obs            NA    NA    </span>
-<span class="co">#&gt;  9 Obs       1     0    76 pi_low        264.    0.025</span>
-<span class="co">#&gt; 10 Obs       1     0    76 pi_med        451.    0.5  </span>
+<span class="co">#&gt;    node4 depth rx          n description median quantile</span>
+<span class="co">#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;   &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt;  1     0     0 Obs       193 pi_low       1257.    0.025</span>
+<span class="co">#&gt;  2     0     0 Obs       193 pi_med       1895.    0.5  </span>
+<span class="co">#&gt;  3     0     0 Obs       193 pi_high      2713.    0.975</span>
+<span class="co">#&gt;  4     0     0 Obs       193 obs          1436    NA    </span>
+<span class="co">#&gt;  5     0     0 Lev+5FU   192 pi_low       2429.    0.025</span>
+<span class="co">#&gt;  6     0     0 Lev+5FU   192 pi_med       2716.    0.5  </span>
+<span class="co">#&gt;  7     0     0 Lev+5FU   192 pi_high      2908.    0.975</span>
+<span class="co">#&gt;  8     0     0 Lev+5FU   192 obs            NA    NA    </span>
+<span class="co">#&gt;  9     0     1 Obs        35 pi_low       1539.    0.025</span>
+<span class="co">#&gt; 10     0     1 Obs        35 pi_med       2558.    0.5  </span>
 <span class="co">#&gt; # … with 22 more rows</span></code></pre></div>
 <p>Calculate hazard ratios with prediction intervals:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -192,7 +196,7 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; * Settings:</span>
 <span class="co">#&gt;     trt: rx</span>
-<span class="co">#&gt;          (Lev+5FU as test trt, Obs as control)</span>
+<span class="co">#&gt;          ('Lev+5FU' as test trt, 'Obs' as control)</span>
 <span class="co">#&gt;     group: depth </span>
 <span class="co">#&gt;     pi.range: 0.95 </span>
 <span class="co">#&gt;     calc.obs: TRUE</span>
@@ -200,17 +204,17 @@
 <p><img src="reference/figures/README-hr_pi-1.png" width="100%"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/extractpi.html">extract_hr_pi</a></span><span class="op">(</span><span class="va">hr.pi</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 8 x 4</span>
-<span class="co">#&gt;   depth description    HR quantile</span>
-<span class="co">#&gt;   &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1     0 pi_low      0.464    0.025</span>
-<span class="co">#&gt; 2     0 pi_med      0.624    0.5  </span>
-<span class="co">#&gt; 3     0 pi_high     0.794    0.975</span>
-<span class="co">#&gt; 4     0 obs         0.590   NA    </span>
-<span class="co">#&gt; 5     1 pi_low      0.233    0.025</span>
-<span class="co">#&gt; 6     1 pi_med      0.597    0.5  </span>
-<span class="co">#&gt; 7     1 pi_high     1.13     0.975</span>
-<span class="co">#&gt; 8     1 obs         0.607   NA</span></code></pre></div>
+<span class="co">#&gt; # A tibble: 8 x 5</span>
+<span class="co">#&gt;   depth rx      description    HR quantile</span>
+<span class="co">#&gt;   &lt;dbl&gt; &lt;fct&gt;   &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1     0 Lev+5FU pi_low      0.464    0.025</span>
+<span class="co">#&gt; 2     0 Lev+5FU pi_med      0.624    0.5  </span>
+<span class="co">#&gt; 3     0 Lev+5FU pi_high     0.794    0.975</span>
+<span class="co">#&gt; 4     0 Lev+5FU obs         0.590   NA    </span>
+<span class="co">#&gt; 5     1 Lev+5FU pi_low      0.233    0.025</span>
+<span class="co">#&gt; 6     1 Lev+5FU pi_med      0.597    0.5  </span>
+<span class="co">#&gt; 7     1 Lev+5FU pi_high     1.13     0.975</span>
+<span class="co">#&gt; 8     1 Lev+5FU obs         0.607   NA</span></code></pre></div>
 </div>
 </div>
   </div>
