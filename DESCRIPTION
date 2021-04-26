@@ -12,7 +12,6 @@ Description: Perform survival simulation with parametric survival model generate
     Prediction intervals of Kaplan-Meier estimates and hazard ratio of treatment effect can be further calculated using simulated survival data.
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
 Depends: R (>= 3.4.0),
 Imports: 
     broom,
