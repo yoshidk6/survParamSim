@@ -23,7 +23,8 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
   }
 
   if(is.null(strat.resample)){
-    newdata.resampled <- resample_per_strat(newdata, n.resample = n.resample, n.rep = n.rep)
+    newdata.resampled <- resample_per_strat(newdata, n.resample = n.resample, n.rep = n.rep) %>%
+      dplyr::mutate(n.resample = n.resample)
   } else {
     strat.sym   <- rlang::sym(strat.resample)
 
