@@ -11,9 +11,9 @@ status](https://www.r-pkg.org/badges/version/survParamSim)](https://cran.r-proje
 
 The goal of survParamSim is to perform survival simulation with
 parametric survival model generated from ‘survreg’ function in
-‘survival’ package. In each simulation, coefficients are resampled
-from variance-covariance matrix of parameter estimates, in order to
-capture uncertainty in model parameters.
+‘survival’ package. In each simulation, coefficients are resampled from
+variance-covariance matrix of parameter estimates, in order to capture
+uncertainty in model parameters.
 
 ## Installation
 
@@ -98,6 +98,10 @@ Calculate survival curves with prediction intervals:
 
 ``` r
 km.pi <- calc_km_pi(sim, trt = "rx", group = c("node4", "depth"))
+#> Warning in calc_km_pi(sim, trt = "rx", group = c("node4", "depth")): 339 of 800
+#> simulations (#rep * #trt * #group) did not reach median survival time and these
+#> are not included for prediction interval calculation. You may want to delay the
+#> `censor.dur` in simulation.
 
 km.pi
 #> ---- Simulated and observed (if calculated) survival curves ----
@@ -121,18 +125,18 @@ plot_km_pi(km.pi) +
 ``` r
 extract_medsurv_pi(km.pi)
 #> # A tibble: 32 x 7
-#>    rx    node4 depth     n description median quantile
-#>    <fct> <dbl> <dbl> <dbl> <chr>        <dbl>    <dbl>
-#>  1 Obs       0     0   193 pi_low       1257.    0.025
-#>  2 Obs       0     0   193 pi_med       1895.    0.5  
-#>  3 Obs       0     0   193 pi_high      2713.    0.975
-#>  4 Obs       0     0   193 obs          1436    NA    
-#>  5 Obs       0     1    35 pi_low       1539.    0.025
-#>  6 Obs       0     1    35 pi_med       2558.    0.5  
-#>  7 Obs       0     1    35 pi_high      2913.    0.975
-#>  8 Obs       0     1    35 obs            NA    NA    
-#>  9 Obs       1     0    76 pi_low        264.    0.025
-#> 10 Obs       1     0    76 pi_med        451.    0.5  
+#>    node4 depth rx          n description median quantile
+#>    <dbl> <dbl> <fct>   <dbl> <chr>        <dbl>    <dbl>
+#>  1     0     0 Obs       193 pi_low       1257.    0.025
+#>  2     0     0 Obs       193 pi_med       1895.    0.5  
+#>  3     0     0 Obs       193 pi_high      2713.    0.975
+#>  4     0     0 Obs       193 obs          1436    NA    
+#>  5     0     0 Lev+5FU   192 pi_low       2429.    0.025
+#>  6     0     0 Lev+5FU   192 pi_med       2716.    0.5  
+#>  7     0     0 Lev+5FU   192 pi_high      2908.    0.975
+#>  8     0     0 Lev+5FU   192 obs            NA    NA    
+#>  9     0     1 Obs        35 pi_low       1539.    0.025
+#> 10     0     1 Obs        35 pi_med       2558.    0.5  
 #> # … with 22 more rows
 ```
 
@@ -149,7 +153,7 @@ hr.pi
 #> 
 #> * Settings:
 #>     trt: rx
-#>          (Lev+5FU as test trt, Obs as control)
+#>          ('Lev+5FU' as test trt, 'Obs' as control)
 #>     group: depth 
 #>     pi.range: 0.95 
 #>     calc.obs: TRUE
@@ -160,15 +164,15 @@ plot_hr_pi(hr.pi)
 
 ``` r
 extract_hr_pi(hr.pi)
-#> # A tibble: 8 x 4
-#>   depth description    HR quantile
-#>   <dbl> <chr>       <dbl>    <dbl>
-#> 1     0 pi_low      0.464    0.025
-#> 2     0 pi_med      0.624    0.5  
-#> 3     0 pi_high     0.794    0.975
-#> 4     0 obs         0.590   NA    
-#> 5     1 pi_low      0.233    0.025
-#> 6     1 pi_med      0.597    0.5  
-#> 7     1 pi_high     1.13     0.975
-#> 8     1 obs         0.607   NA
+#> # A tibble: 8 x 5
+#>   depth rx      description    HR quantile
+#>   <dbl> <fct>   <chr>       <dbl>    <dbl>
+#> 1     0 Lev+5FU pi_low      0.464    0.025
+#> 2     0 Lev+5FU pi_med      0.624    0.5  
+#> 3     0 Lev+5FU pi_high     0.794    0.975
+#> 4     0 Lev+5FU obs         0.590   NA    
+#> 5     1 Lev+5FU pi_low      0.233    0.025
+#> 6     1 Lev+5FU pi_med      0.597    0.5  
+#> 7     1 Lev+5FU pi_high     1.13     0.975
+#> 8     1 Lev+5FU obs         0.607   NA
 ```
