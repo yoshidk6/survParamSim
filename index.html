@@ -127,7 +127,7 @@
 <p>Next, run parametric bootstrap simulation:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim</span> <span class="op">&lt;-</span> 
-  <span class="fu"><a href="reference/surv_param_sim.html">surv_param_sim</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">fit.colon</span>, newdata <span class="op">=</span> <span class="va">colon2</span>, 
+  <span class="fu"><a href="reference/survparamsim.html">surv_param_sim</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">fit.colon</span>, newdata <span class="op">=</span> <span class="va">colon2</span>, 
                  censor.dur <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1800</span>, <span class="fl">3000</span><span class="op">)</span>,
                  <span class="co"># Simulating only 100 times to make the example go fast</span>
                  n.rep <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>
@@ -165,7 +165,7 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html">expand_limits</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-km_pi_group-1.png" width="100%"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/extract_hr_pi.html">extract_medsurv_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="reference/extractpi.html">extract_medsurv_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 32 x 7</span>
 <span class="co">#&gt;    rx    node4 depth     n description median quantile</span>
 <span class="co">#&gt;    &lt;fct&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;</span>
@@ -199,7 +199,7 @@
 <span class="fu"><a href="reference/plot_hr_pi.html">plot_hr_pi</a></span><span class="op">(</span><span class="va">hr.pi</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-hr_pi-1.png" width="100%"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/extract_hr_pi.html">extract_hr_pi</a></span><span class="op">(</span><span class="va">hr.pi</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="reference/extractpi.html">extract_hr_pi</a></span><span class="op">(</span><span class="va">hr.pi</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 8 x 4</span>
 <span class="co">#&gt;   depth description    HR quantile</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;</span>

@@ -157,12 +157,12 @@ You can see that all of the factor has strong association with the outcome.</p>
 <div id="perform-simulation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#perform-simulation" class="anchor"></a>Perform simulation</h2>
-<p><code><a href="../reference/surv_param_sim.html">surv_param_sim()</a></code> is the main function of the package that takes <code>survreg</code> object as described above.<br>
-It also require you to supply <code>newdata</code>, which is required even if it is not new - i.e. the same data was used for both <code><a href="https://rdrr.io/pkg/survival/man/survreg.html">survreg()</a></code> and <code><a href="../reference/surv_param_sim.html">surv_param_sim()</a></code>.</p>
+<p><code><a href="../reference/survparamsim.html">surv_param_sim()</a></code> is the main function of the package that takes <code>survreg</code> object as described above.<br>
+It also require you to supply <code>newdata</code>, which is required even if it is not new - i.e. the same data was used for both <code><a href="https://rdrr.io/pkg/survival/man/survreg.html">survreg()</a></code> and <code><a href="../reference/survparamsim.html">surv_param_sim()</a></code>.</p>
 <p>What it does is: 1. Re-sample all the coefficients in the parametric survival model from variance-covariance matrix for <code>n.rep</code> times. 2. Perform survival time for all subjects in <code>newdata</code> with the corresponding covariates, using one of the resampled coefficients. Also generate censoring time according to <code>censor.dur</code> (if not NULL), and replace the simulated survival time above if censoring time is earlier. 4. Repeat the steps 2. for <code>n.rep</code> times.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim</span> <span class="op">&lt;-</span> 
-  <span class="fu"><a href="../reference/surv_param_sim.html">surv_param_sim</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">fit.colon</span>, newdata <span class="op">=</span> <span class="va">colon2</span>, 
+  <span class="fu"><a href="../reference/survparamsim.html">surv_param_sim</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">fit.colon</span>, newdata <span class="op">=</span> <span class="va">colon2</span>, 
                  <span class="co"># Simulate censoring according to the plot above</span>
                  censor.dur <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1800</span>, <span class="fl">3000</span><span class="op">)</span>,
                  <span class="co"># Simulate only 100 times to make the example go fast</span>
@@ -210,9 +210,9 @@ It also require you to supply <code>newdata</code>, which is required even if it
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Recurrence free rate"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html">expand_limits</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <p><img src="survParamSim_files/figure-html/km_pi_plot-1.png" width="700"></p>
-<p>Or providing median survival summary table with <code><a href="../reference/extract_hr_pi.html">extract_medsurv_pi()</a></code> function.</p>
+<p>Or providing median survival summary table with <code><a href="../reference/extractpi.html">extract_medsurv_pi()</a></code> function.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/extract_hr_pi.html">extract_medsurv_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/extractpi.html">extract_medsurv_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 8 x 5</span>
 <span class="co">#&gt;   rx          n description median quantile</span>
 <span class="co">#&gt;   &lt;fct&gt;   &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;</span>
@@ -260,9 +260,9 @@ You can see that prediction interval is wide for (depth: 1 &amp; nodes4: 1) grou
 <span class="co">#&gt;     calc.obs: TRUE</span>
 <span class="fu"><a href="../reference/plot_hr_pi.html">plot_hr_pi</a></span><span class="op">(</span><span class="va">hr.pi</span><span class="op">)</span></code></pre></div>
 <p><img src="survParamSim_files/figure-html/hr_pi-1.png" width="700"></p>
-<p>You can also extract prediction intervals and observed HR with <code><a href="../reference/extract_hr_pi.html">extract_hr_pi()</a></code> function.</p>
+<p>You can also extract prediction intervals and observed HR with <code><a href="../reference/extractpi.html">extract_hr_pi()</a></code> function.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/extract_hr_pi.html">extract_hr_pi</a></span><span class="op">(</span><span class="va">hr.pi</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/extractpi.html">extract_hr_pi</a></span><span class="op">(</span><span class="va">hr.pi</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 8 x 5</span>
 <span class="co">#&gt;   depth rx      description    HR quantile</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;fct&gt;   &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;</span>
