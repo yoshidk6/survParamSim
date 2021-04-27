@@ -3,7 +3,9 @@ reference:
   desc: >
     Perform simulation using a survival model and a provided dataset
 - contents:
-  - starts_with("surv_param_sim")
+  - surv_param_sim
+  - surv_param_sim_resample
+  - surv_param_sim_pre_resampled
 
 - title: "Step 2: Generate K-M and/or HR"
   desc: >
