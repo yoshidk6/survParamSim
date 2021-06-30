@@ -33,6 +33,9 @@ NULL
 #' from survival events.
 #' @param na.warning Boolean specifying whether warning will be shown if
 #' `newdata` contain subjects with missing model variables.
+#' @param mi.resuls An optional `MIresult` object that contains both `coef` and
+#' `vcov` from multiple imputation. `coef` and `vcov` in `object` is replaced with
+#' those in `mi.resuls`, if this argument is provided
 #' @return A `survparamsim` object that contains the original `survreg` class
 #'   object, newdata, and a data frame for predicted survival profiles with the
 #'   following columns:
@@ -77,7 +80,7 @@ NULL
 #'
 #'
 surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
-                           coef.var = TRUE, na.warning = TRUE){
+                           coef.var = TRUE, na.warning = TRUE, mi.resuls = NULL){
 
   if(missing(newdata)) stop("`newdata` needs to be provided even if the same as the one for `survreg()`")
 
