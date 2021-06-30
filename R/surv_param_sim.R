@@ -97,7 +97,7 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
   if(object$dist != "exponential" & is.null(mi.resuls)){
     theta <- c(object$coef, log(object$scale))
   } else if (!is.null(mi.resuls)) {
-    theta <- coef(fit.mi)
+    theta <- coef(mi.resuls)
   } else {
     theta <- object$coef
   }
