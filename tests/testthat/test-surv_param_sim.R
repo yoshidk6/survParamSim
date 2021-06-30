@@ -58,6 +58,6 @@ for(i in 1:m.imp) betas[[i]] <- c(betas[[i]], `Log(scale)`=log(models[[i]]$scale
 vars <- mitools::MIextract(models, fun=vcov)
 fit.mi <- mitools::MIcombine(betas,vars)
 
-sim <- suppressWarnings(surv_param_sim(models[[1]], newdata, n.rep, censor.dur, mi.resuls = fit.mi))
+sim <- suppressWarnings(surv_param_sim(fit.lung, newdata, n.rep, censor.dur, mi.resuls = fit.mi))
 
 

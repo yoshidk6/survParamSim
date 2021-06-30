@@ -37,8 +37,7 @@ NULL
 #' `vcov` from multiple imputation. `coef` and `vcov` in `object` is replaced with
 #' those in `mi.resuls`, if this argument is provided. All the other information
 #' (e.g. formula, distribution) are taken from `object` argument, so the multiple
-#' imputation need to use the same exact setting. Simplest is to provide one of
-#' the multiple imputation fit object to `object`
+#' imputation need to use the same exact setting
 #' @return A `survparamsim` object that contains the original `survreg` class
 #'   object, newdata, and a data frame for predicted survival profiles with the
 #'   following columns:
