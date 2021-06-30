@@ -28,7 +28,7 @@ test_that("Extracted HR size matches", {
   hr.pi <- calc_hr_pi(sim.resample, trt = "sex")
 
   expect_equal(dim(extract_hr(hr.pi)),
-               c(n.rep, 3))
+               c(n.rep, 5))
 })
 
 test_that("Warning with n per subgroup not consistent", {

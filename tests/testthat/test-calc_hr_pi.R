@@ -82,12 +82,13 @@ test_that("not all groups have both treatment arms", {
 test_that("check HR calculation", {
   hr.pi.raw <- extract_hr(hr.pi)
 
-  expect_equal(dim(hr.pi.raw), c(30, 3))
+  expect_equal(dim(hr.pi.raw), c(30, 5))
   expect_equal(hr.pi.raw$HR[[1]], 0.708, tolerance = .001)
+  expect_equal(hr.pi.raw$p.value.logrank[[1]], 0.0340, tolerance = .001)
 
 
   hr.pi.raw.group <- extract_hr(calc_hr_pi(sim, trt = "sex", group = "ph.ecog", trt.assign = "rev"))
-  expect_equal(dim(hr.pi.raw.group), c(90, 4))
+  expect_equal(dim(hr.pi.raw.group), c(90, 6))
   expect_equal(hr.pi.raw.group$HR[[1]], 1.3, tolerance = .01)
 })
 

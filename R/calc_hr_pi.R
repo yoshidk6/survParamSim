@@ -88,11 +88,14 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
         paste(attributes(formula(sim$survreg))$variables,"~",trt)[2] %>%
         stats::as.formula()
 
-      survival::coxph(formula, data=x) %>%
+      cfit <- survival::coxph(formula, data=x)
+      p.value.logrank <- broom::glance(cfit)$p.value.log
+      cfit %>%
         broom::tidy(exponentiate = TRUE) %>%
         dplyr::mutate(!!trt.sym := factor(substr(term, nchar(trt)+1, nchar(term)),
-                                          levels = trt.levels))%>%
-        dplyr::select(!!trt.sym, HR = estimate)
+                                          levels = trt.levels)) %>%
+        dplyr::select(!!trt.sym, HR = estimate, p.value.coef.wald = p.value) %>%
+        dplyr::mutate(p.value.logrank = p.value.logrank)
     }
     safe_calc_hr_each_obs <- purrr::safely(calc_hr_each_obs, otherwise = NA)
 
@@ -141,11 +144,14 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
       paste("Surv(time, event) ~",trt) %>%
       stats::as.formula()
 
-    survival::coxph(formula, data=x) %>%
+    cfit <- survival::coxph(formula, data=x)
+    p.value.logrank <- broom::glance(cfit)$p.value.log
+    cfit %>%
       broom::tidy(exponentiate = TRUE) %>%
       dplyr::mutate(!!trt.sym := factor(substr(term, nchar(trt)+1, nchar(term)),
                                         levels = trt.levels))%>%
-      dplyr::select(!!trt.sym, HR = estimate)
+      dplyr::select(!!trt.sym, HR = estimate, p.value.coef.wald = p.value) %>%
+      dplyr::mutate(p.value.logrank = p.value.logrank)
   }
   safe_calc_hr_each_sim <- purrr::safely(calc_hr_each_sim, otherwise = NA)
 
@@ -187,7 +193,8 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
   if(calc.obs){
     hr.pi.quantile <-
-      dplyr::bind_rows(sim.hr.pi, obs.hr) %>%
+      dplyr::select(obs.hr, -p.value.coef.wald, -p.value.logrank) %>%
+      dplyr::bind_rows(sim.hr.pi, .) %>%
       dplyr::arrange(!!!group.syms, !!trt.sym)
 
   } else {
