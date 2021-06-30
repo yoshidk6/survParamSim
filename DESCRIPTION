@@ -29,6 +29,8 @@ Imports:
     tidyr (>= 1.1),
 Suggests: 
     knitr,
+    mice,
+    mitools,
     rmarkdown,
     survminer,
     testthat (>= 2.1.0),

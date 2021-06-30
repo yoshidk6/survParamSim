@@ -35,7 +35,10 @@ NULL
 #' `newdata` contain subjects with missing model variables.
 #' @param mi.resuls An optional `MIresult` object that contains both `coef` and
 #' `vcov` from multiple imputation. `coef` and `vcov` in `object` is replaced with
-#' those in `mi.resuls`, if this argument is provided
+#' those in `mi.resuls`, if this argument is provided. All the other information
+#' (e.g. formula, distribution) are taken from `object` argument, so the multiple
+#' imputation need to use the same exact setting. Simplest is to provide one of
+#' the multiple imputation fit object to `object`
 #' @return A `survparamsim` object that contains the original `survreg` class
 #'   object, newdata, and a data frame for predicted survival profiles with the
 #'   following columns:
@@ -91,15 +94,19 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
 
   # Prepare model parameter with bootstrap
   ## point estimates of model parameters
-  if(object$dist != "exponential"){
+  if(object$dist != "exponential" & is.null(mi.resuls)){
     theta <- c(object$coef, log(object$scale))
+  } else if (!is.null(mi.resuls)) {
+    theta <- coef(fit.mi)
   } else {
     theta <- object$coef
   }
 
   # parametric bootstrap of model parameters
   if(coef.var) {
-    th.bs <- mvtnorm::rmvnorm(n.rep, theta, stats::vcov(object))
+    vcov.mat <- stats::vcov(object)
+    if(!is.null(mi.resuls)) vcov.mat <- stats::vcov(mi.resuls)
+    th.bs <- mvtnorm::rmvnorm(n.rep, theta, vcov.mat)
   } else {
     th.bs <- matrix(rep(theta, each = n.rep), nrow = n.rep)
   }
