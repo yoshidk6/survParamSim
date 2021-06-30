@@ -153,7 +153,11 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>extract_sim()</code> extracts raw survival time &amp; event status for all simulated subjects.</p>
-<p><code>extract_hr()</code> extracts simulated HRs for all repeated simulations</p>
+<p><code>extract_hr()</code> extracts simulated HRs for all repeated simulations.
+It also returns p values for Cox regression fits, one for each group
+based on Wald test and another for the overall significance of the
+coefficient based on logrank test. The latter has the same values
+across treatment groups when &gt;2 levels in treatment</p>
 <p><code>extract_km_obs()</code> extracts observed Kaplan-Meier curves.</p>
 <p><code>extract_medsurv()</code> extracts simulated median survival times for all repeated simulations</p>
 <p><code>extract_medsurv_delta()</code> extracts delta of median survival times between treatment groups</p>
