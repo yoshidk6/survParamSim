@@ -52,12 +52,21 @@ imp <- mice::rbind(imp.1, imp.2)
 
 ## Fit and put together summary
 mit <- mitools::imputationList(lapply(1:m.imp, mice::complete, data=imp))
-models <- with(mit, survreg(Surv(exp(time), status) ~ sex + ph.ecog))
+models <- with(mit, survreg(Surv(exp(time), status) ~ sex + factor(ph.ecog)))
 betas <- mitools::MIextract(models,fun=coef)
 for(i in 1:m.imp) betas[[i]] <- c(betas[[i]], `Log(scale)`=log(models[[i]]$scale)) # Add log(scale) parameter at the end. This needs to be ignored for exponential model
 vars <- mitools::MIextract(models, fun=vcov)
 fit.mi <- mitools::MIcombine(betas,vars)
 
-sim <- suppressWarnings(surv_param_sim(fit.lung, newdata, n.rep, censor.dur, mi.resuls = fit.mi))
+test_that("error if object and mi.result have different coefficients", {
+  models <- with(mit, survreg(Surv(exp(time), status) ~ sex + factor(ph.ecog)))
+  betas <- mitools::MIextract(models,fun=coef)
+  for(i in 1:m.imp) betas[[i]] <- c(betas[[i]], `Log(scale)`=log(models[[i]]$scale)) # Add log(scale) parameter at the end. This needs to be ignored for exponential model
+  vars <- mitools::MIextract(models, fun=vcov)
+  fit.mi <- mitools::MIcombine(betas,vars)
+
+  expect_error(surv_param_sim(fit.lung, newdata, n.rep, censor.dur, mi.result = fit.mi),
+                 "Number of coefficients in `mi.result` does not match that in `object`")
+})
 
 

@@ -33,9 +33,9 @@ NULL
 #' from survival events.
 #' @param na.warning Boolean specifying whether warning will be shown if
 #' `newdata` contain subjects with missing model variables.
-#' @param mi.resuls An optional `MIresult` object that contains both `coef` and
+#' @param mi.result An optional `MIresult` object that contains both `coef` and
 #' `vcov` from multiple imputation. `coef` and `vcov` in `object` is replaced with
-#' those in `mi.resuls`, if this argument is provided. All the other information
+#' those in `mi.result`, if this argument is provided. All the other information
 #' (e.g. formula, distribution) are taken from `object` argument, so the multiple
 #' imputation need to use the same exact setting
 #' @return A `survparamsim` object that contains the original `survreg` class
@@ -82,7 +82,7 @@ NULL
 #'
 #'
 surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
-                           coef.var = TRUE, na.warning = TRUE, mi.resuls = NULL){
+                           coef.var = TRUE, na.warning = TRUE, mi.result = NULL){
 
   if(missing(newdata)) stop("`newdata` needs to be provided even if the same as the one for `survreg()`")
 
@@ -93,10 +93,10 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
 
   # Prepare model parameter with bootstrap
   ## point estimates of model parameters
-  if(object$dist != "exponential" & is.null(mi.resuls)){
+  if(object$dist != "exponential" & is.null(mi.result)){
     theta <- c(object$coef, log(object$scale))
-  } else if (!is.null(mi.resuls)) {
-    theta <- coef(mi.resuls)
+  } else if (!is.null(mi.result)) {
+    theta <- coef(mi.result)
   } else {
     theta <- object$coef
   }
@@ -104,12 +104,15 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
   # parametric bootstrap of model parameters
   if(coef.var) {
     vcov.mat <- stats::vcov(object)
-    if(!is.null(mi.resuls)) vcov.mat <- stats::vcov(mi.resuls)
+    if(!is.null(mi.result)) vcov.mat <- stats::vcov(mi.result)
     th.bs <- mvtnorm::rmvnorm(n.rep, theta, vcov.mat)
   } else {
     th.bs <- matrix(rep(theta, each = n.rep), nrow = n.rep)
   }
 
+  if(!is.null(mi.result) && length(object$coefficients) + 1 != ncol(th.bs)) {
+    stop("Number of coefficients in `mi.result` does not match that in `object`")
+  }
 
   # Prep data matrix for simulation
   mf <- stats::model.frame(object, data = newdata)
