@@ -40,15 +40,20 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     }
   }
 
-
-  ###### Need to throw an error if grouping variable is not present in newdata
-
   if(length(trt) > 1) stop("`trt` can only take one string")
 
   # This needs to be kept as syms - rlang::sym() fails with trt=NULL
   trt.syms   <- rlang::syms(trt)
   group.syms <- rlang::syms(group)
+  # This is needed to handle when the same variable is used for both `group` and `trt`
+  group.trt.syms <- rlang::syms(unique(c(group, trt)))
 
+  if(length(trt.syms) + length(group.syms) > length(group.trt.syms)){
+    warning(paste("Use of the same variable for `group` and `trt` is discouraged.",
+                  "If you need a colored & faceted plot, please consider assigning",
+                  "your variable to `trt`, and on the plot generated from `plot_km_pi()`,",
+                  "apply `facet_wrap()` or `facet_grid()`"))
+  }
 
   ## time for output
   if(is.null(simtimelast)){
@@ -75,7 +80,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     # Fit K-M curve to observed data
     obs.grouped <-
       sim$newdata.nona.obs %>%
-      dplyr::group_by(!!!group.syms, !!!trt.syms)
+      dplyr::group_by(!!!group.trt.syms)
 
     if(length(dplyr::group_vars(obs.grouped)) == 0 &
        utils::packageVersion("tidyr") >= '1.0.0') {
@@ -111,7 +116,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
     obs.median.time <-
       obs.km.nested %>%
-      dplyr::select(!!!group.syms, !!!trt.syms, median, n)
+      dplyr::select(!!!group.trt.syms, median, n)
 
   } else {
     obs.km <- NULL
@@ -125,12 +130,12 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
   newdata.group <-
     sim$newdata.nona.sim %>%
-    dplyr::select(subj.sim, !!!group.syms, !!!trt.syms)
+    dplyr::select(subj.sim, !!!group.trt.syms)
 
   sim.grouped <-
     sim$sim %>%
     dplyr::left_join(newdata.group, by = "subj.sim") %>%
-    dplyr::group_by(rep, !!!group.syms, !!!trt.syms)
+    dplyr::group_by(rep, !!!group.trt.syms)
 
   sim.nested <- nest2(sim.grouped)
 
@@ -143,7 +148,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     dplyr::mutate(median = purrr::map_dbl(kmfit, function(x) summary(x)$table["median"]),
                   n      = purrr::map_dbl(kmfit, function(x) summary(x)$table["records"]),
                   km = purrr::map(kmfit, approx_km)) %>%
-    dplyr::arrange(rep, !!!group.syms, !!!trt.syms)
+    dplyr::arrange(rep, !!!group.trt.syms)
 
 
   ## Calc quantile for survival curves
@@ -151,7 +156,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     sim.km %>%
     dplyr::select(-data, -kmfit) %>%
     unnest2(km) %>%
-    dplyr::group_by(!!!group.syms, !!!trt.syms, time) %>%
+    dplyr::group_by(!!!group.trt.syms, time) %>%
     nest2() %>%
     dplyr::mutate(quantiles = purrr::map(data, function(x)
       dplyr::summarize(x,
@@ -166,7 +171,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   ## Calc quantiles for median survival time
   sim.median.time <-
     sim.km %>%
-    dplyr::select(rep, !!!group.syms, !!!trt.syms, median, n) %>%
+    dplyr::select(rep, !!!group.trt.syms, median, n) %>%
     dplyr::ungroup()
 
   quantiles <-
@@ -175,7 +180,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
   sim.median.pi <-
     sim.median.time %>%
-    dplyr::group_by(!!!group.syms, !!!trt.syms) %>%
+    dplyr::group_by(!!!group.trt.syms) %>%
     dplyr::summarize(pi_low = as.numeric(stats::quantile(median, probs = 0.5 - pi.range/2, na.rm = TRUE)),
                      pi_med = as.numeric(stats::quantile(median, probs = 0.5, na.rm = TRUE)),
                      pi_high= as.numeric(stats::quantile(median, probs = 0.5 + pi.range/2, na.rm = TRUE)),
@@ -191,7 +196,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
   median.time.na.detail <-
     sim.median.time %>%
     dplyr::mutate(is.median.na = is.na(median)) %>%
-    dplyr::group_by(!!!group.syms, !!!trt.syms) %>%
+    dplyr::group_by(!!!group.trt.syms) %>%
     dplyr::summarize(N.median.NA = sum(is.median.na),
                     N.all = dplyr::n()) %>%
     dplyr::ungroup()
@@ -229,12 +234,12 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
     median.pi <-
       dplyr::bind_rows(sim.median.pi, obs.median) %>%
-      dplyr::arrange(!!!group.syms, !!!trt.syms)
+      dplyr::arrange(!!!group.trt.syms)
 
   } else {
     median.pi <-
       sim.median.pi %>%
-      dplyr::arrange(!!!group.syms, !!!trt.syms)
+      dplyr::arrange(!!!group.trt.syms)
   }
 
 
@@ -246,6 +251,7 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
   out$group.syms <- group.syms
   out$trt.syms    <- trt.syms
+  out$group.trt.syms <- group.trt.syms
   out$trt.assign <- trt.assign
 
   out$simtimelast <- simtimelast

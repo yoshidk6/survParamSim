@@ -138,3 +138,12 @@ test_that("warning with immature median time simulations", {
 })
 
 
+test_that("trt and group overlapping variables", {
+  km.pi <- expect_warning(calc_km_pi(sim.newdata2, group = c("sex", "ph.ecog"), trt = "sex"),
+                          "Use of the same variable for `group` and `trt` ")
+  extract_km_pi(km.pi)
+  expect_error(extract_medsurv_delta_pi(km.pi),
+               "The same variable cannot be assigned for `group` and `trt`")
+
+})
+

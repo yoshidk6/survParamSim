@@ -50,6 +50,7 @@ extract_km_pi <- function(km.pi, trunc.sim.censor = TRUE) {
 
   group.syms <- km.pi$group.syms
   trt.syms   <- km.pi$trt.syms
+  group.trt.syms <- km.pi$group.trt.syms
 
 
   #### Below will not work if simtimelast is missing and obs.km is not calculated ####
@@ -61,11 +62,11 @@ extract_km_pi <- function(km.pi, trunc.sim.censor = TRUE) {
     ## Get last obs time for each group
     timelast <-
       obs.km %>%
-      dplyr::group_by(!!!trt.syms, !!!group.syms) %>%
+      dplyr::group_by(!!!group.trt.syms) %>%
       dplyr::arrange(time) %>%
       dplyr::slice(dplyr::n()) %>%
       dplyr::ungroup() %>%
-      dplyr::select(!!!trt.syms, !!!group.syms, timelast = time)
+      dplyr::select(!!!group.trt.syms, timelast = time)
 
     if(length(c(group.syms, trt.syms)) == 0){
       sim.km.quantile.plot <-
@@ -77,7 +78,7 @@ extract_km_pi <- function(km.pi, trunc.sim.censor = TRUE) {
     } else {
       sim.km.quantile.plot <-
         sim.km.quantile %>%
-        dplyr::full_join(timelast, by = as.character(c(group.syms, trt.syms))) %>%
+        dplyr::full_join(timelast, by = as.character(group.trt.syms)) %>%
         dplyr::filter(time <= timelast) %>%
         dplyr::select(-timelast)
     }
@@ -141,10 +142,17 @@ extract_medsurv_pi <- function(km.pi, outtype = c("long", "wide")) {
 #' [extract_medsurv_delta_pi()] extracts prediction intervals of
 #' delta of median survival times between treatment groups
 extract_medsurv_delta_pi <- function(km.pi, outtype = c("long", "wide")) {
+  # This is not a default output in km.pi object because not all of the km.pi has
+  # `trt` specified. Therefore these metrics needs to be calculated from the
+  # raw outputs here unlike other *_pi functions
 
   pi.range   <- km.pi$pi.range
   group.syms <- km.pi$group.syms
   trt.sym    <- km.pi$trt.syms[[1]]
+
+  if(length(km.pi$trt.syms) + length(group.syms) > length(km.pi$group.trt.syms)){
+    stop(paste("The same variable cannot be assigned for `group` and `trt`"))
+  }
 
   outtype <- match.arg(outtype)
 
