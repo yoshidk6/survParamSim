@@ -65,7 +65,13 @@ calc_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 
   # Define function to approximate or extract KM curves from KM fit object
   approx_km <- function(x){
-    surv <- stats::approx(c(0,x$time), c(1,x$surv), xout=t.out, method="constant", rule=2)$y
+    timetmp = x$time
+    survtmp = x$surv
+    if(min(timetmp) != 0) {
+      timetmp = c(0, timetmp)
+      survtmp = c(1, survtmp)
+    }
+    surv <- stats::approx(timetmp, survtmp, xout=t.out, method="constant", rule=2)$y
     data.frame(time = t.out,
                surv = surv)
   }
