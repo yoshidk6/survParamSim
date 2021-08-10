@@ -213,7 +213,7 @@ It also require you to supply <code>newdata</code>, which is required even if it
 <p>Or providing median survival summary table with <code><a href="../reference/extractpi.html">extract_medsurv_pi()</a></code> function.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/extractpi.html">extract_medsurv_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 8 x 5</span>
+<span class="co">#&gt; # A tibble: 8 × 5</span>
 <span class="co">#&gt;   rx          n description median quantile</span>
 <span class="co">#&gt;   &lt;fct&gt;   &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 Obs       315 pi_low       1108.   0.0250</span>
@@ -263,7 +263,7 @@ You can see that prediction interval is wide for (depth: 1 &amp; nodes4: 1) grou
 <p>You can also extract prediction intervals and observed HR with <code><a href="../reference/extractpi.html">extract_hr_pi()</a></code> function.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/extractpi.html">extract_hr_pi</a></span><span class="op">(</span><span class="va">hr.pi</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 8 x 5</span>
+<span class="co">#&gt; # A tibble: 8 × 5</span>
 <span class="co">#&gt;   depth rx      description    HR quantile</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;fct&gt;   &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;</span>
 <span class="co">#&gt; 1     0 Lev+5FU pi_low      0.464   0.0250</span>
