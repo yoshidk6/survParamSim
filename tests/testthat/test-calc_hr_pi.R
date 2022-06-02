@@ -23,7 +23,8 @@ hr.pi <- calc_hr_pi(sim, trt = "sex")
 newdata.3trt <-
   newdata %>%
   dplyr::mutate(trt = rep(c("B", "A", "CC"), length.out = nrow(.)),
-                trt = factor(trt, levels = c("B", "A", "CC")))
+                trt = factor(trt, levels = c("B", "A", "CC")),
+                trto= factor(trt, levels = c("B", "A", "CC"), ordered = T))
 # This will also test calculating grouping based on the variables not included in the model formula
 fit.lung.3trt <- survreg(Surv(time, status) ~ sex + ph.ecog, data = newdata.3trt)
 
@@ -121,5 +122,8 @@ test_that("test trt with >2 levels", {
   expect_equal(hr.pi.quantile$HR[[5]], 0.758, tolerance = .001)
   expect_equal(hr.pi.quantile$trt[[5]], factor("A", levels = c("B", "A", "CC")))
 
+  expect_error(calc_hr_pi(sim.3trt, trt = "trto"), "`trt` cannot be an ordered factor")
+
 })
+
 

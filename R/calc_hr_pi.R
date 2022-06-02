@@ -290,6 +290,7 @@ check_trt <- function(newdata.nona.obs, trt.sym, group.syms){
 
   if(sum(is.na(trt.vec)) > 0) stop("`trt` cannot has NA values")
   if(is.factor(trt.vec) & nlevels(trt.vec) != n.distinct.trt) warning("`trt` variable is factor and has unused levels, which is automatically dropped`")
+  if(is.ordered(trt.vec)) stop("`trt` cannot be an ordered factor, please use a regular factor instead")
 
   return(n.distinct.trt)
 
