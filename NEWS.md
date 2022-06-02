@@ -1,4 +1,6 @@
 
+# survParamSim 0.1.7 (in development)
+
 # survParamSim 0.1.6
 
 ## Minor changes
