@@ -5,14 +5,7 @@
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 notes
+0 errors | 0 warnings | 0 notes
 
-* Email address change
-Maintainer: 'Kenta Yoshida <yoshida.kenta.6@gmail.com>'
-
-New maintainer:
-  Kenta Yoshida <yoshida.kenta.6@gmail.com>
-Old maintainer(s):
-  Kenta Yoshida <6.kurabupasu@gmail.com>
 
 
