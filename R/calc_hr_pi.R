@@ -92,42 +92,14 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     nest2()
 
 
-  ## Define function to calc HR
-  calc_hr_each_sim <- function(x){
-    formula <-
-      paste("Surv(time, event) ~",trt) %>%
-      stats::as.formula()
+  sim.hr <- calc_hr_for_sim_with_cox(sim.nested, trt, trt.sym, trt.levels, unnest2)
 
-    cfit <- survival::coxph(formula, data=x)
-    p.value.logrank <- broom::glance(cfit)$p.value.log
-    cfit %>%
-      broom::tidy(exponentiate = TRUE) %>%
-      dplyr::mutate(!!trt.sym := factor(substr(term, nchar(trt)+1, nchar(term)),
-                                        levels = trt.levels))%>%
-      dplyr::select(!!trt.sym, HR = estimate, p.value.coef.wald = p.value) %>%
-      dplyr::mutate(p.value.logrank = p.value.logrank)
-  }
-  safe_calc_hr_each_sim <- purrr::safely(calc_hr_each_sim, otherwise = NA)
-
-  ## Calc HR
-  sim.hr <-
-    sim.nested %>%
-    dplyr::mutate(coxfit = purrr::map(data, safe_calc_hr_each_sim),
-                  HR = purrr::map(coxfit, ~.$result),
-                  description = "sim") %>%
-    unnest2(HR) %>%
-    dplyr::select(-data, -coxfit) %>%
-    dplyr::ungroup()
 
   ## Reverse back the factor
   if(trt.assign == "reverse"){
     sim.hr <-
       sim.hr %>%
       dplyr::mutate(!!trt.sym := forcats::fct_rev(!!trt.sym))
-  }
-
-  if(dplyr::filter(sim.hr, is.na(HR)) %>% nrow() > 0) {
-    warning("HR was not calculable in at least one subgroup for the simulated data, likely due to small number of subjects and this might results in biased estimates for prediction intervals.")
   }
 
 
@@ -307,6 +279,46 @@ calc_hr_for_obs <- function(sim, newdata.nona.obs, group.syms, trt, trt.sym, trt
   }
 
   return(obs.hr)
+}
+
+
+calc_hr_for_sim_with_cox <- function(sim.nested, trt, trt.sym, trt.levels, unnest2) {
+
+  ## Define function to calc HR
+  calc_hr_each_sim <- function(x){
+    formula <-
+      paste("Surv(time, event) ~",trt) %>%
+      stats::as.formula()
+
+    cfit <- survival::coxph(formula, data=x)
+    p.value.logrank <- broom::glance(cfit)$p.value.log
+    cfit %>%
+      broom::tidy(exponentiate = TRUE) %>%
+      dplyr::mutate(!!trt.sym := factor(substr(term, nchar(trt)+1, nchar(term)),
+                                        levels = trt.levels))%>%
+      dplyr::select(!!trt.sym, HR = estimate, p.value.coef.wald = p.value) %>%
+      dplyr::mutate(p.value.logrank = p.value.logrank)
+  }
+  safe_calc_hr_each_sim <- purrr::safely(calc_hr_each_sim, otherwise = NA)
+
+  ## Calc HR
+  ## sim.hr has rep, !!trt, !!!group, HR, description (= "sim") columns,
+  ## This is what we need to emulate with the new method
+  ## it also has p.value.coef.wald & p.value.logrank but it should be ok to ignore for now
+  sim.hr <-
+    sim.nested %>%
+    dplyr::mutate(coxfit = purrr::map(data, safe_calc_hr_each_sim),
+                  HR = purrr::map(coxfit, ~.$result),
+                  description = "sim") %>%
+    unnest2(HR) %>%
+    dplyr::select(-data, -coxfit) %>%
+    dplyr::ungroup()
+
+  if(dplyr::filter(sim.hr, is.na(HR)) %>% nrow() > 0) {
+    warning("HR was not calculable in at least one subgroup for the simulated data, likely due to small number of subjects and this might results in biased estimates for prediction intervals.")
+  }
+
+  return(sim.hr)
 }
 
 
