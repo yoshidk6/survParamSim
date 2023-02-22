@@ -30,6 +30,8 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
   newdata.nona.obs <- sim$newdata.nona.obs
   newdata.nona.sim <- sim$newdata.nona.sim
 
+  # Handle trt variable -------------------------------------------------------------------
+
   if(missing(trt)) stop("`trt` needs to be specified")
   if(length(trt) > 1) stop("`trt` can only take one string")
 
@@ -37,7 +39,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
   trt.sym    <- rlang::sym(trt)
 
   # Check trt values
-  n.distinct.trt <- check_trt(newdata.nona.obs, trt.sym, group.syms)
+  n.distinct.trt <- check_trt(newdata.nona.obs, trt.sym)
 
   # Convert trt to factor
   newdata.nona.obs <-
@@ -67,64 +69,16 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     }
   }
 
-  # Calc HR for observed data
+  # Calc HR for observed data -------------------------------------------------------------------
   if(calc.obs){
-    obs.grouped <-
-      newdata.nona.obs %>%
-      dplyr::group_by(!!!group.syms)
-
-    if(length(dplyr::group_vars(obs.grouped)) == 0 &
-       utils::packageVersion("tidyr") >= '1.0.0') {
-      obs.nested <-
-        obs.grouped %>%
-        nest2(data = dplyr::everything())
-    } else {
-      obs.nested <- nest2(obs.grouped)
-    }
-
-    ## Define function to calc HR
-    calc_hr_each_obs <- function(x){
-      formula <-
-        paste(attributes(formula(sim$survreg))$variables,"~",trt)[2] %>%
-        stats::as.formula()
-
-      cfit <- survival::coxph(formula, data=x)
-      p.value.logrank <- broom::glance(cfit)$p.value.log
-      cfit %>%
-        broom::tidy(exponentiate = TRUE) %>%
-        dplyr::mutate(!!trt.sym := factor(substr(term, nchar(trt)+1, nchar(term)),
-                                          levels = trt.levels)) %>%
-        dplyr::select(!!trt.sym, HR = estimate, p.value.coef.wald = p.value) %>%
-        dplyr::mutate(p.value.logrank = p.value.logrank)
-    }
-    safe_calc_hr_each_obs <- purrr::safely(calc_hr_each_obs, otherwise = NA)
-
-    ## Calc HR
-    obs.hr <-
-      obs.nested %>%
-      dplyr::mutate(coxfit = purrr::map(data, safe_calc_hr_each_obs),
-                    HR = purrr::map(coxfit, ~.$result),
-                    description = "obs") %>%
-      unnest2(HR) %>%
-      dplyr::select(-data, -coxfit) %>%
-      dplyr::ungroup()
-
-    # Reverse back the factor
-    if(trt.assign == "reverse"){
-      obs.hr <-
-        obs.hr %>%
-        dplyr::mutate(!!trt.sym := forcats::fct_rev(!!trt.sym))
-    }
-
-    if(dplyr::filter(obs.hr, is.na(HR)) %>% nrow() > 0) {
-      warning("HR was not calculable in at least one subgroup for the observed data, likely due to small number of subjects.")
-    }
+    obs.hr <- calc_hr_for_obs(sim, newdata.nona.obs, group.syms, trt, trt.sym, trt.assign, trt.levels,
+                              nest2, unnest2)
   } else {
     obs.hr <- NULL
   }
 
 
-  # Calculate HR simulated data
+  # Calc HR for simulated data ----------------------------------------------------------------
 
   ## First nest data - cox fit will done for each nested data
   newdata.trt.group <-
@@ -165,7 +119,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     dplyr::select(-data, -coxfit) %>%
     dplyr::ungroup()
 
-  # Reverse back the factor
+  ## Reverse back the factor
   if(trt.assign == "reverse"){
     sim.hr <-
       sim.hr %>%
@@ -176,7 +130,9 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     warning("HR was not calculable in at least one subgroup for the simulated data, likely due to small number of subjects and this might results in biased estimates for prediction intervals.")
   }
 
-  ## Calc quantiles
+
+  # Calc quantiles ----------------------------------------------------------------
+
   quantiles <-
     tibble::tibble(description = c("pi_low", "pi_med", "pi_high"),
                    quantile = c(0.5 - pi.range/2, 0.5, 0.5 + pi.range/2))
@@ -203,7 +159,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
       dplyr::arrange(!!!group.syms, !!trt.sym)
   }
 
-  # Output
+  # Output ---------------------------------------------------------------
   out <- list()
 
   out$calc.obs <- calc.obs
@@ -278,7 +234,7 @@ plot_hr_pi <- function(hr.pi, show.obs = TRUE){
 }
 
 
-check_trt <- function(newdata.nona.obs, trt.sym, group.syms){
+check_trt <- function(newdata.nona.obs, trt.sym){
 
   # Check trt values
   trt.vec <-
@@ -297,6 +253,61 @@ check_trt <- function(newdata.nona.obs, trt.sym, group.syms){
 }
 
 
+calc_hr_for_obs <- function(sim, newdata.nona.obs, group.syms, trt, trt.sym, trt.assign, trt.levels,
+                            nest2, unnest2) {
+  obs.grouped <-
+    newdata.nona.obs %>%
+    dplyr::group_by(!!!group.syms)
+
+  if(length(dplyr::group_vars(obs.grouped)) == 0 &
+     utils::packageVersion("tidyr") >= '1.0.0') {
+    obs.nested <-
+      obs.grouped %>%
+      nest2(data = dplyr::everything())
+  } else {
+    obs.nested <- nest2(obs.grouped)
+  }
+
+  ## Define function to calc HR
+  calc_hr_each_obs <- function(x){
+    formula <-
+      paste(attributes(formula(sim$survreg))$variables,"~",trt)[2] %>%
+      stats::as.formula()
+
+    cfit <- survival::coxph(formula, data=x)
+    p.value.logrank <- broom::glance(cfit)$p.value.log
+    cfit %>%
+      broom::tidy(exponentiate = TRUE) %>%
+      dplyr::mutate(!!trt.sym := factor(substr(term, nchar(trt)+1, nchar(term)),
+                                        levels = trt.levels)) %>%
+      dplyr::select(!!trt.sym, HR = estimate, p.value.coef.wald = p.value) %>%
+      dplyr::mutate(p.value.logrank = p.value.logrank)
+  }
+  safe_calc_hr_each_obs <- purrr::safely(calc_hr_each_obs, otherwise = NA)
+
+  ## Calc HR
+  obs.hr <-
+    obs.nested %>%
+    dplyr::mutate(coxfit = purrr::map(data, safe_calc_hr_each_obs),
+                  HR = purrr::map(coxfit, ~.$result),
+                  description = "obs") %>%
+    unnest2(HR) %>%
+    dplyr::select(-data, -coxfit) %>%
+    dplyr::ungroup()
+
+  # Reverse back the factor
+  if(trt.assign == "reverse"){
+    obs.hr <-
+      obs.hr %>%
+      dplyr::mutate(!!trt.sym := forcats::fct_rev(!!trt.sym))
+  }
+
+  if(dplyr::filter(obs.hr, is.na(HR)) %>% nrow() > 0) {
+    warning("HR was not calculable in at least one subgroup for the observed data, likely due to small number of subjects.")
+  }
+
+  return(obs.hr)
+}
 
 
 #' @rdname survparamsim-methods
