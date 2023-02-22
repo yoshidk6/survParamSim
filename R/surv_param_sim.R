@@ -209,7 +209,8 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
 
   ## Export for average HR calculation
   # out$lp.matrix <- lp
-  if(object$dist != "exponential") out$scale.vec <- scale.bs
+  # if(object$dist != "exponential") out$scale.vec <- scale.bs
+  if(object$dist != "exponential") out$scale.bs.df <- data.frame(rep = 1:n.rep, scale = scale.bs)
 
   structure(out, class = c("survparamsim"))
 }
