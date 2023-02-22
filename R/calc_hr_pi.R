@@ -103,7 +103,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
   out$trt.levels <- trt.levels
 
-  structure(out, class = c("survparamsim.hrpi"))
+  structure(out, class = c("survparamsim.hrpi.simulated.time", "survparamsim.hrpi"))
 }
 
 
@@ -374,6 +374,11 @@ print.survparamsim.hrpi <- function(x, ...){
   cat("    pi.range:", x$pi.range, "\n", sep=" ")
   cat("    calc.obs:", x$calc.obs, "\n", sep=" ")
 
+  if(methods::is(x, "survparamsim.hrpi.simulated.time")){
+    cat("    method: Cox on simulated survival using `calc_hr_pi()`")
+  } else if (methods::is(x, "survparamsim.hrpi.aveHR")){
+    cat("    method: average HR using `calc_ave_hr_pi()`")
+  }
 
 }
 

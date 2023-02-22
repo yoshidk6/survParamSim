@@ -4,9 +4,11 @@
 #'
 #' @param simtimelast An optional numeric to specify duration for average HR calculation.
 #' If NULL (default), the last observation time in the `newdata` will be used.
+#' @param boot.subj Boolean to specify whether bootstrapping of subjects are performed
+#' before calculating HR. Default TRUE.
 calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
                            calc.obs = TRUE, trt.assign = c("default", "reverse"),
-                           simtimelast = NULL){
+                           simtimelast = NULL, boot.subj = TRUE){
 
   # Replace nest with packageVersion("tidyr") >= '1.0.0' for a speed issue
   # and different behavior when no grouping is supplied
@@ -57,6 +59,11 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     nest2() %>%
     dplyr::ungroup()
 
+  if (boot.subj) {
+    sim.nested.2 <-
+      sim.nested.2 %>%
+      dplyr::mutate(data = purrr::map(data, function(x) dplyr::slice_sample(x, prop = 1, replace = TRUE)))
+  }
 
   # Calculate average HR
   sim.hr <- calc_hr_with_average_surv(sim.nested.2, sim$scale.bs.df,
@@ -94,7 +101,7 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
   out$trt.levels <- trt.levels
 
-  structure(out, class = c("survparamsim.hrpi"))
+  structure(out, class = c("survparamsim.hrpi.aveHR", "survparamsim.hrpi"))
 }
 
 

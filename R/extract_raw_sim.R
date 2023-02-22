@@ -45,8 +45,10 @@ extract_sim <- function(sim) {
 #' @export
 #' @param hr.pi a return object from [calc_hr_pi()] function.
 #' @details
-#' [extract_hr()] extracts simulated HRs for all repeated simulations.
-#' It also returns p values for Cox regression fits, one for each group
+#' [extract_hr()] extracts simulated HR for all repeated simulations.
+#' If HR was calculated based on simulated survival times with
+#' [calc_hr_pi()] function, it also returns p values for Cox regression
+#' fits, one for each group
 #' based on Wald test and another for the overall significance of the
 #' coefficient based on logrank test. The latter has the same values
 #' across treatment groups when >2 levels in treatment
