@@ -92,6 +92,9 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     nest2()
 
 
+  ## sim.hr has rep, !!trt, !!!group, HR, description (= "sim") columns,
+  ## This is what we need to emulate with the new method
+  ## it also has p.value.coef.wald & p.value.logrank but it should be ok to ignore for now
   sim.hr <- calc_hr_for_sim_with_cox(sim.nested, trt, trt.sym, trt.levels, unnest2)
 
 
@@ -105,31 +108,8 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
   # Calc quantiles ----------------------------------------------------------------
 
-  quantiles <-
-    tibble::tibble(description = c("pi_low", "pi_med", "pi_high"),
-                   quantile = c(0.5 - pi.range/2, 0.5, 0.5 + pi.range/2))
-
-  sim.hr.pi <-
-    sim.hr %>%
-    dplyr::group_by(!!!group.syms, !!trt.sym) %>%
-    dplyr::summarize(pi_low = as.numeric(stats::quantile(HR, probs = 0.5 - pi.range/2, na.rm = TRUE)),
-                     pi_med = as.numeric(stats::quantile(HR, probs = 0.5, na.rm = TRUE)),
-                     pi_high= as.numeric(stats::quantile(HR, probs = 0.5 + pi.range/2, na.rm = TRUE))) %>%
-    dplyr::ungroup() %>%
-    tidyr::gather(description, HR, pi_low:pi_high) %>%
-    dplyr::left_join(quantiles, by = "description")
-
-  if(calc.obs){
-    hr.pi.quantile <-
-      dplyr::select(obs.hr, -p.value.coef.wald, -p.value.logrank) %>%
-      dplyr::bind_rows(sim.hr.pi, .) %>%
-      dplyr::arrange(!!!group.syms, !!trt.sym)
-
-  } else {
-    hr.pi.quantile <-
-      sim.hr.pi %>%
-      dplyr::arrange(!!!group.syms, !!trt.sym)
-  }
+  hr.pi.quantile <- calc_hr_quantiles(pi.range, sim.hr, obs.hr, calc.obs,
+                                      group.syms, trt.sym)
 
   # Output ---------------------------------------------------------------
   out <- list()
@@ -302,9 +282,6 @@ calc_hr_for_sim_with_cox <- function(sim.nested, trt, trt.sym, trt.levels, unnes
   safe_calc_hr_each_sim <- purrr::safely(calc_hr_each_sim, otherwise = NA)
 
   ## Calc HR
-  ## sim.hr has rep, !!trt, !!!group, HR, description (= "sim") columns,
-  ## This is what we need to emulate with the new method
-  ## it also has p.value.coef.wald & p.value.logrank but it should be ok to ignore for now
   sim.hr <-
     sim.nested %>%
     dplyr::mutate(coxfit = purrr::map(data, safe_calc_hr_each_sim),
@@ -319,6 +296,39 @@ calc_hr_for_sim_with_cox <- function(sim.nested, trt, trt.sym, trt.levels, unnes
   }
 
   return(sim.hr)
+}
+
+
+calc_hr_quantiles <- function(pi.range, sim.hr, obs.hr, calc.obs,
+                              group.syms, trt.sym) {
+
+  quantiles <-
+    tibble::tibble(description = c("pi_low", "pi_med", "pi_high"),
+                   quantile = c(0.5 - pi.range/2, 0.5, 0.5 + pi.range/2))
+
+  sim.hr.pi <-
+    sim.hr %>%
+    dplyr::group_by(!!!group.syms, !!trt.sym) %>%
+    dplyr::summarize(pi_low = as.numeric(stats::quantile(HR, probs = 0.5 - pi.range/2, na.rm = TRUE)),
+                     pi_med = as.numeric(stats::quantile(HR, probs = 0.5, na.rm = TRUE)),
+                     pi_high= as.numeric(stats::quantile(HR, probs = 0.5 + pi.range/2, na.rm = TRUE))) %>%
+    dplyr::ungroup() %>%
+    tidyr::gather(description, HR, pi_low:pi_high) %>%
+    dplyr::left_join(quantiles, by = "description")
+
+  if(calc.obs){
+    hr.pi.quantile <-
+      dplyr::select(obs.hr, -p.value.coef.wald, -p.value.logrank) %>%
+      dplyr::bind_rows(sim.hr.pi, .) %>%
+      dplyr::arrange(!!!group.syms, !!trt.sym)
+
+  } else {
+    hr.pi.quantile <-
+      sim.hr.pi %>%
+      dplyr::arrange(!!!group.syms, !!trt.sym)
+  }
+
+  return(hr.pi.quantile)
 }
 
 
