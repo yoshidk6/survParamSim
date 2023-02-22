@@ -16,7 +16,7 @@ censor.dur <- c(200, 1100)
 
 
 sim <- surv_param_sim(object, newdata, n.rep, censor.dur)
-hr.pi <- calc_ave_hr_pi(sim, trt = "sex")
+hr.pi <- calc_ave_hr_pi(sim, trt = "sex", simtimelast = 1000)
 
 
 ## >2 levels in treatment
@@ -63,20 +63,20 @@ test_that("calc_ave_hr_pi behavior check with manually calling", {
 
   hr.manual.calc <-
     calc_ave_hr_from_lp(lp.vec.control, lp.vec.treatment, scale = sim$scale.bs.df$scale[[2]],
-                        dist = "lognormal", time.max = 1000)
+                        dist = "lognormal", simtimelast = 1000)
 
   # Use `calc_ave_hr_pi()` function
-  hr.pi <- calc_ave_hr_pi(sim, trt = "sex")
+  hr.pi <- calc_ave_hr_pi(sim, trt = "sex", simtimelast = 1000)
   expect_equal(hr.manual.calc, 1/extract_hr(hr.pi)$HR[[2]])
 
-  hr.pi <- calc_ave_hr_pi(sim, trt = "sex", trt.assign = "reverse")
+  hr.pi <- calc_ave_hr_pi(sim, trt = "sex", simtimelast = 1000, trt.assign = "reverse")
   expect_equal(hr.manual.calc, extract_hr(hr.pi)$HR[[2]])
 })
 
 
 test_that(">=3 trt arms", {
 
-  hr.pi <- calc_ave_hr_pi(sim.3trt.2, trt = "trtfct", time.max = 1000)
+  hr.pi <- calc_ave_hr_pi(sim.3trt.2, trt = "trtfct", simtimelast = 1000)
 
   # Manual calculation
   sim.raw <- extract_sim(sim.3trt.2) %>% tibble::tibble()
@@ -128,10 +128,10 @@ test_that("check grouping works", {
 
   hr.manual.calc <-
     calc_ave_hr_from_lp(lp.vec.control, lp.vec.treatment, scale = sim$scale.bs.df$scale[[2]],
-                        dist = "lognormal", time.max = 1000)
+                        dist = "lognormal", simtimelast = 1000)
 
   # Use `calc_ave_hr_pi()` function
-  hr.pi <- calc_ave_hr_pi(sim, trt = "sex", group = "ph.ecog", trt.assign = "reverse")
+  hr.pi <- calc_ave_hr_pi(sim, trt = "sex", group = "ph.ecog", trt.assign = "reverse", simtimelast = 1000)
   expect_equal(hr.manual.calc,
                extract_hr(hr.pi) %>%
                  dplyr::filter(rep == 2, ph.ecog == 0) %>%

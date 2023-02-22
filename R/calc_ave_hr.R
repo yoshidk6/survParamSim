@@ -2,9 +2,11 @@
 #' @rdname calculate_hr_pi
 #' @export
 #'
+#' @param simtimelast An optional numeric to specify duration for average HR calculation.
+#' If NULL (default), the last observation time in the `newdata` will be used.
 calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
                            calc.obs = TRUE, trt.assign = c("default", "reverse"),
-                           time.max = 1000){
+                           simtimelast = NULL){
 
   # Replace nest with packageVersion("tidyr") >= '1.0.0' for a speed issue
   # and different behavior when no grouping is supplied
@@ -13,6 +15,10 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
   unnest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
 
   trt.assign <- match.arg(trt.assign)
+
+
+  ## time for output
+  if(is.null(simtimelast)) simtimelast <- sim$t.last.orig.new
 
   # Handle trt variable -------------------------------------------------------------------
 
@@ -56,7 +62,7 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
   sim.hr <- calc_hr_with_average_surv(sim.nested.2, sim$scale.bs.df,
                                       trt, trt.sym, trt.levels, group, group.syms,
                                       dist = sim$survreg$dist,
-                                      time.max, unnest2)
+                                      simtimelast, unnest2)
 
   ## Reverse back the factor
   if(trt.assign == "reverse"){
@@ -95,7 +101,7 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
 calc_hr_with_average_surv <- function(sim.nested.2, scale.bs.df,
                                       trt, trt.sym, trt.levels, group, group.syms, dist,
-                                      time.max = 1000, unnest2) {
+                                      simtimelast = 1000, unnest2) {
 
   # Extract linear predictor (lp), also get scale
   df.lp.extracted <-
@@ -134,8 +140,8 @@ calc_hr_with_average_surv <- function(sim.nested.2, scale.bs.df,
     df.surv.pdf.fun.join %>%
     dplyr::mutate(integrand1 = purrr::map2(survfun.control, pdf.trt, function(x, y) function(t){x(t) * y(t)}),
                   integrand2 = purrr::map2(survfun.trt, pdf.control, function(x, y) function(t){x(t) * y(t)})) %>%
-    dplyr::mutate(term1 = purrr::map_dbl(integrand1, function(x) integrate(x, lower = 0, upper = time.max)$value),
-                  term2 = purrr::map_dbl(integrand2, function(x) integrate(x, lower = 0, upper = time.max)$value)) %>%
+    dplyr::mutate(term1 = purrr::map_dbl(integrand1, function(x) integrate(x, lower = 0, upper = simtimelast)$value),
+                  term2 = purrr::map_dbl(integrand2, function(x) integrate(x, lower = 0, upper = simtimelast)$value)) %>%
     dplyr::mutate(HR = term1 / term2) %>%
     dplyr::select(rep, !!!group.syms, !!trt.sym, HR) %>%
     dplyr::mutate(description = "sim")
@@ -158,11 +164,11 @@ calc_hr_with_average_surv <- function(sim.nested.2, scale.bs.df,
 #' @param lp.vec.treatment A vector of linear predictor (lp) for the treatment (or test) group.
 #' @param scale Scale variable used for simulation (NULL for exponential model)
 #' @dist Distribution for the parametric survival model
-#' @time.max Time for calculation of average HR
-#' @return Average hazard ratio from time `0` to `time.max`
+#' @simtimelast Time for calculation of average HR
+#' @return Average hazard ratio from time `0` to `simtimelast`
 calc_ave_hr_from_lp <- function(lp.vec.control, lp.vec.treatment, scale = NULL,
                                 dist = "lognormal",
-                                time.max = 1000){
+                                simtimelast = NULL){
 
   # Currently only accept log normal
   dist <- match.arg(dist)
@@ -175,8 +181,8 @@ calc_ave_hr_from_lp <- function(lp.vec.control, lp.vec.treatment, scale = NULL,
   integrand1 <- function(x){survfun.control(x) * pdf.treatment(x)}
   integrand2 <- function(x){survfun.treatment(x) * pdf.control(x)}
 
-  term1 <- integrate(integrand1, lower=0, upper=time.max)$value
-  term2 <- integrate(integrand2, lower=0, upper=time.max)$value
+  term1 <- integrate(integrand1, lower=0, upper=simtimelast)$value
+  term2 <- integrate(integrand2, lower=0, upper=simtimelast)$value
 
   ahr <- term1 / term2
 
