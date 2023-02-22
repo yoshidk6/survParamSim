@@ -3,7 +3,8 @@
 #' @export
 #'
 calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
-                           calc.obs = TRUE, trt.assign = c("default", "reverse")){
+                           calc.obs = TRUE, trt.assign = c("default", "reverse"),
+                           time.max = 1000){
 
   # Replace nest with packageVersion("tidyr") >= '1.0.0' for a speed issue
   # and different behavior when no grouping is supplied
@@ -50,10 +51,12 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     nest2()
 
 
+  # Calculate average HR
   ## sim.hr has rep, !!trt, !!!group, HR, description (= "sim") columns,
   ## This is what we need to emulate with the new method
   ## it also has p.value.coef.wald & p.value.logrank but it should be ok to ignore for now
-  sim.hr <- calc_hr_for_sim_with_cox(sim.nested, trt, trt.sym, trt.levels, unnest2)
+  sim.hr <- calc_hr_with_average_surv(sim.nested, trt, trt.sym, trt.levels,
+                                      time.max, unnest2)
 
 
   ## Reverse back the factor
@@ -66,8 +69,10 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
   # Calc quantiles ----------------------------------------------------------------
 
-  hr.pi.quantile <- calc_hr_quantiles(pi.range, sim.hr, obs.hr, calc.obs,
-                                      group.syms, trt.sym)
+  ## Better to first implement 3 or more treatment groups handling
+  ## before making the quantile function to work
+  # hr.pi.quantile <- calc_hr_quantiles(pi.range, sim.hr, obs.hr, calc.obs,
+  #                                     group.syms, trt.sym)
 
   # Output ---------------------------------------------------------------
   out <- list()
@@ -80,7 +85,7 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
   out$obs.hr <- obs.hr
   out$sim.hr <- sim.hr
-  out$hr.pi.quantile <- hr.pi.quantile
+  # out$hr.pi.quantile <- hr.pi.quantile
 
   out$trt.levels <- trt.levels
 
@@ -88,7 +93,36 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 }
 
 
-#' Calculate average hazard ratio
+
+calc_hr_with_average_surv <- function(sim.nested, trt, trt.sym, trt.levels,
+                                      time.max = 1000, unnest2) {
+
+  ## Define function to calc HR
+  calc_hr_each_sim <- function(x, y){
+
+    # First level in the factor serves as the reference group
+    lp.vec.control <- x$lp[as.numeric(x[[trt]]) == 1]
+    lp.vec.treatment <- x$lp[as.numeric(x[[trt]]) == 2]
+
+    ahr <-
+      calc_ave_hr_from_lp(lp.vec.control, lp.vec.treatment, scale = y,
+                          dist = "lognormal", time.max = time.max)
+  }
+
+  ## Calc HR
+  sim.hr <-
+    sim.nested %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(HR = purrr::map2_dbl(data, sim$scale.vec, calc_hr_each_sim),
+                  description = "sim") %>%
+    dplyr::select(-data)
+
+  return(sim.hr)
+}
+
+
+
+#' Calculate average hazard ratio from linear predictors
 #'
 #' Survival and PDF functions used in calculation are average of these functions for subjects in
 #' the individual groups, because every subject has different survival and PDF functions
@@ -100,9 +134,12 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 #' @dist Distribution for the parametric survival model
 #' @time.max Time for calculation of average HR
 #' @return Average hazard ratio from time `0` to `time.max`
-calc_ave_hr_oc <- function(lp.vec.control, lp.vec.treatment, scale = NULL,
-                           dist = "lognormal",
-                           time.max = 1000){
+calc_ave_hr_from_lp <- function(lp.vec.control, lp.vec.treatment, scale = NULL,
+                                dist = "lognormal",
+                                time.max = 1000){
+
+  # Currently only accept log normal
+  dist <- match.arg(dist)
 
   survfun.control   <- create_survfun(lp.vec.control,   scale, dist = dist)
   survfun.treatment <- create_survfun(lp.vec.treatment, scale, dist = dist)
@@ -122,11 +159,10 @@ calc_ave_hr_oc <- function(lp.vec.control, lp.vec.treatment, scale = NULL,
 
 
 
-
 #' Create a function to calculate S(t)
 #' The function to be created will take time (`x`) as the input argument and return
 #'
-create_survfun <- function(lpvec, scale){
+create_survfun <- function(lpvec, scale, dist = "lognormal"){
   function(x) {
     survmatrix <-
       vapply(lpvec,
@@ -139,7 +175,7 @@ create_survfun <- function(lpvec, scale){
 }
 
 # Create a function to calculate PDF(t)
-create_pdf <- function(lpvec, scale){
+create_pdf <- function(lpvec, scale, dist = "lognormal"){
   function(x) {
     pdmatrix <-
       vapply(lpvec,
@@ -150,3 +186,5 @@ create_pdf <- function(lpvec, scale){
     return(rowMeans(pdmatrix))
   }
 }
+
+

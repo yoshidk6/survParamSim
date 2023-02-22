@@ -71,9 +71,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     nest2()
 
 
-  ## sim.hr has rep, !!trt, !!!group, HR, description (= "sim") columns,
-  ## This is what we need to emulate with the new method
-  ## it also has p.value.coef.wald & p.value.logrank but it should be ok to ignore for now
+  # Calculate HR with Cox
   sim.hr <- calc_hr_for_sim_with_cox(sim.nested, trt, trt.sym, trt.levels, unnest2)
 
 
