@@ -170,7 +170,8 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
     data.frame(time = as.vector(preds),
                event= as.vector(event.status),
                rep  = rep(1:n.rep,  times=n.subj),
-               subj.sim = rep(subj.sim.id,  each =n.rep)) %>%
+               subj.sim = rep(subj.sim.id,  each =n.rep),
+               lp = as.vector(lp)) %>%
     dplyr::arrange(rep, subj.sim)
 
   newdata <-
@@ -207,7 +208,7 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
   out$censor.dur <- censor.dur
 
   ## Export for average HR calculation
-  out$lp.matrix <- lp
+  # out$lp.matrix <- lp
   if(object$dist != "exponential") out$scale.vec <- scale.bs
 
   structure(out, class = c("survparamsim"))

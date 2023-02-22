@@ -18,21 +18,21 @@ extract_sim <- function(sim) {
   if(methods::is(sim, "survparamsim_resample")){
     sim.merged.with.cov <-
       sim$newdata.nona.sim %>%
-      dplyr::select(-time.var, -status.var, -n.resample) %>%
+      dplyr::select(-dplyr::all_of(time.var), -dplyr::all_of(status.var), -n.resample) %>%
       dplyr::left_join(sim$sim, ., by = c("rep", "subj.sim")) %>%
       dplyr::select(rep, subj.sim, time, event, dplyr::everything())
 
   } else if(methods::is(sim, "survparamsim_pre_resampled")){
     sim.merged.with.cov <-
       sim$newdata.nona.sim %>%
-      dplyr::select(-time.var, -status.var) %>%
+      dplyr::select(-dplyr::all_of(time.var), -dplyr::all_of(status.var)) %>%
       dplyr::left_join(sim$sim, ., by = c("rep", "subj.sim")) %>%
       dplyr::select(rep, subj.sim, time, event, dplyr::everything())
 
   } else {
     sim.merged.with.cov <-
       sim$newdata.nona.sim %>%
-      dplyr::select(-time.var, -status.var) %>%
+      dplyr::select(-dplyr::all_of(time.var), -dplyr::all_of(status.var)) %>%
       dplyr::left_join(sim$sim, ., by = c("subj.sim")) %>%
       dplyr::select(rep, subj.sim, time, event, dplyr::everything())
   }
@@ -92,7 +92,7 @@ extract_medsurv_delta <- function(km.pi) {
   trt.sym    <- km.pi$trt.syms[[1]]
 
   # Check trt values
-  check_trt(km.pi$median.pi, trt.sym, group.syms)
+  check_trt(km.pi$median.pi, trt.sym)
 
   # Convert trt to factor
   sim.median.time <-

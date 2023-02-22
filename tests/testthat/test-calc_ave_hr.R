@@ -19,18 +19,39 @@ sim <- surv_param_sim(object, newdata, n.rep, censor.dur)
 
 
 test_that("check create_survfun function works as intended", {
+  newdata.1subj.rep <- dplyr::bind_rows(newdata[1,], newdata[1,], newdata[1,])
 
   # Lognormal distribution
   fit.lung.ln <- survreg(Surv(time, status) ~ sex + ph.ecog, data = lung, dist = "lognormal")
-  sim.ln <- surv_param_sim(fit.lung.ln, newdata, n.rep = 1, censor.dur, coef.var = FALSE)
+  sim.ln <- surv_param_sim(fit.lung.ln, newdata.1subj.rep, n.rep = 1, censor.dur, coef.var = FALSE)
+  sim.ln.raw <- extract_sim(sim.ln) %>% tibble::tibble()
 
   # Confirm that, when using median survival time predicted from survreg's predict function,
   # the created survival function would return 50% survival
-  pred.median.surv <- predict(fit.lung.ln, newdata = head(newdata, 1))
-  survfun.ln.1subj <- create_survfun(sim.ln$lp.matrix[1,1], sim.ln$scale.vec[1])
+  pred.median.surv <- predict(fit.lung.ln, newdata = newdata[1,])
+  survfun.ln.1subj <- create_survfun(sim.ln.raw$lp[1], sim.ln$scale.vec[1])
   expect_equal(survfun.ln.1subj(pred.median.surv), 0.5)
   ## Make sure it also works with a vector of lp
-  survfun.ln.1subj <- create_survfun(rep(sim.ln$lp.matrix[1,1], 5), sim.ln$scale.vec[1])
-  expect_equal(survfun.ln.1subj(pred.median.surv), 0.5)
+  survfun.ln.1subj.rep <- create_survfun(sim.ln.raw$lp, sim.ln$scale.vec[1])
+  expect_equal(survfun.ln.1subj.rep(pred.median.surv), 0.5)
 
 })
+
+#
+# aaa <- extract_sim(sim.ln) %>%
+#   tibble::tibble() %>%
+#   dplyr::mutate(sex = factor(sex+1)) %>%
+#   dplyr::mutate(trt = as.numeric(sex))
+#
+# sim.ln.nested <-
+#   extract_sim(sim.ln) %>%
+#   dplyr::mutate(sex = factor(sex)) %>%
+#   dplyr::group_by(rep) %>%
+#   tidyr::nest()
+
+test_that("check grouping works", {
+
+})
+
+
+

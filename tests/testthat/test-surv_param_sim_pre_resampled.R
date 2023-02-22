@@ -145,3 +145,8 @@ test_that("Make sure PI get narrower with coef.var = FALSE", {
   plot_km_pi(calc_km_pi(sim.pre.repeated.nocoefvar))
 })
 
+
+test_that("Raw sim extraction", {
+  expect_equal(dim(extract_sim(sim.pre.resampled)), c(1200, 7))
+})
+

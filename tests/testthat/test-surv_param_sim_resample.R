@@ -21,7 +21,7 @@ sim.resample.nostrat <- surv_param_sim_resample(object, newdata, n.rep, censor.d
 
 test_that("Simulated data fame size matches", {
   expect_equal(dim(sim.resample$sim),
-               c(n.rep * sum(n.resample), 4))
+               c(n.rep * sum(n.resample), 5))
 })
 
 test_that("Extracted HR size matches", {
@@ -71,5 +71,8 @@ test_that("Make sure km and hr calc works with group", {
   plot_hr_pi(hr.pi)
 })
 
+test_that("Raw sim extraction", {
+  expect_equal(dim(extract_sim(sim.resample)), c(7500, 7))
+})
 
 
