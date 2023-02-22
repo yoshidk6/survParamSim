@@ -26,6 +26,12 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
   # Calc HR for observed data -------------------------------------------------------------------
 
+  if(methods::is(sim, "survparamsim_pre_resampled")){
+    if(sim$newdata.orig.missing & calc.obs) {
+      warning("Original observed data not provided in `surv_param_sim_pre_resampled()` and HR will not be estimated for the observed data. Speficy `calc.obs = FALSE` to suppress this warning.")
+      calc.obs = FALSE
+    }
+  }
   obs.hr <- calc_hr_for_obs(sim, newdata.nona.obs, group.syms, trt, trt.sym, trt.assign, trt.levels,
                             nest2, unnest2, calc.obs)
 
