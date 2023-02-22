@@ -1,4 +1,87 @@
 
+#' @rdname calculate_hr_pi
+#' @export
+#'
+calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
+                           calc.obs = TRUE, trt.assign = c("default", "reverse")){
+
+  # Replace nest with packageVersion("tidyr") >= '1.0.0' for a speed issue
+  # and different behavior when no grouping is supplied
+  # See https://github.com/tidyverse/tidyr/issues/751
+  nest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::nest_legacy, tidyr::nest)
+  unnest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
+
+  trt.assign <- match.arg(trt.assign)
+
+  # Handle trt variable -------------------------------------------------------------------
+
+  handle.trt.group.output <- handle_trt_group(trt, trt.assign, group,
+                                              sim$newdata.nona.obs, sim$newdata.nona.sim)
+  group.syms       <- handle.trt.group.output$group.syms
+  trt.sym          <- handle.trt.group.output$trt.sym
+  newdata.nona.obs <- handle.trt.group.output$newdata.nona.obs
+  newdata.nona.sim <- handle.trt.group.output$newdata.nona.sim
+  trt.levels       <- handle.trt.group.output$trt.levels
+
+
+  # Calc HR for observed data -------------------------------------------------------------------
+
+  obs.hr <- calc_hr_for_obs(sim, newdata.nona.obs, group.syms, trt, trt.sym, trt.assign, trt.levels,
+                            nest2, unnest2, calc.obs)
+
+
+  # Calc HR for simulated data ----------------------------------------------------------------
+
+  ## First nest data - cox fit will done for each nested data
+  newdata.trt.group <-
+    newdata.nona.sim %>%
+    dplyr::select(subj.sim, !!trt.sym, !!!group.syms)
+
+  sim.nested <-
+    sim$sim %>%
+    dplyr::left_join(newdata.trt.group, by = "subj.sim") %>%
+    dplyr::group_by(rep, !!!group.syms) %>%
+    nest2()
+
+
+  ## sim.hr has rep, !!trt, !!!group, HR, description (= "sim") columns,
+  ## This is what we need to emulate with the new method
+  ## it also has p.value.coef.wald & p.value.logrank but it should be ok to ignore for now
+  sim.hr <- calc_hr_for_sim_with_cox(sim.nested, trt, trt.sym, trt.levels, unnest2)
+
+
+  ## Reverse back the factor
+  if(trt.assign == "reverse"){
+    sim.hr <-
+      sim.hr %>%
+      dplyr::mutate(!!trt.sym := forcats::fct_rev(!!trt.sym))
+  }
+
+
+  # Calc quantiles ----------------------------------------------------------------
+
+  hr.pi.quantile <- calc_hr_quantiles(pi.range, sim.hr, obs.hr, calc.obs,
+                                      group.syms, trt.sym)
+
+  # Output ---------------------------------------------------------------
+  out <- list()
+
+  out$calc.obs <- calc.obs
+  out$pi.range   <- pi.range
+
+  out$group.syms <- group.syms
+  out$trt.sym    <- trt.sym
+
+  out$obs.hr <- obs.hr
+  out$sim.hr <- sim.hr
+  out$hr.pi.quantile <- hr.pi.quantile
+
+  out$trt.levels <- trt.levels
+
+  structure(out, class = c("survparamsim.hrpi"))
+}
+
+
 #' Calculate average hazard ratio
 #'
 #' Survival and PDF functions used in calculation are average of these functions for subjects in

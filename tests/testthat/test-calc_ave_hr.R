@@ -26,7 +26,7 @@ test_that("check create_survfun function works as intended", {
   sim.ln <- surv_param_sim(fit.lung.ln, newdata.1subj.rep, n.rep = 1, censor.dur, coef.var = FALSE)
   sim.ln.raw <- extract_sim(sim.ln) %>% tibble::tibble()
 
-  # Confirm that, when using median survival time predicted from survreg's predict function,
+  # Confirm that, at the median survival time predicted from survreg's predict function,
   # the created survival function would return 50% survival
   pred.median.surv <- predict(fit.lung.ln, newdata = newdata[1,])
   survfun.ln.1subj <- create_survfun(sim.ln.raw$lp[1], sim.ln$scale.vec[1])
