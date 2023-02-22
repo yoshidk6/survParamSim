@@ -16,6 +16,7 @@ censor.dur <- c(200, 1100)
 
 
 sim <- surv_param_sim(object, newdata, n.rep, censor.dur)
+hr.pi <- calc_ave_hr_pi(sim, trt = "sex")
 
 
 ## >2 levels in treatment
@@ -141,5 +142,14 @@ test_that("check grouping works", {
 
 
 
+test_that("Check quantile calculation", {
+  hr.pi.quantile <- extract_hr_pi(hr.pi)
+  hr.pi.raw <- extract_hr(hr.pi)
+
+  expect_equal(hr.pi.raw %>%
+                 dplyr::summarize(quantile = quantile(HR, probs = c(0.025, 0.5, 0.975))) %>%
+                 dplyr::pull(quantile) %>% as.numeric(),
+               hr.pi.quantile %>% dplyr::pull(HR) %>% .[1:3])
+})
 
 

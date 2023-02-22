@@ -68,10 +68,10 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
   # Calc quantiles ----------------------------------------------------------------
 
-  ## Better to first implement 3 or more treatment groups handling
-  ## before making the quantile function to work
-  # hr.pi.quantile <- calc_hr_quantiles(pi.range, sim.hr, obs.hr, calc.obs,
-  #                                     group.syms, trt.sym)
+  # Better to first implement 3 or more treatment groups handling
+  # before making the quantile function to work
+  hr.pi.quantile <- calc_hr_quantiles(pi.range, sim.hr, obs.hr, calc.obs,
+                                      group.syms, trt.sym)
 
   # Output ---------------------------------------------------------------
   out <- list()
@@ -84,7 +84,7 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
   out$obs.hr <- obs.hr
   out$sim.hr <- sim.hr
-  # out$hr.pi.quantile <- hr.pi.quantile
+  out$hr.pi.quantile <- hr.pi.quantile
 
   out$trt.levels <- trt.levels
 
@@ -146,6 +146,9 @@ calc_hr_with_average_surv <- function(sim.nested.2, scale.bs.df,
 
 
 #' Calculate average hazard ratio from linear predictors
+#'
+#' Only used for code testing only, as this workflow was not the best fit for
+#' calculating HR with 3 or more treatment arms
 #'
 #' Survival and PDF functions used in calculation are average of these functions for subjects in
 #' the individual groups, because every subject has different survival and PDF functions
