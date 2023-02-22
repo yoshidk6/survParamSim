@@ -158,21 +158,13 @@ calc_hr_with_average_surv <- function(sim.nested.2, scale.bs.df,
 
 
 
-#' Calculate average hazard ratio from linear predictors
-#'
-#' Only used for code testing only, as this workflow was not the best fit for
-#' calculating HR with 3 or more treatment arms
-#'
-#' Survival and PDF functions used in calculation are average of these functions for subjects in
-#' the individual groups, because every subject has different survival and PDF functions
-#' @param lp.vec.control A vector of linear predictor (lp) for the control (or reference) group.
-#' The number of elements equal to the number of subjects in the control group of `newdata`
-#'  used for `surv_param_sim()` function.
-#' @param lp.vec.treatment A vector of linear predictor (lp) for the treatment (or test) group.
-#' @param scale Scale variable used for simulation (NULL for exponential model)
-#' @dist Distribution for the parametric survival model
-#' @simtimelast Time for calculation of average HR
-#' @return Average hazard ratio from time `0` to `simtimelast`
+# Calculate average hazard ratio from linear predictors
+#
+# Only used for code testing only, as this workflow was not the best fit for
+# calculating HR with 3 or more treatment arms
+#
+# Survival and PDF functions used in calculation are average of these functions for subjects in
+# the individual groups, because every subject has different survival and PDF functions
 calc_ave_hr_from_lp <- function(lp.vec.control, lp.vec.treatment, scale = NULL,
                                 dist = "lognormal",
                                 simtimelast = NULL){
@@ -198,9 +190,8 @@ calc_ave_hr_from_lp <- function(lp.vec.control, lp.vec.treatment, scale = NULL,
 
 
 
-#' Create a function to calculate S(t)
-#' The function to be created will take time (`x`) as the input argument and return
-#'
+# Create a function to calculate S(t)
+# The function to be created will take time (`x`) as the input argument and return
 create_survfun <- function(lpvec, scale, dist = "lognormal"){
   function(x) {
     survmatrix <-

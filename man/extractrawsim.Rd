@@ -32,8 +32,10 @@ Functions to extract raw simulated samples
 \details{
 \code{\link[=extract_sim]{extract_sim()}} extracts raw survival time & event status for all simulated subjects.
 
-\code{\link[=extract_hr]{extract_hr()}} extracts simulated HRs for all repeated simulations.
-It also returns p values for Cox regression fits, one for each group
+\code{\link[=extract_hr]{extract_hr()}} extracts simulated HR for all repeated simulations.
+If HR was calculated based on simulated survival times with
+\code{\link[=calc_hr_pi]{calc_hr_pi()}} function, it also returns p values for Cox regression
+fits, one for each group
 based on Wald test and another for the overall significance of the
 coefficient based on logrank test. The latter has the same values
 across treatment groups when >2 levels in treatment

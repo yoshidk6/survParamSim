@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_km_pi.R
 \name{calc_km_pi}
 \alias{calc_km_pi}
-\title{Generate Kaplan-Meier curves with prediction intervals from parametric bootstrap simulation}
+\title{Generate Kaplan-Meier curves with prediction intervals using simulated survival time}
 \usage{
 calc_km_pi(
   sim,
@@ -36,7 +36,7 @@ See details below if you have more than two categories. Only applicable if you w
 \code{\link[=extract_medsurv_delta_pi]{extract_medsurv_delta_pi()}} to extract delta of median survival times.}
 }
 \description{
-Generate Kaplan-Meier curves with prediction intervals from parametric bootstrap simulation
+Generate Kaplan-Meier curves with prediction intervals using simulated survival time
 }
 \details{
 If your \code{trt} has more than two categories/levels and want to specify which one to use as a
