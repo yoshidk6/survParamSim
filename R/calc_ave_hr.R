@@ -44,20 +44,19 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     newdata.nona.sim %>%
     dplyr::select(subj.sim, !!trt.sym, !!!group.syms)
 
-  sim.nested <-
+  sim.nested.2 <-
     sim$sim %>%
     dplyr::left_join(newdata.trt.group, by = "subj.sim") %>%
-    dplyr::group_by(rep, !!!group.syms) %>%
-    nest2()
+    dplyr::group_by(rep, !!trt.sym, !!!group.syms) %>%
+    nest2() %>%
+    dplyr::ungroup()
 
 
   # Calculate average HR
-  ## sim.hr has rep, !!trt, !!!group, HR, description (= "sim") columns,
-  ## This is what we need to emulate with the new method
-  ## it also has p.value.coef.wald & p.value.logrank but it should be ok to ignore for now
-  sim.hr <- calc_hr_with_average_surv(sim.nested, trt, trt.sym, trt.levels,
+  sim.hr <- calc_hr_with_average_surv(sim.nested.2, sim$scale.bs.df,
+                                      trt, trt.sym, trt.levels, group, group.syms,
+                                      dist = sim$survreg$dist,
                                       time.max, unnest2)
-
 
   ## Reverse back the factor
   if(trt.assign == "reverse"){
@@ -94,28 +93,52 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
 
 
-calc_hr_with_average_surv <- function(sim.nested, trt, trt.sym, trt.levels,
+calc_hr_with_average_surv <- function(sim.nested.2, scale.bs.df,
+                                      trt, trt.sym, trt.levels, group, group.syms, dist,
                                       time.max = 1000, unnest2) {
 
-  ## Define function to calc HR
-  calc_hr_each_sim <- function(x, y){
+  # Extract linear predictor (lp), also get scale
+  df.lp.extracted <-
+    sim.nested.2 %>%
+    dplyr::mutate(lp = purrr::map(data, function(x) x$lp)) %>%
+    dplyr::select(-data) %>%
+    dplyr::left_join(scale.bs.df, by = "rep")
 
-    # First level in the factor serves as the reference group
-    lp.vec.control <- x$lp[as.numeric(x[[trt]]) == 1]
-    lp.vec.treatment <- x$lp[as.numeric(x[[trt]]) == 2]
+  df.lp.control <-
+    df.lp.extracted %>%
+    dplyr::filter(as.numeric(!!trt.sym) == 1) %>%
+    dplyr::select(-!!trt.sym)
+  df.lp.treatment <-
+    df.lp.extracted %>%
+    dplyr::filter(as.numeric(!!trt.sym) != 1)
 
-    ahr <-
-      calc_ave_hr_from_lp(lp.vec.control, lp.vec.treatment, scale = y,
-                          dist = "lognormal", time.max = time.max)
-  }
+  # Create survival and PDF functions
+  df.surv.pdf.fun.control <-
+    df.lp.control %>%
+    dplyr::mutate(survfun.control = purrr::map2(lp, scale, function(x, y) create_survfun(lpvec = x, scale = y, dist = dist)),
+                  pdf.control     = purrr::map2(lp, scale, function(x, y) create_pdf(lpvec = x, scale = y, dist = dist))) %>%
+    dplyr::select(-lp, -scale)
+  df.surv.pdf.fun.treatment <-
+    df.lp.treatment %>%
+    dplyr::mutate(survfun.trt = purrr::map2(lp, scale, function(x, y) create_survfun(lpvec = x, scale = y, dist = dist)),
+                  pdf.trt     = purrr::map2(lp, scale, function(x, y) create_pdf(lpvec = x, scale = y, dist = dist))) %>%
+    dplyr::select(-lp, -scale)
 
-  ## Calc HR
+  df.surv.pdf.fun.join <-
+    dplyr::left_join(df.surv.pdf.fun.treatment,
+                     df.surv.pdf.fun.control,
+                     by = c("rep", group))
+
+  # Calculate aveHR
   sim.hr <-
-    sim.nested %>%
-    dplyr::ungroup() %>%
-    dplyr::mutate(HR = purrr::map2_dbl(data, sim$scale.vec, calc_hr_each_sim),
-                  description = "sim") %>%
-    dplyr::select(-data)
+    df.surv.pdf.fun.join %>%
+    dplyr::mutate(integrand1 = purrr::map2(survfun.control, pdf.trt, function(x, y) function(t){x(t) * y(t)}),
+                  integrand2 = purrr::map2(survfun.trt, pdf.control, function(x, y) function(t){x(t) * y(t)})) %>%
+    dplyr::mutate(term1 = purrr::map_dbl(integrand1, function(x) integrate(x, lower = 0, upper = time.max)$value),
+                  term2 = purrr::map_dbl(integrand2, function(x) integrate(x, lower = 0, upper = time.max)$value)) %>%
+    dplyr::mutate(HR = term1 / term2) %>%
+    dplyr::select(rep, !!!group.syms, !!trt.sym, HR) %>%
+    dplyr::mutate(description = "sim")
 
   return(sim.hr)
 }
