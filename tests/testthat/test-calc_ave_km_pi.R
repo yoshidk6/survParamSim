@@ -16,7 +16,7 @@ censor.dur <- c(200, 1100)
 
 
 sim <- surv_param_sim(object, newdata, n.rep, censor.dur)
-km.pi <- calc_ave_km_pi(sim, trt = "sex", group = "ph.ecog")
+km.pi <- calc_ave_km_pi(sim, trt = "sex", group = "ph.ecog", boot.subj = FALSE)
 # plot_km_pi(km.pi)
 
 
@@ -30,7 +30,7 @@ fit.lung.3trt.2 <- survreg(Surv(time, status) ~ sex + ph.ecog, data = newdata.3t
 
 sim.3trt.2 <- surv_param_sim(fit.lung.3trt.2, newdata.3trt.2, n.rep, censor.dur)
 
-km.pi.3trt.2 <- calc_ave_km_pi(sim.3trt.2, trt = "trtfct", group = "ph.ecog")
+km.pi.3trt.2 <- calc_ave_km_pi(sim.3trt.2, trt = "trtfct", group = "ph.ecog", boot.subj = FALSE)
 # plot_km_pi(km.pi.3trt.2)
 
 test_that("check create_survfun function works as intended", {

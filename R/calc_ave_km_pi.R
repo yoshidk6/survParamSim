@@ -74,6 +74,13 @@ calc_ave_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     tidyr::nest(sim.grouped) %>%
     dplyr::ungroup()
 
+
+  if (boot.subj) {
+    sim.nested <-
+      sim.nested %>%
+      dplyr::mutate(data = purrr::map(data, function(x) dplyr::slice_sample(x, prop = 1, replace = TRUE)))
+  }
+
   # Extract linear predictor (lp), also get scale
   df.lp.extracted <-
     sim.nested %>%

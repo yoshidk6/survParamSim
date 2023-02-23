@@ -81,11 +81,11 @@ test_that("predicted KM and median time per group", {
 
 
 test_that("grouping and trt", {
-  plot.km.sex <- plot_km_pi(calc_km_pi(sim, trt = "sex"))
+  plot.km.sex <- suppressWarnings(plot_km_pi(calc_km_pi(sim, trt = "sex")))
   expect_doppelganger("km plot with sex as trt", plot.km.sex)
 
   km.pi.sex.ecog <- suppressWarnings(calc_km_pi(sim, group = c("sex", "ph.ecog")))
-  plot.km.sex.ecog <- plot_km_pi(km.pi.sex.ecog)
+  plot.km.sex.ecog <- suppressWarnings(plot_km_pi(km.pi.sex.ecog))
   expect_doppelganger("km plot with sex and ph.ecog as group", plot.km.sex.ecog)
 })
 
