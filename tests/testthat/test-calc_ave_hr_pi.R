@@ -1,4 +1,4 @@
-context("test-calc_ave_hr")
+context("test-calc_ave_hr_pi")
 
 library(survival)
 set.seed(12345)

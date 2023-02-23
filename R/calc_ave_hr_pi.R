@@ -10,12 +10,6 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
                            calc.obs = TRUE, trt.assign = c("default", "reverse"),
                            simtimelast = NULL, boot.subj = TRUE){
 
-  # Replace nest with packageVersion("tidyr") >= '1.0.0' for a speed issue
-  # and different behavior when no grouping is supplied
-  # See https://github.com/tidyverse/tidyr/issues/751
-  nest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::nest_legacy, tidyr::nest)
-  unnest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
-
   trt.assign <- match.arg(trt.assign)
 
 
@@ -42,7 +36,7 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     }
   }
   obs.hr <- calc_hr_for_obs(sim, newdata.nona.obs, group.syms, trt, trt.sym, trt.assign, trt.levels,
-                            nest2, unnest2, calc.obs)
+                            calc.obs)
 
 
   # Calc HR for simulated data ----------------------------------------------------------------
@@ -56,7 +50,7 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     sim$sim %>%
     dplyr::left_join(newdata.trt.group, by = "subj.sim") %>%
     dplyr::group_by(rep, !!trt.sym, !!!group.syms) %>%
-    nest2() %>%
+    tidyr::nest() %>%
     dplyr::ungroup()
 
   if (boot.subj) {
@@ -69,7 +63,7 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
   sim.hr <- calc_hr_with_average_surv(sim.nested.2, sim$scale.bs.df,
                                       trt, trt.sym, trt.levels, group, group.syms,
                                       dist = sim$survreg$dist,
-                                      simtimelast, unnest2)
+                                      simtimelast)
 
   ## Reverse back the factor
   if(trt.assign == "reverse"){
@@ -108,7 +102,7 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
 calc_hr_with_average_surv <- function(sim.nested.2, scale.bs.df,
                                       trt, trt.sym, trt.levels, group, group.syms, dist,
-                                      simtimelast = 1000, unnest2) {
+                                      simtimelast = 1000) {
 
   # Extract linear predictor (lp), also get scale
   df.lp.extracted <-

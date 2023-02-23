@@ -24,11 +24,6 @@
 surv_param_sim_pre_resampled <- function(object, newdata.resampled, newdata.orig = NULL, censor.dur = NULL,
                                          coef.var = TRUE, na.warning = TRUE){
 
-  # Replace nest with packageVersion("tidyr") == '1.0.0' for a speed issue
-  # See https://github.com/tidyverse/tidyr/issues/751
-  nest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::nest_legacy, tidyr::nest)
-  unnest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
-
   if(is.null(newdata.orig)){
     newdata.orig <- newdata.resampled
     newdata.orig.missing <- TRUE
@@ -52,7 +47,7 @@ surv_param_sim_pre_resampled <- function(object, newdata.resampled, newdata.orig
   newdata.resampled.nested <-
     newdata.resampled %>%
     dplyr::group_by(rep) %>%
-    nest2()
+    tidyr::nest()
 
 
   simulate_each <- function(data, object, censor.dur){
@@ -70,7 +65,7 @@ surv_param_sim_pre_resampled <- function(object, newdata.resampled, newdata.orig
     newdata.resampled.nested %>%
     dplyr::mutate(sim = purrr::map(data, simulate_each, object = object, censor.dur = censor.dur)) %>%
     dplyr::select(-data) %>%
-    unnest2(sim) %>%
+    tidyr::unnest(sim) %>%
     dplyr::ungroup()
 
 

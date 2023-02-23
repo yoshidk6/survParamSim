@@ -26,12 +26,6 @@ NULL
 calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
                        calc.obs = TRUE, trt.assign = c("default", "reverse")){
 
-  # Replace nest with packageVersion("tidyr") >= '1.0.0' for a speed issue
-  # and different behavior when no grouping is supplied
-  # See https://github.com/tidyverse/tidyr/issues/751
-  nest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::nest_legacy, tidyr::nest)
-  unnest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
-
   trt.assign <- match.arg(trt.assign)
 
   # Handle trt variable -------------------------------------------------------------------
@@ -54,7 +48,7 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     }
   }
   obs.hr <- calc_hr_for_obs(sim, newdata.nona.obs, group.syms, trt, trt.sym, trt.assign, trt.levels,
-                            nest2, unnest2, calc.obs)
+                            calc.obs)
 
 
   # Calc HR for simulated data ----------------------------------------------------------------
@@ -68,11 +62,11 @@ calc_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
     sim$sim %>%
     dplyr::left_join(newdata.trt.group, by = "subj.sim") %>%
     dplyr::group_by(rep, !!!group.syms) %>%
-    nest2()
+    tidyr::nest()
 
 
   # Calculate HR with Cox
-  sim.hr <- calc_hr_for_sim_with_cox(sim.nested, trt, trt.sym, trt.levels, unnest2)
+  sim.hr <- calc_hr_for_sim_with_cox(sim.nested, trt, trt.sym, trt.levels)
 
 
   ## Reverse back the factor
@@ -224,7 +218,7 @@ check_trt <- function(newdata.nona.obs, trt.sym){
 
 
 calc_hr_for_obs <- function(sim, newdata.nona.obs, group.syms, trt, trt.sym, trt.assign, trt.levels,
-                            nest2, unnest2, calc.obs) {
+                            calc.obs) {
 
   if(calc.obs){
 
@@ -232,13 +226,12 @@ calc_hr_for_obs <- function(sim, newdata.nona.obs, group.syms, trt, trt.sym, trt
       newdata.nona.obs %>%
       dplyr::group_by(!!!group.syms)
 
-    if(length(dplyr::group_vars(obs.grouped)) == 0 &
-       utils::packageVersion("tidyr") >= '1.0.0') {
+    if(length(dplyr::group_vars(obs.grouped)) == 0) {
       obs.nested <-
         obs.grouped %>%
-        nest2(data = dplyr::everything())
+        tidyr::nest(data = dplyr::everything())
     } else {
-      obs.nested <- nest2(obs.grouped)
+      obs.nested <- tidyr::nest(obs.grouped)
     }
 
     ## Define function to calc HR
@@ -264,7 +257,7 @@ calc_hr_for_obs <- function(sim, newdata.nona.obs, group.syms, trt, trt.sym, trt
       dplyr::mutate(coxfit = purrr::map(data, safe_calc_hr_each_obs),
                     HR = purrr::map(coxfit, ~.$result),
                     description = "obs") %>%
-      unnest2(HR) %>%
+      tidyr::unnest(HR) %>%
       dplyr::select(-data, -coxfit) %>%
       dplyr::ungroup()
 
@@ -287,7 +280,7 @@ calc_hr_for_obs <- function(sim, newdata.nona.obs, group.syms, trt, trt.sym, trt
 }
 
 
-calc_hr_for_sim_with_cox <- function(sim.nested, trt, trt.sym, trt.levels, unnest2) {
+calc_hr_for_sim_with_cox <- function(sim.nested, trt, trt.sym, trt.levels) {
 
   ## Define function to calc HR
   calc_hr_each_sim <- function(x){
@@ -312,7 +305,7 @@ calc_hr_for_sim_with_cox <- function(sim.nested, trt, trt.sym, trt.levels, unnes
     dplyr::mutate(coxfit = purrr::map(data, safe_calc_hr_each_sim),
                   HR = purrr::map(coxfit, ~.$result),
                   description = "sim") %>%
-    unnest2(HR) %>%
+    tidyr::unnest(HR) %>%
     dplyr::select(-data, -coxfit) %>%
     dplyr::ungroup()
 

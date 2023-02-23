@@ -12,7 +12,7 @@ reference:
     Calculate Kaplan-Meier estimates (with median survival time) and/or
     hazard ratios. You can either use methods based on the simulated survival times
     (`calc_hr_pi()` and `calc_km_pi()`) or based on the average survival & PDF functions
-    per treatment groups (`calc_ave_hr_pi()` and `calc_ave_km_pi()`)
+    per treatment groups (`calc_ave_hr_pi()` and `calc_ave_km_pi()` (in development))
 - contents:
   - starts_with("calc_")
 
