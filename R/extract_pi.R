@@ -116,6 +116,10 @@ extract_medsurv_pi <- function(km.pi, outtype = c("long", "wide")) {
 
   outtype <- match.arg(outtype)
 
+  if(methods::is(km.pi, "survparamsim.kmpi.aveHR")){
+    stop("Median survival calculation not implemented in `calc_ave_km_pi()`` yet")
+  }
+
   out <- km.pi$median.pi
 
   if(outtype == "wide"){
@@ -145,6 +149,10 @@ extract_medsurv_delta_pi <- function(km.pi, outtype = c("long", "wide")) {
   # This is not a default output in km.pi object because not all of the km.pi has
   # `trt` specified. Therefore these metrics needs to be calculated from the
   # raw outputs here unlike other *_pi functions
+
+  if(methods::is(km.pi, "survparamsim.kmpi.aveHR")){
+    stop("Median survival calculation not implemented in `calc_ave_km_pi()`` yet")
+  }
 
   pi.range   <- km.pi$pi.range
   group.syms <- km.pi$group.syms

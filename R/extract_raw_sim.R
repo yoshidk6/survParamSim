@@ -73,6 +73,9 @@ extract_km_obs <- function(km.pi) {
 #' @details
 #' [extract_medsurv()] extracts simulated median survival times for all repeated simulations
 extract_medsurv <- function(km.pi) {
+  if(methods::is(km.pi, "survparamsim.kmpi.aveHR")){
+    stop("Median survival calculation not implemented in `calc_ave_km_pi()`` yet")
+  }
   return(km.pi$sim.median.time)
 }
 
