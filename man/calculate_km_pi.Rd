@@ -49,6 +49,9 @@ If NULL (default), the last observation time in the \code{newdata} will be used.
 See details below if you have more than two categories. Only applicable if you will use
 \code{\link[=extract_medsurv_delta_pi]{extract_medsurv_delta_pi()}} to extract delta of median survival times.}
 
+\item{boot.subj}{Boolean to specify whether bootstrapping of subjects are performed
+before calculating HR. Default TRUE.}
+
 \item{calc.median.surv}{Whether to calculate median survival time for
 \code{\link[=calc_ave_km_pi]{calc_ave_km_pi()}}. Default FALSE as the calculation can be long.
 Currently median survival calculation not implemented yet.}

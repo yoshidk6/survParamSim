@@ -2,6 +2,8 @@
 #' @rdname calculate_km_pi
 #' @export
 #'
+#' @param boot.subj Boolean to specify whether bootstrapping of subjects are performed
+#' before calculating HR. Default TRUE.
 #' @param calc.median.surv Whether to calculate median survival time for
 #' [calc_ave_km_pi()]. Default FALSE as the calculation can be long.
 #' Currently median survival calculation not implemented yet.
@@ -84,7 +86,7 @@ calc_ave_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     df.lp.extracted %>%
     dplyr::mutate(survfun =
                     purrr::map2(lp, scale,
-                                function(x, y) create_survfun(lpvec = x, scale = y, dist = dist))) %>%
+                                function(x, y) create_survfun(lpvec = x, scale = y, dist = sim$survreg$dist))) %>%
     dplyr::select(-lp, -scale) %>%
     dplyr::mutate(km = purrr::map(survfun, function(x) data.frame(time = t.out,
                                                                   surv = x(t.out)))) %>%

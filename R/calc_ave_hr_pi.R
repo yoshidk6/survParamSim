@@ -141,8 +141,8 @@ calc_hr_with_average_surv <- function(sim.nested.2, scale.bs.df,
     df.surv.pdf.fun.join %>%
     dplyr::mutate(integrand1 = purrr::map2(survfun.control, pdf.trt, function(x, y) function(t){x(t) * y(t)}),
                   integrand2 = purrr::map2(survfun.trt, pdf.control, function(x, y) function(t){x(t) * y(t)})) %>%
-    dplyr::mutate(term1 = purrr::map_dbl(integrand1, function(x) integrate(x, lower = 0, upper = simtimelast)$value),
-                  term2 = purrr::map_dbl(integrand2, function(x) integrate(x, lower = 0, upper = simtimelast)$value)) %>%
+    dplyr::mutate(term1 = purrr::map_dbl(integrand1, function(x) stats::integrate(x, lower = 0, upper = simtimelast)$value),
+                  term2 = purrr::map_dbl(integrand2, function(x) stats::integrate(x, lower = 0, upper = simtimelast)$value)) %>%
     dplyr::mutate(HR = term1 / term2) %>%
     dplyr::select(rep, !!!group.syms, !!trt.sym, HR) %>%
     dplyr::mutate(description = "sim")
@@ -174,8 +174,8 @@ calc_ave_hr_from_lp <- function(lp.vec.control, lp.vec.treatment, scale = NULL,
   integrand1 <- function(x){survfun.control(x) * pdf.treatment(x)}
   integrand2 <- function(x){survfun.treatment(x) * pdf.control(x)}
 
-  term1 <- integrate(integrand1, lower=0, upper=simtimelast)$value
-  term2 <- integrate(integrand2, lower=0, upper=simtimelast)$value
+  term1 <- stats::integrate(integrand1, lower=0, upper=simtimelast)$value
+  term2 <- stats::integrate(integrand2, lower=0, upper=simtimelast)$value
 
   ahr <- term1 / term2
 
@@ -190,7 +190,7 @@ create_survfun <- function(lpvec, scale, dist = "lognormal"){
   function(x) {
     survmatrix <-
       vapply(lpvec,
-             function(lp) {plnorm(q=x, meanlog=lp, sdlog=exp(scale), lower=FALSE)},
+             function(lp) {stats::plnorm(q=x, meanlog=lp, sdlog=exp(scale), lower=FALSE)},
              numeric(length(x)))
 
     if(length(x) == 1) return(mean(survmatrix))
@@ -203,7 +203,7 @@ create_pdf <- function(lpvec, scale, dist = "lognormal"){
   function(x) {
     pdmatrix <-
       vapply(lpvec,
-             function(lp) {dlnorm(x=x, meanlog=lp, sdlog=exp(scale))},
+             function(lp) {stats::dlnorm(x=x, meanlog=lp, sdlog=exp(scale))},
              numeric(length(x)))
 
     if(length(x) == 1) return(mean(pdmatrix))
