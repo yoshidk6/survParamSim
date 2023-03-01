@@ -56,14 +56,14 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">surv_param_sim_pre_resampled</span><span class="op">(</span>
-  <span class="va">object</span>,
-  <span class="va">newdata.resampled</span>,
-  newdata.orig <span class="op">=</span> <span class="cn">NULL</span>,
-  censor.dur <span class="op">=</span> <span class="cn">NULL</span>,
-  coef.var <span class="op">=</span> <span class="cn">TRUE</span>,
-  na.warning <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">surv_param_sim_pre_resampled</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  <span class="va">newdata.resampled</span>,</span>
+<span>  newdata.orig <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  censor.dur <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  coef.var <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  na.warning <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -71,27 +71,40 @@
     <dl><dt>object</dt>
 <dd><p>A <code>survreg</code> class object. Currently accept exponential,
 lognormal, weibull, loglogistic, and gaussian distributions.</p></dd>
+
+
 <dt>newdata.resampled</dt>
 <dd><p>A required input, the already resampled dataset for simulation.
 This dataset must have: (a) <code>rep</code> variable indicating the #simulation groups, and (b) the same number of subjects per each <code>rep</code></p></dd>
+
+
 <dt>newdata.orig</dt>
 <dd><p>An optional input needed for calculating KM and HR for the observed data.</p></dd>
+
+
 <dt>censor.dur</dt>
 <dd><p>A two elements vector specifying duration of events
 censoring. Censoring time will be calculated with uniform distribution
 between two numbers. No censoring will be applied if NULL is provided.</p></dd>
+
+
 <dt>coef.var</dt>
 <dd><p>Boolean specifying whether parametric bootstrap are
 performed on survival model coefficients, based on variance-covariance
 matrix. If FALSE, prediction interval only reflects inherent variability
 from survival events.</p></dd>
+
+
 <dt>na.warning</dt>
 <dd><p>Boolean specifying whether warning will be shown if
 <code>newdata</code> contain subjects with missing model variables.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A <code>survparamsim</code> object that contains the original <code>survreg</code> class
+    
+
+<p>A <code>survparamsim</code> object that contains the original <code>survreg</code> class
 object, newdata, and a data frame for predicted survival profiles.</p>
     </div>
     <div id="details">
@@ -111,7 +124,7 @@ object, newdata, and a data frame for predicted survival profiles.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

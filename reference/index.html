@@ -63,16 +63,16 @@
         <td><p>Simulation of parametric survival model with an already-resampled dataset</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="step-generate-k-m-and-or-hr">Step 2: Generate K-M and/or HR <a href="#step-generate-k-m-and-or-hr" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p><p>Calculate Kaplan-Meier estimates (with median survival time) and/or hazard ratios</p>
+          <p class="section-desc"></p><p>Calculate Kaplan-Meier estimates (with median survival time) and/or hazard ratios. You can either use methods based on the simulated survival times (<code><a href="../reference/calculate_hr_pi.html">calc_hr_pi()</a></code> and <code><a href="../reference/calculate_km_pi.html">calc_km_pi()</a></code>) or based on the average survival &amp; PDF functions per treatment groups (<code><a href="../reference/calculate_hr_pi.html">calc_ave_hr_pi()</a></code> and <code><a href="../reference/calculate_km_pi.html">calc_ave_km_pi()</a></code>)</p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="calc_hr_pi.html">calc_hr_pi()</a></code> </p>
+          <p><code><a href="calculate_hr_pi.html">calc_ave_hr_pi()</a></code> <code><a href="calculate_hr_pi.html">calc_hr_pi()</a></code> </p>
         </td>
         <td><p>Generate hazard ratio with prediction intervals from parametric bootstrap simulation</p></td>
       </tr><tr><td>
-          <p><code><a href="calc_km_pi.html">calc_km_pi()</a></code> </p>
+          <p><code><a href="calculate_km_pi.html">calc_ave_km_pi()</a></code> <code><a href="calculate_km_pi.html">calc_km_pi()</a></code> </p>
         </td>
-        <td><p>Generate Kaplan-Meier curves with prediction intervals from parametric bootstrap simulation</p></td>
+        <td><p>Generate Kaplan-Meier curves with prediction intervals using simulated survival time</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="step-extract-k-m-hr-or-generate-plots">Step 3: Extract K-M/HR or generate plots <a href="#step-extract-k-m-hr-or-generate-plots" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p>
@@ -122,7 +122,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

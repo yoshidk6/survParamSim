@@ -58,25 +58,25 @@ generated with <code><a href="https://rdrr.io/pkg/survival/man/survreg.html" cla
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">surv_param_sim</span><span class="op">(</span>
-  <span class="va">object</span>,
-  <span class="va">newdata</span>,
-  n.rep <span class="op">=</span> <span class="fl">1000</span>,
-  censor.dur <span class="op">=</span> <span class="cn">NULL</span>,
-  coef.var <span class="op">=</span> <span class="cn">TRUE</span>,
-  na.warning <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-
-<span class="fu">surv_param_sim_resample</span><span class="op">(</span>
-  <span class="va">object</span>,
-  <span class="va">newdata</span>,
-  n.rep <span class="op">=</span> <span class="fl">1000</span>,
-  censor.dur <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">n.resample</span>,
-  strat.resample <span class="op">=</span> <span class="cn">NULL</span>,
-  coef.var <span class="op">=</span> <span class="cn">TRUE</span>,
-  na.warning <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">surv_param_sim</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  <span class="va">newdata</span>,</span>
+<span>  n.rep <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  censor.dur <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  coef.var <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  na.warning <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">surv_param_sim_resample</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  <span class="va">newdata</span>,</span>
+<span>  n.rep <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  censor.dur <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">n.resample</span>,</span>
+<span>  strat.resample <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  coef.var <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  na.warning <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -84,6 +84,8 @@ generated with <code><a href="https://rdrr.io/pkg/survival/man/survreg.html" cla
     <dl><dt>object</dt>
 <dd><p>A <code>survreg</code> class object. Currently accept exponential,
 lognormal, weibull, loglogistic, and gaussian distributions.</p></dd>
+
+
 <dt>newdata</dt>
 <dd><p>A required data frame for simulation that contain covariates in
 the survival model. It is required even if this is the same as the one used
@@ -95,32 +97,47 @@ long enough so that simulated KM plot will be long enough for
 <code><a href="plot_km_pi.html">plot_km_pi()</a></code> to draw simulated survival curves.</p>
 <p>Subjects with NA for covariates in <code>survreg</code> model will be removed from
 the simulation and subsequent plotting of observed data.</p></dd>
+
+
 <dt>n.rep</dt>
 <dd><p>An integer defining numbers of parametric bootstrap runs</p></dd>
+
+
 <dt>censor.dur</dt>
 <dd><p>A two elements vector specifying duration of events
 censoring. Censoring time will be calculated with uniform distribution
 between two numbers. No censoring will be applied if NULL is provided.</p></dd>
+
+
 <dt>coef.var</dt>
 <dd><p>Boolean specifying whether parametric bootstrap are
 performed on survival model coefficients, based on variance-covariance
 matrix. If FALSE, prediction interval only reflects inherent variability
 from survival events.</p></dd>
+
+
 <dt>na.warning</dt>
 <dd><p>Boolean specifying whether warning will be shown if
 <code>newdata</code> contain subjects with missing model variables.</p></dd>
+
+
 <dt>n.resample</dt>
 <dd><p>Number of subjects for resampled simulations.
 If <code>strat.resample</code> is provided, this needs to be a vector of the length
 equal to the number of categories in the stratification variable.</p></dd>
+
+
 <dt>strat.resample</dt>
 <dd><p>String specifying stratification variable for
 resampling. Currently only one variable is allowed. If you need more than one,
 create a new variable e.g. by <code><a href="https://rdrr.io/r/base/interaction.html" class="external-link">base::interaction()</a></code></p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A <code>survparamsim</code> object that contains the original <code>survreg</code> class
+    
+
+<p>A <code>survparamsim</code> object that contains the original <code>survreg</code> class
 object, newdata, and a data frame for predicted survival profiles with the
 following columns:</p><ul><li><p><strong>event</strong>: event status, 0=censored, 1=event</p></li>
 <li><p><strong>rep</strong>: ID for parametric bootstrap runs</p></li>
@@ -146,21 +163,21 @@ with stratification variables.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival" class="external-link">survival</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">fit.lung</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/survreg.html" class="external-link">survreg</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">sex</span> <span class="op">+</span> <span class="va">ph.ecog</span>, data <span class="op">=</span> <span class="va">lung</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">object</span> <span class="op">&lt;-</span> <span class="va">fit.lung</span></span>
-<span class="r-in"><span class="va">n.rep</span>  <span class="op">&lt;-</span>  <span class="fl">30</span></span>
-<span class="r-in"><span class="va">newdata</span> <span class="op">&lt;-</span></span>
-<span class="r-in">  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">lung</span>, <span class="va">time</span>, <span class="va">status</span>, <span class="va">sex</span>, <span class="va">ph.ecog</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html" class="external-link">drop_na</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">censor.dur</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">1100</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">sim</span> <span class="op">&lt;-</span> <span class="fu">surv_param_sim</span><span class="op">(</span><span class="va">object</span>, <span class="va">newdata</span>, <span class="va">n.rep</span>, <span class="va">censor.dur</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival" class="external-link">survival</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">fit.lung</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/survreg.html" class="external-link">survreg</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">sex</span> <span class="op">+</span> <span class="va">ph.ecog</span>, data <span class="op">=</span> <span class="va">lung</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">object</span> <span class="op">&lt;-</span> <span class="va">fit.lung</span></span></span>
+<span class="r-in"><span><span class="va">n.rep</span>  <span class="op">&lt;-</span>  <span class="fl">30</span></span></span>
+<span class="r-in"><span><span class="va">newdata</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">lung</span>, <span class="va">time</span>, <span class="va">status</span>, <span class="va">sex</span>, <span class="va">ph.ecog</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html" class="external-link">drop_na</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">censor.dur</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">1100</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">sim</span> <span class="op">&lt;-</span> <span class="fu">surv_param_sim</span><span class="op">(</span><span class="va">object</span>, <span class="va">newdata</span>, <span class="va">n.rep</span>, <span class="va">censor.dur</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -175,7 +192,7 @@ with stratification variables.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

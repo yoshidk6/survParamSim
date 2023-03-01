@@ -80,20 +80,20 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'dplyr'</span>
-<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     filter, lag</span>
-<span class="co">#&gt; The following objects are masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     intersect, setdiff, setequal, union</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival" class="external-link">survival</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/yoshidk6/survParamSim" class="external-link">survParamSim</a></span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     filter, lag</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival" class="external-link">survival</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/yoshidk6/survParamSim" class="external-link">survParamSim</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span></span></code></pre></div>
 <p>The goal of survParamSim is to perform survival simulation with parametric survival model generated from ‘survreg’ function in ‘survival’ package. In each simulation, coefficients are resampled from variance-covariance matrix of parameter estimates, in order to capture uncertainty in model parameters.</p>
 <div class="section level2">
 <h2 id="fit-model-with-survreg-function">Fit model with <code>survreg()</code> function<a class="anchor" aria-label="anchor" href="#fit-model-with-survreg-function"></a>
@@ -102,53 +102,53 @@
 In this vignette, we will be using <code>colon</code> dataset available in <code>survival</code> package, where the treatment effect of adjuvant Levamisole+5-FU for colon cancer over placebo is evaluated.</p>
 <p>First, we load the data and do some data wrangling.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># ref for dataset https://vincentarelbundock.github.io/Rdatasets/doc/survival/colon.html</span>
-<span class="va">colon2</span> <span class="op">&lt;-</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">colon</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="co"># recurrence only and not including Lev alone arm</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">rx</span> <span class="op">!=</span> <span class="st">"Lev"</span>,
-         <span class="va">etype</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="co"># Same definition as Lin et al, 1994</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>rx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">rx</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Obs"</span>, <span class="st">"Lev+5FU"</span><span class="op">)</span><span class="op">)</span>,
-         depth <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">extent</span> <span class="op">&lt;=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># ref for dataset https://vincentarelbundock.github.io/Rdatasets/doc/survival/colon.html</span></span>
+<span><span class="va">colon2</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">colon</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="co"># recurrence only and not including Lev alone arm</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">rx</span> <span class="op">!=</span> <span class="st">"Lev"</span>,</span>
+<span>         <span class="va">etype</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="co"># Same definition as Lin et al, 1994</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>rx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">rx</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Obs"</span>, <span class="st">"Lev+5FU"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>         depth <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">extent</span> <span class="op">&lt;=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Shown below are Kaplan-Meier curves for visually checking the data.<br>
 The second plot is looking at how many censoring we have over time.<br>
 Looks like we have a fairly uniform censoring between 1800 to 3000 days - this is attributable to a steady clinical study enrollment.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">survfit.colon</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/survfit.html" class="external-link">survfit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">rx</span>, data <span class="op">=</span> <span class="va">colon2</span><span class="op">)</span>
-<span class="fu">survminer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survminer/man/ggsurvplot.html" class="external-link">ggsurvplot</a></span><span class="op">(</span><span class="va">survfit.colon</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">survfit.colon</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/survfit.html" class="external-link">survfit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">rx</span>, data <span class="op">=</span> <span class="va">colon2</span><span class="op">)</span></span>
+<span><span class="fu">survminer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survminer/man/ggsurvplot.html" class="external-link">ggsurvplot</a></span><span class="op">(</span><span class="va">survfit.colon</span><span class="op">)</span></span></code></pre></div>
 <p><img src="survParamSim_files/figure-html/plot_raw_data-1.png" width="700"></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="va">survfit.colon.censor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/survfit.html" class="external-link">survfit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="fl">1</span><span class="op">-</span><span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">rx</span>, data <span class="op">=</span> <span class="va">colon2</span><span class="op">)</span>
-<span class="fu">survminer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survminer/man/ggsurvplot.html" class="external-link">ggsurvplot</a></span><span class="op">(</span><span class="va">survfit.colon.censor</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="va">survfit.colon.censor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/survfit.html" class="external-link">survfit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="fl">1</span><span class="op">-</span><span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">rx</span>, data <span class="op">=</span> <span class="va">colon2</span><span class="op">)</span></span>
+<span><span class="fu">survminer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survminer/man/ggsurvplot.html" class="external-link">ggsurvplot</a></span><span class="op">(</span><span class="va">survfit.colon.censor</span><span class="op">)</span></span></code></pre></div>
 <p><img src="survParamSim_files/figure-html/plot_raw_data-2.png" width="700"></p>
 <p>Next we fit a lognormal parametric model for the data.<br>
 Here we are using <code>node4</code> and <code>depth</code> as additional covariates in addition to treatment (<code>rx</code>).<br>
 You can see that all of the factor has strong association with the outcome.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fit.colon</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/survreg.html" class="external-link">survreg</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">rx</span> <span class="op">+</span> <span class="va">node4</span> <span class="op">+</span> <span class="va">depth</span>, 
-                     data <span class="op">=</span> <span class="va">colon2</span>, dist <span class="op">=</span> <span class="st">"lognormal"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit.colon</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Call:</span>
-<span class="co">#&gt; survreg(formula = Surv(time, status) ~ rx + node4 + depth, data = colon2, </span>
-<span class="co">#&gt;     dist = "lognormal")</span>
-<span class="co">#&gt;               Value Std. Error     z       p</span>
-<span class="co">#&gt; (Intercept)  7.5103     0.1343 55.92 &lt; 2e-16</span>
-<span class="co">#&gt; rxLev+5FU    0.7606     0.1677  4.54 5.7e-06</span>
-<span class="co">#&gt; node4       -1.3474     0.1816 -7.42 1.2e-13</span>
-<span class="co">#&gt; depth        1.1243     0.2661  4.22 2.4e-05</span>
-<span class="co">#&gt; Log(scale)   0.6040     0.0461 13.10 &lt; 2e-16</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Scale= 1.83 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Log Normal distribution</span>
-<span class="co">#&gt; Loglik(model)= -2561.7   Loglik(intercept only)= -2607.6</span>
-<span class="co">#&gt;  Chisq= 91.8 on 3 degrees of freedom, p= 9e-20 </span>
-<span class="co">#&gt; Number of Newton-Raphson Iterations: 4 </span>
-<span class="co">#&gt; n= 619</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fit.colon</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/survreg.html" class="external-link">survreg</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">rx</span> <span class="op">+</span> <span class="va">node4</span> <span class="op">+</span> <span class="va">depth</span>, </span>
+<span>                     data <span class="op">=</span> <span class="va">colon2</span>, dist <span class="op">=</span> <span class="st">"lognormal"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit.colon</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call:</span></span>
+<span><span class="co">#&gt; survreg(formula = Surv(time, status) ~ rx + node4 + depth, data = colon2, </span></span>
+<span><span class="co">#&gt;     dist = "lognormal")</span></span>
+<span><span class="co">#&gt;               Value Std. Error     z       p</span></span>
+<span><span class="co">#&gt; (Intercept)  7.5103     0.1343 55.92 &lt; 2e-16</span></span>
+<span><span class="co">#&gt; rxLev+5FU    0.7606     0.1677  4.54 5.7e-06</span></span>
+<span><span class="co">#&gt; node4       -1.3474     0.1816 -7.42 1.2e-13</span></span>
+<span><span class="co">#&gt; depth        1.1243     0.2661  4.22 2.4e-05</span></span>
+<span><span class="co">#&gt; Log(scale)   0.6040     0.0461 13.10 &lt; 2e-16</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Scale= 1.83 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Log Normal distribution</span></span>
+<span><span class="co">#&gt; Loglik(model)= -2561.7   Loglik(intercept only)= -2607.6</span></span>
+<span><span class="co">#&gt;  Chisq= 91.8 on 3 degrees of freedom, p= 9e-20 </span></span>
+<span><span class="co">#&gt; Number of Newton-Raphson Iterations: 4 </span></span>
+<span><span class="co">#&gt; n= 619</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="perform-simulation">Perform simulation<a class="anchor" aria-label="anchor" href="#perform-simulation"></a>
@@ -157,119 +157,118 @@ You can see that all of the factor has strong association with the outcome.</p>
 It also require you to supply <code>newdata</code>, which is required even if it is not new - i.e. the same data was used for both <code><a href="https://rdrr.io/pkg/survival/man/survreg.html" class="external-link">survreg()</a></code> and <code><a href="../reference/survparamsim.html">surv_param_sim()</a></code>.</p>
 <p>What it does is: 1. Re-sample all the coefficients in the parametric survival model from variance-covariance matrix for <code>n.rep</code> times. 2. Perform survival time for all subjects in <code>newdata</code> with the corresponding covariates, using one of the resampled coefficients. Also generate censoring time according to <code>censor.dur</code> (if not NULL), and replace the simulated survival time above if censoring time is earlier. 4. Repeat the steps 2. for <code>n.rep</code> times.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sim</span> <span class="op">&lt;-</span> 
-  <span class="fu"><a href="../reference/survparamsim.html">surv_param_sim</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">fit.colon</span>, newdata <span class="op">=</span> <span class="va">colon2</span>, 
-                 <span class="co"># Simulate censoring according to the plot above</span>
-                 censor.dur <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1800</span>, <span class="fl">3000</span><span class="op">)</span>,
-                 <span class="co"># Simulate only 100 times to make the example go fast</span>
-                 n.rep <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">sim</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="../reference/survparamsim.html">surv_param_sim</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">fit.colon</span>, newdata <span class="op">=</span> <span class="va">colon2</span>, </span>
+<span>                 <span class="co"># Simulate censoring according to the plot above</span></span>
+<span>                 censor.dur <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1800</span>, <span class="fl">3000</span><span class="op">)</span>,</span>
+<span>                 <span class="co"># Simulate only 100 times to make the example go fast</span></span>
+<span>                 n.rep <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
 <p>After the simulation is performed, you can either extract raw simulation results or further calculate Kaplan-Meier estimates or hazard ratio of treatment effect, as you see when you type <code>sim</code> in the console.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sim</span>
-<span class="co">#&gt; ---- Simulated survival data with the following model ----</span>
-<span class="co">#&gt; survreg(formula = Surv(time, status) ~ rx + node4 + depth, data = colon2, </span>
-<span class="co">#&gt;     dist = "lognormal")</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; * Use `extract_sim()` function to extract individual simulated survivals</span>
-<span class="co">#&gt; * Use `calc_km_pi()` function to get survival curves and median survival time</span>
-<span class="co">#&gt; * Use `calc_hr_pi()` function to get hazard ratio</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; * Settings:</span>
-<span class="co">#&gt;     #simulations: 100 </span>
-<span class="co">#&gt;     #subjects: 619 (without NA in model variables)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">sim</span></span>
+<span><span class="co">#&gt; ---- Simulated survival data with the following model ----</span></span>
+<span><span class="co">#&gt; survreg(formula = Surv(time, status) ~ rx + node4 + depth, data = colon2, </span></span>
+<span><span class="co">#&gt;     dist = "lognormal")</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; * Use `extract_sim()` function to extract individual simulated survivals</span></span>
+<span><span class="co">#&gt; * Use `calc_km_pi()` function to get survival curves and median survival time</span></span>
+<span><span class="co">#&gt; * Use `calc_hr_pi()` function to get hazard ratio</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; * Settings:</span></span>
+<span><span class="co">#&gt;     #simulations: 100 </span></span>
+<span><span class="co">#&gt;     #subjects: 619 (without NA in model variables)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="survival-time-profile">Survival time profile<a class="anchor" aria-label="anchor" href="#survival-time-profile"></a>
 </h2>
-<p>To calculate survival curves for each simulated dataset, <code><a href="../reference/calc_km_pi.html">calc_km_pi()</a></code> can be used on the simulated object above.</p>
+<p>To calculate survival curves for each simulated dataset, <code><a href="../reference/calculate_km_pi.html">calc_ave_km_pi()</a></code> or <code><a href="../reference/calculate_km_pi.html">calc_km_pi()</a></code> can be used on the simulated object above.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">km.pi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_km_pi.html">calc_km_pi</a></span><span class="op">(</span><span class="va">sim</span>, trt <span class="op">=</span> <span class="st">"rx"</span><span class="op">)</span>
-<span class="co">#&gt; Warning in calc_km_pi(sim, trt = "rx"): 70 of 200 simulations (#rep * #trt</span>
-<span class="co">#&gt; * #group) did not reach median survival time and these are not included for</span>
-<span class="co">#&gt; prediction interval calculation. You may want to delay the `censor.dur` in</span>
-<span class="co">#&gt; simulation.</span>
-<span class="va">km.pi</span>
-<span class="co">#&gt; ---- Simulated and observed (if calculated) survival curves ----</span>
-<span class="co">#&gt; * Use `extract_medsurv_pi()` to extract prediction intervals of median survival times</span>
-<span class="co">#&gt; * Use `extract_km_pi()` to extract prediction intervals of K-M curves</span>
-<span class="co">#&gt; * Use `plot_km_pi()` to draw survival curves</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; * Settings:</span>
-<span class="co">#&gt;     trt: rx </span>
-<span class="co">#&gt;     group: NA </span>
-<span class="co">#&gt;     pi.range: 0.95 </span>
-<span class="co">#&gt;     calc.obs: TRUE</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">km.pi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_km_pi.html">calc_ave_km_pi</a></span><span class="op">(</span><span class="va">sim</span>, trt <span class="op">=</span> <span class="st">"rx"</span><span class="op">)</span></span>
+<span><span class="va">km.pi</span></span>
+<span><span class="co">#&gt; ---- Simulated and observed (if calculated) survival curves ----</span></span>
+<span><span class="co">#&gt; * Use `extract_km_pi()` to extract prediction intervals of K-M curves</span></span>
+<span><span class="co">#&gt; * Use `plot_km_pi()` to draw survival curves</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; * Settings:</span></span>
+<span><span class="co">#&gt;     trt: rx </span></span>
+<span><span class="co">#&gt;     group: NA </span></span>
+<span><span class="co">#&gt;     pi.range: 0.95 </span></span>
+<span><span class="co">#&gt;     calc.obs: TRUE </span></span>
+<span><span class="co">#&gt;     method: Average survival using `calc_ave_km_pi()`</span></span></code></pre></div>
 <p>Similar to the raw simulated object, you can have a few options for further processing - one of them is plotting prediction intervals with <code><a href="../reference/plot_km_pi.html">plot_km_pi()</a></code> function.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_km_pi.html">plot_km_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Recurrence free rate"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html" class="external-link">expand_limits</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_km_pi.html">plot_km_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Recurrence free rate"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html" class="external-link">expand_limits</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <p><img src="survParamSim_files/figure-html/km_pi_plot-1.png" width="700"></p>
-<p>Or providing median survival summary table with <code><a href="../reference/extractpi.html">extract_medsurv_pi()</a></code> function.</p>
+<p>Or providing median survival summary table with <code><a href="../reference/extractpi.html">extract_medsurv_pi()</a></code> function.<br>
+This functionality is only available for <code><a href="../reference/calculate_km_pi.html">calc_km_pi()</a></code> output and has not been implemented for <code><a href="../reference/calculate_km_pi.html">calc_ave_km_pi()</a></code> yet..</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/extractpi.html">extract_medsurv_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 5</span></span>
-<span class="co">#&gt;   rx          n description median quantile</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Obs       315 pi_low       <span style="text-decoration: underline;">1</span>108.   0.025<span style="text-decoration: underline;">0</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Obs       315 pi_med       <span style="text-decoration: underline;">1</span>538.   0.5   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Obs       315 pi_high      <span style="text-decoration: underline;">2</span>113.   0.975 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Obs       315 obs          <span style="text-decoration: underline;">1</span>236   <span style="color: #BB0000;">NA</span>     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Lev+5FU   304 pi_low       <span style="text-decoration: underline;">2</span>126.   0.025<span style="text-decoration: underline;">0</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Lev+5FU   304 pi_med       <span style="text-decoration: underline;">2</span>697.   0.5   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">7</span> Lev+5FU   304 pi_high      <span style="text-decoration: underline;">2</span>927.   0.975 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">8</span> Lev+5FU   304 obs            <span style="color: #BB0000;">NA</span>   <span style="color: #BB0000;">NA</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">km.pi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_km_pi.html">calc_km_pi</a></span><span class="op">(</span><span class="va">sim</span>, trt <span class="op">=</span> <span class="st">"rx"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in calc_km_pi(sim, trt = "rx"): 70 of 200 simulations (#rep * #trt *</span></span>
+<span><span class="co">#&gt; #group) did not reach median survival time and these are not included for</span></span>
+<span><span class="co">#&gt; prediction interval calculation. You may want to delay the `censor.dur` in</span></span>
+<span><span class="co">#&gt; simulation.</span></span>
+<span><span class="fu"><a href="../reference/extractpi.html">extract_medsurv_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 5</span></span></span>
+<span><span class="co">#&gt;   rx          n description median quantile</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Obs       315 pi_low       <span style="text-decoration: underline;">1</span>108.   0.025<span style="text-decoration: underline;">0</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Obs       315 pi_med       <span style="text-decoration: underline;">1</span>538.   0.5   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Obs       315 pi_high      <span style="text-decoration: underline;">2</span>113.   0.975 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Obs       315 obs          <span style="text-decoration: underline;">1</span>236   <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Lev+5FU   304 pi_low       <span style="text-decoration: underline;">2</span>126.   0.025<span style="text-decoration: underline;">0</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Lev+5FU   304 pi_med       <span style="text-decoration: underline;">2</span>697.   0.5   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> Lev+5FU   304 pi_high      <span style="text-decoration: underline;">2</span>927.   0.975 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> Lev+5FU   304 obs            <span style="color: #BB0000;">NA</span>   <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
 <p>Plot can also be made for subgroups.<br>
 You can see that prediction interval is wide for (depth: 1 &amp; nodes4: 1) group, mainly due to small number of subjects</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">km.pi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_km_pi.html">calc_km_pi</a></span><span class="op">(</span><span class="va">sim</span>, trt <span class="op">=</span> <span class="st">"rx"</span>, group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"node4"</span>, <span class="st">"depth"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; Warning in calc_km_pi(sim, trt = "rx", group = c("node4", "depth")): 339 of 800</span>
-<span class="co">#&gt; simulations (#rep * #trt * #group) did not reach median survival time and these</span>
-<span class="co">#&gt; are not included for prediction interval calculation. You may want to delay the</span>
-<span class="co">#&gt; `censor.dur` in simulation.</span>
-
-<span class="fu"><a href="../reference/plot_km_pi.html">plot_km_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Recurrence free rate"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html" class="external-link">expand_limits</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">km.pi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_km_pi.html">calc_ave_km_pi</a></span><span class="op">(</span><span class="va">sim</span>, trt <span class="op">=</span> <span class="st">"rx"</span>, group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"node4"</span>, <span class="st">"depth"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/plot_km_pi.html">plot_km_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Recurrence free rate"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html" class="external-link">expand_limits</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <p><img src="survParamSim_files/figure-html/km_pi_group-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="hazard-ratios-hrs">Hazard ratios (HRs)<a class="anchor" aria-label="anchor" href="#hazard-ratios-hrs"></a>
 </h2>
-<p>To calculate prediction intervals of HRs, <code><a href="../reference/calc_hr_pi.html">calc_hr_pi()</a></code> can be used on the simulated object above. Here I only generated subgroups based on “depth”, since the very small N in (depth: 1 &amp; nodes4: 1) can cause issue with calculating HRs.</p>
+<p>To calculate prediction intervals of HRs, <code><a href="../reference/calculate_hr_pi.html">calc_ave_hr_pi()</a></code> or <code><a href="../reference/calculate_hr_pi.html">calc_hr_pi()</a></code> can be used on the simulated object above. Here I only generated subgroups based on “depth”, since the very small N in (depth: 1 &amp; nodes4: 1) can cause issue with calculating HRs.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">hr.pi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_hr_pi.html">calc_hr_pi</a></span><span class="op">(</span><span class="va">sim</span>, trt <span class="op">=</span> <span class="st">"rx"</span>, group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"depth"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="va">hr.pi</span>
-<span class="co">#&gt; ---- Simulated and observed (if calculated) hazard ratio ----</span>
-<span class="co">#&gt; * Use `extract_hr_pi()` to extract prediction intervals and observed HR</span>
-<span class="co">#&gt; * Use `extract_hr()` to extract individual simulated HRs</span>
-<span class="co">#&gt; * Use `plot_hr_pi()` to draw histogram of predicted HR</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; * Settings:</span>
-<span class="co">#&gt;     trt: rx</span>
-<span class="co">#&gt;          ('Lev+5FU' as test trt, 'Obs' as control)</span>
-<span class="co">#&gt;     group: depth </span>
-<span class="co">#&gt;     pi.range: 0.95 </span>
-<span class="co">#&gt;     calc.obs: TRUE</span>
-<span class="fu"><a href="../reference/plot_hr_pi.html">plot_hr_pi</a></span><span class="op">(</span><span class="va">hr.pi</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">hr.pi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_hr_pi.html">calc_ave_hr_pi</a></span><span class="op">(</span><span class="va">sim</span>, trt <span class="op">=</span> <span class="st">"rx"</span>, group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"depth"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">hr.pi</span></span>
+<span><span class="co">#&gt; ---- Simulated and observed (if calculated) hazard ratio ----</span></span>
+<span><span class="co">#&gt; * Use `extract_hr_pi()` to extract prediction intervals and observed HR</span></span>
+<span><span class="co">#&gt; * Use `extract_hr()` to extract individual simulated HRs</span></span>
+<span><span class="co">#&gt; * Use `plot_hr_pi()` to draw histogram of predicted HR</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; * Settings:</span></span>
+<span><span class="co">#&gt;     trt: rx</span></span>
+<span><span class="co">#&gt;          ('Lev+5FU' as test trt, 'Obs' as control)</span></span>
+<span><span class="co">#&gt;     group: depth </span></span>
+<span><span class="co">#&gt;     pi.range: 0.95 </span></span>
+<span><span class="co">#&gt;     calc.obs: TRUE </span></span>
+<span><span class="co">#&gt;     method: average HR using `calc_ave_hr_pi()`</span></span>
+<span><span class="fu"><a href="../reference/plot_hr_pi.html">plot_hr_pi</a></span><span class="op">(</span><span class="va">hr.pi</span><span class="op">)</span></span></code></pre></div>
 <p><img src="survParamSim_files/figure-html/hr_pi-1.png" width="700"></p>
 <p>You can also extract prediction intervals and observed HR with <code><a href="../reference/extractpi.html">extract_hr_pi()</a></code> function.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/extractpi.html">extract_hr_pi</a></span><span class="op">(</span><span class="va">hr.pi</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 5</span></span>
-<span class="co">#&gt;   depth rx      description    HR quantile</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     0 Lev+5FU pi_low      0.464   0.025<span style="text-decoration: underline;">0</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     0 Lev+5FU pi_med      0.624   0.5   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     0 Lev+5FU pi_high     0.794   0.975 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     0 Lev+5FU obs         0.590  <span style="color: #BB0000;">NA</span>     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     1 Lev+5FU pi_low      0.233   0.025<span style="text-decoration: underline;">0</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     1 Lev+5FU pi_med      0.597   0.5   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">7</span>     1 Lev+5FU pi_high     1.13    0.975 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">8</span>     1 Lev+5FU obs         0.607  <span style="color: #BB0000;">NA</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/extractpi.html">extract_hr_pi</a></span><span class="op">(</span><span class="va">hr.pi</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 5</span></span></span>
+<span><span class="co">#&gt;   depth rx      description    HR quantile</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     0 Lev+5FU pi_low      0.491   0.025<span style="text-decoration: underline;">0</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     0 Lev+5FU pi_med      0.601   0.5   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     0 Lev+5FU pi_high     0.765   0.975 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     0 Lev+5FU obs         0.590  <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     1 Lev+5FU pi_low      0.413   0.025<span style="text-decoration: underline;">0</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     1 Lev+5FU pi_med      0.560   0.5   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span>     1 Lev+5FU pi_high     0.702   0.975 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span>     1 Lev+5FU obs         0.607  <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
 </div>
   </div>
 
@@ -290,7 +289,7 @@ You can see that prediction interval is wide for (depth: 1 &amp; nodes4: 1) grou
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
