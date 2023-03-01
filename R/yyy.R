@@ -10,11 +10,14 @@ if(getRversion() >= "2.15.1"){
   # calc_hr
   utils::globalVariables(c('coxfit', 'HR', 'term', 'estimate',
                            "p.value", "p.value.coef.wald", "p.value.logrank"))
+  utils::globalVariables(c('lp', 'survfun.control', 'survfun.trt', 'pdf.control', 'pdf.trt',
+                           'integrand1', 'integrand2', 'term1', 'term2'))
 
   # calc_km
   utils::globalVariables(c('kmfit', 'km', 'surv', 'time', 'cnsr',
                            'is.median.na', 'N.median.NA', 'N.all', 'n_min', 'n_max',
                            '.trt.control.group', '.trt.group.1', '.trt.group.index', 'median_delta'))
+  utils::globalVariables(c('survfun', 'quantiles', 'scale.ln'))
 
   # extract sim
   utils::globalVariables(c('n.resample', 'covec50', 'cove0', 'covemaxstr', 'covec50str', 'cove0str',

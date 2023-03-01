@@ -120,7 +120,7 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
   ## Generate linear predictors (lp)
   if(object$dist != "exponential"){
     lp <- th.bs[,-ncol(th.bs)] %*% t(rdata)
-    scale.bs <- th.bs[,ncol(th.bs)]
+    scale.ln.bs <- th.bs[,ncol(th.bs)]
   } else {
     lp <- th.bs %*% t(rdata)
   }
@@ -129,16 +129,16 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
     switch(object$dist,
            gaussian = stats::rnorm(n    = length(lp),
                                    mean = lp,
-                                   sd   = exp(scale.bs)),
+                                   sd   = exp(scale.ln.bs)),
            lognormal = stats::rlnorm(n    = length(lp),
                                      mean = lp,
-                                     sd   = exp(scale.bs)),
+                                     sd   = exp(scale.ln.bs)),
            weibull = stats::rweibull(n     = length(lp),
-                                     shape = 1/exp(scale.bs),
+                                     shape = 1/exp(scale.ln.bs),
                                      scale = exp(lp)),
            loglogistic = exp(stats::rlogis(n = length(lp),
                                            location = lp,
-                                           scale = exp(scale.bs))),
+                                           scale = exp(scale.ln.bs))),
            exponential = stats::rexp(n = length(lp),
                                      rate = 1/exp(lp))
     )
@@ -170,7 +170,8 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
     data.frame(time = as.vector(preds),
                event= as.vector(event.status),
                rep  = rep(1:n.rep,  times=n.subj),
-               subj.sim = rep(subj.sim.id,  each =n.rep)) %>%
+               subj.sim = rep(subj.sim.id,  each =n.rep),
+               lp = as.vector(lp)) %>%
     dplyr::arrange(rep, subj.sim)
 
   newdata <-
@@ -205,6 +206,15 @@ surv_param_sim <- function(object, newdata, n.rep = 1000, censor.dur = NULL,
   out$newdata.nona.sim <- newdata.nona # Used for grouping assignment in sim HR & K-M
   out$sim <- sim
   out$censor.dur <- censor.dur
+
+  ## Export for average HR calculation
+  # out$lp.matrix <- lp
+  # if(object$dist != "exponential") out$scale.vec <- scale.bs
+  if(object$dist != "exponential") {
+    out$scale.ln.bs.df <- data.frame(rep = 1:n.rep, scale.ln = scale.ln.bs)
+  } else {
+    out$scale.ln.bs.df <- data.frame(rep = 1:n.rep, scale.ln = NA)
+  }
 
   structure(out, class = c("survparamsim"))
 }

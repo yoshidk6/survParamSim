@@ -10,11 +10,6 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
                                     n.resample, strat.resample = NULL,
                                     coef.var = TRUE, na.warning = TRUE){
 
-  # Replace nest with packageVersion("tidyr") == '1.0.0' for a speed issue
-  # See https://github.com/tidyverse/tidyr/issues/751
-  nest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::nest_legacy, tidyr::nest)
-  unnest2 <- ifelse(utils::packageVersion("tidyr") == '1.0.0', tidyr::unnest_legacy, tidyr::unnest)
-
   # check_data_na_resample(newdata, object)
 
   resample_per_strat <- function(data, n.resample, n.rep){
@@ -44,11 +39,11 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
     newdata.resampled <-
       newdata %>%
       dplyr::group_by(!!strat.sym) %>%
-      nest2() %>%
+      tidyr::nest() %>%
       dplyr::left_join(sample_scheme, by = strat.resample) %>%
       dplyr::mutate(sample = purrr::map2(data, n.resample, resample_per_strat, n.rep = n.rep)) %>%
       dplyr::select(-data) %>%
-      unnest2(sample) %>%
+      tidyr::unnest(sample) %>%
       dplyr::ungroup()
   }
 
@@ -60,7 +55,7 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
   newdata.resampled.nested <-
     newdata.resampled %>%
     dplyr::group_by(rep) %>%
-    nest2()
+    tidyr::nest()
 
 
   simulate_each <- function(data, object, censor.dur){
@@ -78,7 +73,7 @@ surv_param_sim_resample <- function(object, newdata, n.rep = 1000, censor.dur = 
     newdata.resampled.nested %>%
     dplyr::mutate(sim = purrr::map(data, simulate_each, object = object, censor.dur = censor.dur)) %>%
     dplyr::select(-data) %>%
-    unnest2(sim) %>%
+    tidyr::unnest(sim) %>%
     dplyr::ungroup()
 
 

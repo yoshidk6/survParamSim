@@ -18,21 +18,21 @@ extract_sim <- function(sim) {
   if(methods::is(sim, "survparamsim_resample")){
     sim.merged.with.cov <-
       sim$newdata.nona.sim %>%
-      dplyr::select(-time.var, -status.var, -n.resample) %>%
+      dplyr::select(-dplyr::all_of(time.var), -dplyr::all_of(status.var), -n.resample) %>%
       dplyr::left_join(sim$sim, ., by = c("rep", "subj.sim")) %>%
       dplyr::select(rep, subj.sim, time, event, dplyr::everything())
 
   } else if(methods::is(sim, "survparamsim_pre_resampled")){
     sim.merged.with.cov <-
       sim$newdata.nona.sim %>%
-      dplyr::select(-time.var, -status.var) %>%
+      dplyr::select(-dplyr::all_of(time.var), -dplyr::all_of(status.var)) %>%
       dplyr::left_join(sim$sim, ., by = c("rep", "subj.sim")) %>%
       dplyr::select(rep, subj.sim, time, event, dplyr::everything())
 
   } else {
     sim.merged.with.cov <-
       sim$newdata.nona.sim %>%
-      dplyr::select(-time.var, -status.var) %>%
+      dplyr::select(-dplyr::all_of(time.var), -dplyr::all_of(status.var)) %>%
       dplyr::left_join(sim$sim, ., by = c("subj.sim")) %>%
       dplyr::select(rep, subj.sim, time, event, dplyr::everything())
   }
@@ -45,8 +45,10 @@ extract_sim <- function(sim) {
 #' @export
 #' @param hr.pi a return object from [calc_hr_pi()] function.
 #' @details
-#' [extract_hr()] extracts simulated HRs for all repeated simulations.
-#' It also returns p values for Cox regression fits, one for each group
+#' [extract_hr()] extracts simulated HR for all repeated simulations.
+#' If HR was calculated based on simulated survival times with
+#' [calc_hr_pi()] function, it also returns p values for Cox regression
+#' fits, one for each group
 #' based on Wald test and another for the overall significance of the
 #' coefficient based on logrank test. The latter has the same values
 #' across treatment groups when >2 levels in treatment
@@ -71,6 +73,9 @@ extract_km_obs <- function(km.pi) {
 #' @details
 #' [extract_medsurv()] extracts simulated median survival times for all repeated simulations
 extract_medsurv <- function(km.pi) {
+  if(methods::is(km.pi, "survparamsim.kmpi.aveHR")){
+    stop("Median survival calculation not implemented in `calc_ave_km_pi()`` yet")
+  }
   return(km.pi$sim.median.time)
 }
 
@@ -92,7 +97,7 @@ extract_medsurv_delta <- function(km.pi) {
   trt.sym    <- km.pi$trt.syms[[1]]
 
   # Check trt values
-  check_trt(km.pi$median.pi, trt.sym, group.syms)
+  check_trt(km.pi$median.pi, trt.sym)
 
   # Convert trt to factor
   sim.median.time <-

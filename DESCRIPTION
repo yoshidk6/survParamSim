@@ -16,6 +16,7 @@ Depends: R (>= 3.4.0),
 Imports: 
     broom,
     dplyr,
+    eha,
     forcats,
     ggplot2,
     lifecycle (>= 0.2.0),
@@ -31,13 +32,15 @@ Suggests:
     knitr,
     rmarkdown,
     survminer,
-    testthat (>= 2.1.0),
+    testthat (>= 3.1.0),
     vdiffr,
-    withr
+    withr,
+    flexsurv (>= 2.2),
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.3
 Language: en-US
 URL: https://github.com/yoshidk6/survParamSim
 BugReports: https://github.com/yoshidk6/survParamSim/issues
 VignetteBuilder: knitr
 RdMacros: lifecycle
+Config/testthat/edition: 3

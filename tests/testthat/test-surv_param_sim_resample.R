@@ -1,5 +1,3 @@
-context("test-surv_param_sim_resample")
-
 library(survival)
 set.seed(12345)
 
@@ -21,7 +19,7 @@ sim.resample.nostrat <- surv_param_sim_resample(object, newdata, n.rep, censor.d
 
 test_that("Simulated data fame size matches", {
   expect_equal(dim(sim.resample$sim),
-               c(n.rep * sum(n.resample), 4))
+               c(n.rep * sum(n.resample), 5))
 })
 
 test_that("Extracted HR size matches", {
@@ -58,7 +56,7 @@ test_that("Make sure km and hr calc works", {
   expect_equal(extract_hr_pi(hr.pi)$HR[[1]], 0.328, tolerance = .001)
   extract_km_pi(km.pi)
   plot_hr_pi(hr.pi)
-  plot_km_pi(km.pi)
+  suppressWarnings(plot_km_pi(km.pi)) # Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
 })
 
 test_that("Make sure km and hr calc works with group", {
@@ -67,9 +65,12 @@ test_that("Make sure km and hr calc works with group", {
 
   expect_equal(extract_hr_pi(hr.pi)$HR[[5]], 0.361, tolerance = .001)
   extract_km_pi(km.pi)
-  plot_km_pi(km.pi)
   plot_hr_pi(hr.pi)
+  suppressWarnings(plot_km_pi(km.pi)) # Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
 })
 
+test_that("Raw sim extraction", {
+  expect_equal(dim(extract_sim(sim.resample)), c(7500, 7))
+})
 
 

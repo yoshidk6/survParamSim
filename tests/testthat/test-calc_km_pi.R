@@ -1,5 +1,3 @@
-context("test-calc_km_pi")
-
 library(survival)
 set.seed(12345)
 
@@ -81,11 +79,11 @@ test_that("predicted KM and median time per group", {
 
 
 test_that("grouping and trt", {
-  plot.km.sex <- plot_km_pi(calc_km_pi(sim, trt = "sex"))
+  plot.km.sex <- suppressWarnings(plot_km_pi(calc_km_pi(sim, trt = "sex")))
   expect_doppelganger("km plot with sex as trt", plot.km.sex)
 
   km.pi.sex.ecog <- suppressWarnings(calc_km_pi(sim, group = c("sex", "ph.ecog")))
-  plot.km.sex.ecog <- plot_km_pi(km.pi.sex.ecog)
+  plot.km.sex.ecog <- suppressWarnings(plot_km_pi(km.pi.sex.ecog))
   expect_doppelganger("km plot with sex and ph.ecog as group", plot.km.sex.ecog)
 })
 
@@ -139,8 +137,8 @@ test_that("warning with immature median time simulations", {
 
 
 test_that("trt and group overlapping variables", {
-  km.pi <- expect_warning(calc_km_pi(sim.newdata2, group = c("sex", "ph.ecog"), trt = "sex"),
-                          "Use of the same variable for `group` and `trt` ")
+  expect_warning(km.pi <- calc_km_pi(sim.newdata2, group = c("sex", "ph.ecog"), trt = "sex"),
+                 "Use of the same variable for `group` and `trt` ")
   extract_km_pi(km.pi)
   expect_error(extract_medsurv_delta_pi(km.pi),
                "The same variable cannot be assigned for `group` and `trt`")

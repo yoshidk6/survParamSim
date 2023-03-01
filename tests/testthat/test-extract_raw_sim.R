@@ -1,5 +1,3 @@
-context("test-extract_raw_sim")
-
 library(survival)
 set.seed(12345)
 
@@ -20,6 +18,6 @@ test_that("make sure extraction works for both with or without resampling", {
   sim.resample <- surv_param_sim_resample(object, newdata, n.rep, censor.dur, n.resample, strat.resample = "sex")
   sim.raw.resample <- extract_sim(sim.resample)
 
-  expect_equal(dim(sim.raw), c(6810, 6))
-  expect_equal(dim(sim.raw.resample), c(1200, 6))
+  expect_equal(dim(sim.raw), c(6810, 7))
+  expect_equal(dim(sim.raw.resample), c(1200, 7))
 })

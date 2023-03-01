@@ -1,5 +1,3 @@
-context("test-surv_param_sim")
-
 library(survival)
 set.seed(12345)
 

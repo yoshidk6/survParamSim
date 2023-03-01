@@ -96,14 +96,16 @@ sim
 
 ## Survival time profile
 
-To calculate survival curves for each simulated dataset, `calc_km_pi()` can be used on the simulated object above.
+To calculate survival curves for each simulated dataset, `calc_ave_km_pi()` or
+`calc_km_pi()` can be used on the simulated object above.
 
 ```{r km_pi_calc}
-km.pi <- calc_km_pi(sim, trt = "rx")
+km.pi <- calc_ave_km_pi(sim, trt = "rx")
 km.pi
 ```
 
-Similar to the raw simulated object, you can have a few options for further processing - one of them is plotting prediction intervals with `plot_km_pi()` function.
+Similar to the raw simulated object, you can have a few options for further 
+processing - one of them is plotting prediction intervals with `plot_km_pi()` function.
 
 ```{r km_pi_plot}
 plot_km_pi(km.pi) +
@@ -112,9 +114,12 @@ plot_km_pi(km.pi) +
   expand_limits(y = 0)
 ```
 
-Or providing median survival summary table with `extract_medsurv_pi()` function.
+Or providing median survival summary table with `extract_medsurv_pi()` function.  
+This functionality is only available for `calc_km_pi()` output and has not been
+implemented for `calc_ave_km_pi()` yet..
 
 ```{r km_pi_table}
+km.pi <- calc_km_pi(sim, trt = "rx")
 extract_medsurv_pi(km.pi)
 ```
 
@@ -122,7 +127,7 @@ Plot can also be made for subgroups.
 You can see that prediction interval is wide for (depth: 1 & nodes4: 1) group, mainly due to small number of subjects
 
 ```{r km_pi_group}
-km.pi <- calc_km_pi(sim, trt = "rx", group = c("node4", "depth"))
+km.pi <- calc_ave_km_pi(sim, trt = "rx", group = c("node4", "depth"))
 
 plot_km_pi(km.pi) +
   theme(legend.position = "bottom") +
@@ -132,11 +137,12 @@ plot_km_pi(km.pi) +
 
 ## Hazard ratios (HRs)
 
-To calculate prediction intervals of HRs, `calc_hr_pi()` can be used on the simulated object above.
+To calculate prediction intervals of HRs, `calc_ave_hr_pi()` or `calc_hr_pi()` can 
+be used on the simulated object above.
 Here I only generated subgroups based on "depth", since the very small N in (depth: 1 & nodes4: 1) can cause issue with calculating HRs.
 
 ```{r hr_pi}
-hr.pi <- calc_hr_pi(sim, trt = "rx", group = c("depth"))
+hr.pi <- calc_ave_hr_pi(sim, trt = "rx", group = c("depth"))
 
 hr.pi
 plot_hr_pi(hr.pi)

@@ -1,5 +1,3 @@
-context("test-calc_hr_pi")
-
 library(survival)
 set.seed(12345)
 
@@ -74,8 +72,15 @@ test_that("not all groups have both treatment arms", {
 
   sim.tmp <- surv_param_sim(object, newdata.wo.both.trt, n.rep, censor.dur)
 
-  expect_warning(calc_hr_pi(sim.tmp, trt = "sex", group = "ph.ecog"),
-               "HR was not calculable in at least one subgroup for the observed data")
+  warnings <-
+    capture_warnings(calc_hr_pi(sim.tmp, trt = "sex", group = "ph.ecog"),
+                     ignore_deprecation = TRUE)
+
+  expect_match(warnings, "HR was not calculable in at least one subgroup for the observed data", all = FALSE)
+  expect_match(warnings, "HR was not calculable in at least one subgroup for the simulated data", all = FALSE)
+  expect_match(warnings, "Ran out of iterations and did not converge", all = FALSE)
+  expect_equal(length(warnings), 3)
+
 
 })
 
