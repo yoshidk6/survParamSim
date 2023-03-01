@@ -62,7 +62,9 @@ Generate Kaplan-Meier curves with prediction intervals using simulated survival 
 \details{
 \code{\link[=calc_km_pi]{calc_km_pi()}} calculate survival profile using the simulated survival times with
 Kaplan-Meier estimates, while \code{\link[=calc_ave_km_pi]{calc_ave_km_pi()}} calculate "average" survival
-using the mean survival function per treatment groups.
+using the mean survival function per treatment groups. \code{\link[=calc_ave_km_pi]{calc_ave_km_pi()}} actually
+does not rely on Kaplan-Meier estimates as it directly uses the underlying
+parametric survival model, however the function has \code{km} for naming consistency.
 
 If your \code{trt} has more than two categories/levels and want to specify which one to use as a
 reference group, you can convert the column into a factor in the \code{newdata} input for
