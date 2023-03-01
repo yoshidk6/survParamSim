@@ -11,7 +11,6 @@ create_survfun <- function(lpvec, scale,
   dist <- match.arg(dist)
 
   if(dist == "lognormal") {
-
     function(x) {
       survmatrix <-
         vapply(lpvec,
@@ -21,21 +20,94 @@ create_survfun <- function(lpvec, scale,
       if(length(x) == 1) return(mean(survmatrix))
       return(rowMeans(survmatrix))
     }
+  } else if(dist == "gaussian") {
+    function(x) {
+      survmatrix <-
+        vapply(lpvec,
+               function(lp) {stats::pnorm(q=x, mean=lp, sd=exp(scale), lower=FALSE)},
+               numeric(length(x)))
+
+      if(length(x) == 1) return(mean(survmatrix))
+      return(rowMeans(survmatrix))
+    }
+  } else if(dist == "weibull") {
+    function(x) {
+      survmatrix <-
+        vapply(lpvec,
+               function(lp) {stats::pweibull(q=x, shape=1/exp(scale), scale=exp(lp), lower=FALSE)},
+               numeric(length(x)))
+
+      if(length(x) == 1) return(mean(survmatrix))
+      return(rowMeans(survmatrix))
+    }
+  } else if(dist == "exponential") {
+    function(x) {
+      survmatrix <-
+        vapply(lpvec,
+               function(lp) {stats::pexp(q=x, rate=1/exp(lp), lower=FALSE)},
+               numeric(length(x)))
+
+      if(length(x) == 1) return(mean(survmatrix))
+      return(rowMeans(survmatrix))
+    }
+  } else if(dist == "loglogistic") {
+    stop("Loglogistic distribution not supported yet")
   } else {
     stop("Distribution not defined")
   }
 }
 
+
+
+
 # Create a function to calculate PDF(t)
 create_pdf <- function(lpvec, scale, dist = "lognormal"){
-  function(x) {
-    pdmatrix <-
-      vapply(lpvec,
-             function(lp) {stats::dlnorm(x=x, meanlog=lp, sdlog=exp(scale))},
-             numeric(length(x)))
 
-    if(length(x) == 1) return(mean(pdmatrix))
-    return(rowMeans(pdmatrix))
+
+  if(dist == "lognormal") {
+    function(x) {
+      pdmatrix <-
+        vapply(lpvec,
+               function(lp) {stats::dlnorm(x=x, meanlog=lp, sdlog=exp(scale))},
+               numeric(length(x)))
+
+      if(length(x) == 1) return(mean(pdmatrix))
+      return(rowMeans(pdmatrix))
+    }
+  } else if(dist == "gaussian") {
+    function(x) {
+      pdmatrix <-
+        vapply(lpvec,
+               function(lp) {stats::pnorm(x=x, mean=lp, sd=exp(scale))},
+               numeric(length(x)))
+
+      if(length(x) == 1) return(mean(pdmatrix))
+      return(rowMeans(pdmatrix))
+    }
+  } else if(dist == "weibull") {
+    function(x) {
+      pdmatrix <-
+        vapply(lpvec,
+               function(lp) {stats::dweibull(x=x, shape=1/exp(scale), scale=exp(lp))},
+               numeric(length(x)))
+
+      if(length(x) == 1) return(mean(pdmatrix))
+      return(rowMeans(pdmatrix))
+    }
+  } else if(dist == "exponential") {
+    function(x) {
+      pdmatrix <-
+        vapply(lpvec,
+               function(lp) {stats::dexp(x=x, rate=1/exp(lp))},
+               numeric(length(x)))
+
+      if(length(x) == 1) return(mean(pdmatrix))
+      return(rowMeans(pdmatrix))
+    }
+  } else if(dist == "loglogistic") {
+    stop("Loglogistic distribution not supported yet")
+  } else {
+    stop("Distribution not defined")
   }
 }
 
