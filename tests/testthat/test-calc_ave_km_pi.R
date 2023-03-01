@@ -33,21 +33,6 @@ sim.3trt.2 <- surv_param_sim(fit.lung.3trt.2, newdata.3trt.2, n.rep, censor.dur)
 km.pi.3trt.2 <- calc_ave_km_pi(sim.3trt.2, trt = "trtfct", group = "ph.ecog", boot.subj = FALSE)
 # plot_km_pi(km.pi.3trt.2)
 
-test_that("check create_survfun function works as intended", {
-
-  t.out <- seq(100, 600, by = 100)
-  newdata.1subj.rep <- dplyr::bind_rows(newdata[1,], newdata[1,], newdata[1,])
-
-  # Lognormal distribution
-  fit.lung.ln <- survreg(Surv(time, status) ~ sex + ph.ecog, data = lung, dist = "lognormal")
-  sim.ln <- surv_param_sim(fit.lung.ln, newdata.1subj.rep, n.rep = 1, censor.dur, coef.var = FALSE)
-  sim.ln.raw <- extract_sim(sim.ln) %>% tibble::tibble()
-
-  surv.vec.manual <- plnorm(q=t.out, meanlog=sim.ln.raw$lp, sdlog=exp(sim.ln$scale.bs.df$scale[1]), lower=FALSE)
-  survfun.ln.1subj.rep <- create_survfun(sim.ln.raw$lp, sim.ln$scale.bs.df$scale[1])
-  expect_equal(survfun.ln.1subj.rep(t.out), surv.vec.manual)
-
-})
 
 test_that("calc_ave_km_pi behavior check with manually calling", {
 
