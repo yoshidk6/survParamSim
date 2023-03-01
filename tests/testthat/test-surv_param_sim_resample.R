@@ -1,5 +1,3 @@
-context("test-surv_param_sim_resample")
-
 library(survival)
 set.seed(12345)
 
@@ -58,7 +56,7 @@ test_that("Make sure km and hr calc works", {
   expect_equal(extract_hr_pi(hr.pi)$HR[[1]], 0.328, tolerance = .001)
   extract_km_pi(km.pi)
   plot_hr_pi(hr.pi)
-  plot_km_pi(km.pi)
+  suppressWarnings(plot_km_pi(km.pi)) # Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
 })
 
 test_that("Make sure km and hr calc works with group", {
@@ -67,8 +65,8 @@ test_that("Make sure km and hr calc works with group", {
 
   expect_equal(extract_hr_pi(hr.pi)$HR[[5]], 0.361, tolerance = .001)
   extract_km_pi(km.pi)
-  plot_km_pi(km.pi)
   plot_hr_pi(hr.pi)
+  suppressWarnings(plot_km_pi(km.pi)) # Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
 })
 
 test_that("Raw sim extraction", {

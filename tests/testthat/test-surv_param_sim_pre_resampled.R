@@ -1,5 +1,3 @@
-context("test-surv_param_sim_pre_resampled")
-
 library(survival)
 set.seed(12345)
 
@@ -42,8 +40,9 @@ test_that("Expect warning for unbalanced subjects due to NA", {
     sim.resample.withna$newdata.nona.sim %>%
     dplyr::select(-subj.sim, -n.resample)
 
-  sim.pre.resample.withna <-
-    expect_warning(surv_param_sim_pre_resampled(object,
+
+  expect_warning(sim.pre.resample.withna <-
+                   surv_param_sim_pre_resampled(object,
                                                 newdata.orig = newdata.withna,
                                                 newdata.resampled = newdata.resampled.withna,
                                                 censor.dur = censor.dur))

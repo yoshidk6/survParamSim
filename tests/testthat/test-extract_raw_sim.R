@@ -1,5 +1,3 @@
-context("test-extract_raw_sim")
-
 library(survival)
 set.seed(12345)
 
