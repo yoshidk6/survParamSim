@@ -1,7 +1,7 @@
 
 # Create a function to calculate S(t)
 # The function to be created will take time (`x`) as the input argument and return
-create_survfun <- function(lpvec, scale,
+create_survfun <- function(lpvec, scale.ln,
                            dist = c("lognormal",
                                     "gaussian",
                                     "weibull",
@@ -14,7 +14,7 @@ create_survfun <- function(lpvec, scale,
     function(x) {
       survmatrix <-
         vapply(lpvec,
-               function(lp) {stats::plnorm(q=x, meanlog=lp, sdlog=exp(scale), lower=FALSE)},
+               function(lp) {stats::plnorm(q=x, meanlog=lp, sdlog=exp(scale.ln), lower=FALSE)},
                numeric(length(x)))
 
       if(length(x) == 1) return(mean(survmatrix))
@@ -24,7 +24,7 @@ create_survfun <- function(lpvec, scale,
     function(x) {
       survmatrix <-
         vapply(lpvec,
-               function(lp) {stats::pnorm(q=x, mean=lp, sd=exp(scale), lower=FALSE)},
+               function(lp) {stats::pnorm(q=x, mean=lp, sd=exp(scale.ln), lower=FALSE)},
                numeric(length(x)))
 
       if(length(x) == 1) return(mean(survmatrix))
@@ -34,7 +34,7 @@ create_survfun <- function(lpvec, scale,
     function(x) {
       survmatrix <-
         vapply(lpvec,
-               function(lp) {stats::pweibull(q=x, shape=1/exp(scale), scale=exp(lp), lower=FALSE)},
+               function(lp) {stats::pweibull(q=x, shape=1/exp(scale.ln), scale=exp(lp), lower=FALSE)},
                numeric(length(x)))
 
       if(length(x) == 1) return(mean(survmatrix))
@@ -51,7 +51,15 @@ create_survfun <- function(lpvec, scale,
       return(rowMeans(survmatrix))
     }
   } else if(dist == "loglogistic") {
-    stop("Loglogistic distribution not supported yet")
+    function(x) {
+      survmatrix <-
+        vapply(lpvec,
+               function(lp) {eha::pllogis(q=x, shape = 1/exp(scale.ln), scale = exp(lp), lower=FALSE)},
+               numeric(length(x)))
+
+      if(length(x) == 1) return(mean(survmatrix))
+      return(rowMeans(survmatrix))
+    }
   } else {
     stop("Distribution not defined")
   }
@@ -59,16 +67,15 @@ create_survfun <- function(lpvec, scale,
 
 
 
-
 # Create a function to calculate PDF(t)
-create_pdf <- function(lpvec, scale, dist = "lognormal"){
+create_pdf <- function(lpvec, scale.ln, dist = "lognormal"){
 
 
   if(dist == "lognormal") {
     function(x) {
       pdmatrix <-
         vapply(lpvec,
-               function(lp) {stats::dlnorm(x=x, meanlog=lp, sdlog=exp(scale))},
+               function(lp) {stats::dlnorm(x=x, meanlog=lp, sdlog=exp(scale.ln))},
                numeric(length(x)))
 
       if(length(x) == 1) return(mean(pdmatrix))
@@ -78,7 +85,7 @@ create_pdf <- function(lpvec, scale, dist = "lognormal"){
     function(x) {
       pdmatrix <-
         vapply(lpvec,
-               function(lp) {stats::pnorm(x=x, mean=lp, sd=exp(scale))},
+               function(lp) {stats::pnorm(x=x, mean=lp, sd=exp(scale.ln))},
                numeric(length(x)))
 
       if(length(x) == 1) return(mean(pdmatrix))
@@ -88,7 +95,7 @@ create_pdf <- function(lpvec, scale, dist = "lognormal"){
     function(x) {
       pdmatrix <-
         vapply(lpvec,
-               function(lp) {stats::dweibull(x=x, shape=1/exp(scale), scale=exp(lp))},
+               function(lp) {stats::dweibull(x=x, shape=1/exp(scale.ln), scale=exp(lp))},
                numeric(length(x)))
 
       if(length(x) == 1) return(mean(pdmatrix))
@@ -105,7 +112,15 @@ create_pdf <- function(lpvec, scale, dist = "lognormal"){
       return(rowMeans(pdmatrix))
     }
   } else if(dist == "loglogistic") {
-    stop("Loglogistic distribution not supported yet")
+    function(x) {
+      survmatrix <-
+        vapply(lpvec,
+               function(lp) {eha::dllogis(x=x, shape = 1/exp(scale.ln), scale = exp(lp))},
+               numeric(length(x)))
+
+      if(length(x) == 1) return(mean(survmatrix))
+      return(rowMeans(survmatrix))
+    }
   } else {
     stop("Distribution not defined")
   }

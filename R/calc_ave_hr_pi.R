@@ -60,7 +60,7 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
   }
 
   # Calculate average HR
-  sim.hr <- calc_hr_with_average_surv(sim.nested.2, sim$scale.bs.df,
+  sim.hr <- calc_hr_with_average_surv(sim.nested.2, sim$scale.ln.bs.df,
                                       trt, trt.sym, trt.levels, group, group.syms,
                                       dist = sim$survreg$dist,
                                       simtimelast)
@@ -100,7 +100,7 @@ calc_ave_hr_pi <- function(sim, trt, group = NULL, pi.range = 0.95,
 
 
 
-calc_hr_with_average_surv <- function(sim.nested.2, scale.bs.df,
+calc_hr_with_average_surv <- function(sim.nested.2, scale.ln.bs.df,
                                       trt, trt.sym, trt.levels, group, group.syms, dist,
                                       simtimelast = 1000) {
 
@@ -109,7 +109,7 @@ calc_hr_with_average_surv <- function(sim.nested.2, scale.bs.df,
     sim.nested.2 %>%
     dplyr::mutate(lp = purrr::map(data, function(x) x$lp)) %>%
     dplyr::select(-data) %>%
-    dplyr::left_join(scale.bs.df, by = "rep")
+    dplyr::left_join(scale.ln.bs.df, by = "rep")
 
   df.lp.control <-
     df.lp.extracted %>%
@@ -122,14 +122,14 @@ calc_hr_with_average_surv <- function(sim.nested.2, scale.bs.df,
   # Create survival and PDF functions
   df.surv.pdf.fun.control <-
     df.lp.control %>%
-    dplyr::mutate(survfun.control = purrr::map2(lp, scale, function(x, y) create_survfun(lpvec = x, scale = y, dist = dist)),
-                  pdf.control     = purrr::map2(lp, scale, function(x, y) create_pdf(lpvec = x, scale = y, dist = dist))) %>%
-    dplyr::select(-lp, -scale)
+    dplyr::mutate(survfun.control = purrr::map2(lp, scale.ln, function(x, y) create_survfun(lpvec = x, scale.ln = y, dist = dist)),
+                  pdf.control     = purrr::map2(lp, scale.ln, function(x, y) create_pdf(lpvec = x, scale.ln = y, dist = dist))) %>%
+    dplyr::select(-lp, -scale.ln)
   df.surv.pdf.fun.treatment <-
     df.lp.treatment %>%
-    dplyr::mutate(survfun.trt = purrr::map2(lp, scale, function(x, y) create_survfun(lpvec = x, scale = y, dist = dist)),
-                  pdf.trt     = purrr::map2(lp, scale, function(x, y) create_pdf(lpvec = x, scale = y, dist = dist))) %>%
-    dplyr::select(-lp, -scale)
+    dplyr::mutate(survfun.trt = purrr::map2(lp, scale.ln, function(x, y) create_survfun(lpvec = x, scale.ln = y, dist = dist)),
+                  pdf.trt     = purrr::map2(lp, scale.ln, function(x, y) create_pdf(lpvec = x, scale.ln = y, dist = dist))) %>%
+    dplyr::select(-lp, -scale.ln)
 
   df.surv.pdf.fun.join <-
     dplyr::left_join(df.surv.pdf.fun.treatment,
@@ -159,17 +159,17 @@ calc_hr_with_average_surv <- function(sim.nested.2, scale.bs.df,
 #
 # Survival and PDF functions used in calculation are average of these functions for subjects in
 # the individual groups, because every subject has different survival and PDF functions
-calc_ave_hr_from_lp <- function(lp.vec.control, lp.vec.treatment, scale = NULL,
+calc_ave_hr_from_lp <- function(lp.vec.control, lp.vec.treatment, scale.ln = NULL,
                                 dist = "lognormal",
                                 simtimelast = NULL){
 
   # Currently only accept log normal
   dist <- match.arg(dist)
 
-  survfun.control   <- create_survfun(lp.vec.control,   scale, dist = dist)
-  survfun.treatment <- create_survfun(lp.vec.treatment, scale, dist = dist)
-  pdf.control   <- create_pdf(lp.vec.control,   scale, dist = dist)
-  pdf.treatment <- create_pdf(lp.vec.treatment, scale, dist = dist)
+  survfun.control   <- create_survfun(lp.vec.control,   scale.ln, dist = dist)
+  survfun.treatment <- create_survfun(lp.vec.treatment, scale.ln, dist = dist)
+  pdf.control   <- create_pdf(lp.vec.control,   scale.ln, dist = dist)
+  pdf.treatment <- create_pdf(lp.vec.treatment, scale.ln, dist = dist)
 
   integrand1 <- function(x){survfun.control(x) * pdf.treatment(x)}
   integrand2 <- function(x){survfun.treatment(x) * pdf.control(x)}

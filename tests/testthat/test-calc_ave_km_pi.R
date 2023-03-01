@@ -52,7 +52,7 @@ test_that("calc_ave_km_pi behavior check with manually calling", {
     data.each %>%
     dplyr::mutate(survfun =
                     purrr::map(lp, function(x)
-                      function(t) plnorm(q=t, meanlog=x, sdlog=exp(sim.2subj$scale.bs.df$scale[[2]]), lower=FALSE))) %>%
+                      function(t) plnorm(q=t, meanlog=x, sdlog=exp(sim.2subj$scale.ln.bs.df$scale.ln[[2]]), lower=FALSE))) %>%
     dplyr::mutate(km = purrr::map(survfun, function(x) x(t.out))) %>%
     head(2) %>%
     tidyr::unnest(km) %>%

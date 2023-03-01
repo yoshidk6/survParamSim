@@ -86,15 +86,15 @@ calc_ave_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
     sim.nested %>%
     dplyr::mutate(lp = purrr::map(data, function(x) x$lp)) %>%
     dplyr::select(-data) %>%
-    dplyr::left_join(sim$scale.bs.df, by = "rep")
+    dplyr::left_join(sim$scale.ln.bs.df, by = "rep")
 
 
   sim.km <-
     df.lp.extracted %>%
     dplyr::mutate(survfun =
-                    purrr::map2(lp, scale,
-                                function(x, y) create_survfun(lpvec = x, scale = y, dist = sim$survreg$dist))) %>%
-    dplyr::select(-lp, -scale) %>%
+                    purrr::map2(lp, scale.ln,
+                                function(x, y) create_survfun(lpvec = x, scale.ln = y, dist = sim$survreg$dist))) %>%
+    dplyr::select(-lp, -scale.ln) %>%
     dplyr::mutate(km = purrr::map(survfun, function(x) data.frame(time = t.out,
                                                                   surv = x(t.out)))) %>%
     dplyr::arrange(rep, !!!group.trt.syms)

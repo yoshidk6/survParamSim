@@ -40,7 +40,7 @@ test_that("calc_ave_hr_pi behavior check with manually calling", {
   lp.vec.treatment <- data.each$lp[as.numeric(data.each$sex) == 2]
 
   hr.manual.calc <-
-    calc_ave_hr_from_lp(lp.vec.control, lp.vec.treatment, scale = sim$scale.bs.df$scale[[2]],
+    calc_ave_hr_from_lp(lp.vec.control, lp.vec.treatment, scale = sim$scale.ln.bs.df$scale.ln[[2]],
                         dist = "lognormal", simtimelast = 1000)
 
   # Use `calc_ave_hr_pi()` function
@@ -67,12 +67,12 @@ test_that(">=3 trt arms", {
   lp.vec.trt1 <- sim.raw.rep2$lp[as.numeric(sim.raw.rep2[["trtfct"]]) == 2]
   lp.vec.trt2 <- sim.raw.rep2$lp[as.numeric(sim.raw.rep2[["trtfct"]]) == 3]
 
-  survfun.control <- create_survfun(lp.vec.control, sim.3trt.2$scale.bs.df$scale[[2]], dist = sim.3trt.2$survreg$dist)
-  survfun.trt1    <- create_survfun(lp.vec.trt1,    sim.3trt.2$scale.bs.df$scale[[2]], dist = sim.3trt.2$survreg$dist)
-  survfun.trt2    <- create_survfun(lp.vec.trt2,    sim.3trt.2$scale.bs.df$scale[[2]], dist = sim.3trt.2$survreg$dist)
-  pdf.control <- create_pdf(lp.vec.control,   sim.3trt.2$scale.bs.df$scale[[2]], dist = sim.3trt.2$survreg$dist)
-  pdf.trt1    <- create_pdf(lp.vec.trt1,      sim.3trt.2$scale.bs.df$scale[[2]], dist = sim.3trt.2$survreg$dist)
-  pdf.trt2    <- create_pdf(lp.vec.trt2,      sim.3trt.2$scale.bs.df$scale[[2]], dist = sim.3trt.2$survreg$dist)
+  survfun.control <- create_survfun(lp.vec.control, sim.3trt.2$scale.ln.bs.df$scale.ln[[2]], dist = sim.3trt.2$survreg$dist)
+  survfun.trt1    <- create_survfun(lp.vec.trt1,    sim.3trt.2$scale.ln.bs.df$scale.ln[[2]], dist = sim.3trt.2$survreg$dist)
+  survfun.trt2    <- create_survfun(lp.vec.trt2,    sim.3trt.2$scale.ln.bs.df$scale.ln[[2]], dist = sim.3trt.2$survreg$dist)
+  pdf.control <- create_pdf(lp.vec.control,   sim.3trt.2$scale.ln.bs.df$scale.ln[[2]], dist = sim.3trt.2$survreg$dist)
+  pdf.trt1    <- create_pdf(lp.vec.trt1,      sim.3trt.2$scale.ln.bs.df$scale.ln[[2]], dist = sim.3trt.2$survreg$dist)
+  pdf.trt2    <- create_pdf(lp.vec.trt2,      sim.3trt.2$scale.ln.bs.df$scale.ln[[2]], dist = sim.3trt.2$survreg$dist)
 
   integrand1 <- function(x){survfun.control(x) * pdf.trt1(x)}
   integrand2 <- function(x){survfun.trt1(x) * pdf.control(x)}
@@ -105,7 +105,7 @@ test_that("check grouping works", {
   lp.vec.treatment <- data.each$lp[as.numeric(data.each$sex) == 2]
 
   hr.manual.calc <-
-    calc_ave_hr_from_lp(lp.vec.control, lp.vec.treatment, scale = sim$scale.bs.df$scale[[2]],
+    calc_ave_hr_from_lp(lp.vec.control, lp.vec.treatment, scale = sim$scale.ln.bs.df$scale.ln[[2]],
                         dist = "lognormal", simtimelast = 1000)
 
   # Use `calc_ave_hr_pi()` function
