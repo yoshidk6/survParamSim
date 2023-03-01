@@ -31,7 +31,7 @@ Suggests:
     knitr,
     rmarkdown,
     survminer,
-    testthat (>= 2.1.0),
+    testthat (>= 3.0.0),
     vdiffr,
     withr
 Roxygen: list(markdown = TRUE)
@@ -41,3 +41,4 @@ URL: https://github.com/yoshidk6/survParamSim
 BugReports: https://github.com/yoshidk6/survParamSim/issues
 VignetteBuilder: knitr
 RdMacros: lifecycle
+Config/testthat/edition: 3
