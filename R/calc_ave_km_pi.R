@@ -142,59 +142,5 @@ calc_ave_km_pi <- function(sim, trt=NULL, group=NULL, pi.range = 0.95,
 }
 
 
-calc_obs_km <- function(sim, calc.obs, group.trt.syms) {
-
-  out <- list()
-  out$obs.km <- NULL
-  out$obs.median.time <- NULL
-
-  if(calc.obs){
-    # Fit K-M curve to observed data
-    obs.grouped <-
-      sim$newdata.nona.obs %>%
-      dplyr::group_by(!!!group.trt.syms)
-
-    if(length(dplyr::group_vars(obs.grouped)) == 0 &
-       utils::packageVersion("tidyr") >= '1.0.0') {
-      obs.nested <-
-        obs.grouped %>%
-        nest2(data = dplyr::everything())
-    } else {
-      obs.nested <- nest2(obs.grouped)
-    }
-
-
-    ## Define formula
-    formula <-
-      paste(attributes(formula(sim$survreg))$variables,"~1")[2] %>%
-      stats::as.formula()
-
-
-    ## Calc median and KM curve
-    obs.km.nested <-
-      obs.nested %>%
-      dplyr::mutate(kmfit = purrr::map(data, function(x) survival::survfit(formula, data=x))) %>%
-      dplyr::mutate(median = purrr::map_dbl(kmfit, function(x) summary(x)$table["median"]),
-                    n      = purrr::map_dbl(kmfit, function(x) summary(x)$table["records"]),
-                    km = purrr::map(kmfit, extract_km_obs_time_profile))
-
-    out$obs.km <-
-      obs.km.nested %>%
-      dplyr::select(-data, -kmfit) %>%
-      tidyr::unnest(km) %>%
-      dplyr::ungroup() %>%
-      dplyr::filter(!is.na(surv)) %>%
-      dplyr::select(-median)
-
-    out$obs.median.time <-
-      obs.km.nested %>%
-      dplyr::select(!!!group.trt.syms, median, n)
-
-  }
-
-  return(out)
-}
-
-
 
 

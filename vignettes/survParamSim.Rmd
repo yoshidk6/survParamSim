@@ -100,7 +100,7 @@ To calculate survival curves for each simulated dataset, `calc_ave_km_pi()` or
 `calc_km_pi()` can be used on the simulated object above.
 
 ```{r km_pi_calc}
-km.pi <- calc_ave_km_pi(sim, trt = "rx")
+km.pi <- calc_km_pi(sim, trt = "rx")
 km.pi
 ```
 
@@ -119,7 +119,6 @@ This functionality is only available for `calc_km_pi()` output and has not been
 implemented for `calc_ave_km_pi()` yet..
 
 ```{r km_pi_table}
-km.pi <- calc_km_pi(sim, trt = "rx")
 extract_medsurv_pi(km.pi)
 ```
 
@@ -127,7 +126,7 @@ Plot can also be made for subgroups.
 You can see that prediction interval is wide for (depth: 1 & nodes4: 1) group, mainly due to small number of subjects
 
 ```{r km_pi_group}
-km.pi <- calc_ave_km_pi(sim, trt = "rx", group = c("node4", "depth"))
+km.pi <- calc_km_pi(sim, trt = "rx", group = c("node4", "depth"))
 
 plot_km_pi(km.pi) +
   theme(legend.position = "bottom") +
@@ -142,7 +141,7 @@ be used on the simulated object above.
 Here I only generated subgroups based on "depth", since the very small N in (depth: 1 & nodes4: 1) can cause issue with calculating HRs.
 
 ```{r hr_pi}
-hr.pi <- calc_ave_hr_pi(sim, trt = "rx", group = c("depth"))
+hr.pi <- calc_hr_pi(sim, trt = "rx", group = c("depth"))
 
 hr.pi
 plot_hr_pi(hr.pi)

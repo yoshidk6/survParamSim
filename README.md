@@ -52,6 +52,7 @@ library(dplyr)
 library(ggplot2)
 library(survival)
 library(survParamSim)
+#> Warning: package 'survParamSim' was built under R version 4.2.3
 
 set.seed(12345)
 
@@ -97,10 +98,15 @@ sim
 Calculate survival curves with prediction intervals:
 
 ``` r
-km.pi <- calc_ave_km_pi(sim, trt = "rx", group = c("node4", "depth"))
+km.pi <- calc_km_pi(sim, trt = "rx", group = c("node4", "depth"))
+#> Warning in calc_km_pi(sim, trt = "rx", group = c("node4", "depth")): 339 of 800
+#> simulations (#rep * #trt * #group) did not reach median survival time and these
+#> are not included for prediction interval calculation. You may want to delay the
+#> `censor.dur` in simulation.
 
 km.pi
 #> ---- Simulated and observed (if calculated) survival curves ----
+#> * Use `extract_medsurv_pi()` to extract prediction intervals of median survival times
 #> * Use `extract_km_pi()` to extract prediction intervals of K-M curves
 #> * Use `plot_km_pi()` to draw survival curves
 #> 
@@ -108,8 +114,7 @@ km.pi
 #>     trt: rx 
 #>     group: node4 
 #>     pi.range: 0.95 
-#>     calc.obs: TRUE 
-#>     method: Average survival using `calc_ave_km_pi()`
+#>     calc.obs: TRUE
 plot_km_pi(km.pi) +
   theme(legend.position = "bottom") +
   labs(y = "Recurrence free rate") +
@@ -119,13 +124,27 @@ plot_km_pi(km.pi) +
 <img src="man/figures/README-km_pi_group-1.png" width="100%" />
 
 ``` r
-# extract_medsurv_pi(km.pi)
+extract_medsurv_pi(km.pi) # Not implemented for calc_ave_km_pi yet; available for calc_km_pi
+#> # A tibble: 32 × 7
+#>    node4 depth rx          n description median quantile
+#>    <dbl> <dbl> <fct>   <dbl> <chr>        <dbl>    <dbl>
+#>  1     0     0 Obs       193 pi_low       1257.   0.0250
+#>  2     0     0 Obs       193 pi_med       1895.   0.5   
+#>  3     0     0 Obs       193 pi_high      2713.   0.975 
+#>  4     0     0 Obs       193 obs          1436   NA     
+#>  5     0     0 Lev+5FU   192 pi_low       2429.   0.0250
+#>  6     0     0 Lev+5FU   192 pi_med       2716.   0.5   
+#>  7     0     0 Lev+5FU   192 pi_high      2908.   0.975 
+#>  8     0     0 Lev+5FU   192 obs            NA   NA     
+#>  9     0     1 Obs        35 pi_low       1539.   0.0250
+#> 10     0     1 Obs        35 pi_med       2558.   0.5   
+#> # … with 22 more rows
 ```
 
 Calculate hazard ratios with prediction intervals:
 
 ``` r
-hr.pi <- calc_ave_hr_pi(sim, trt = "rx", group = c("depth"))
+hr.pi <- calc_hr_pi(sim, trt = "rx", group = c("depth"))
 
 hr.pi
 #> ---- Simulated and observed (if calculated) hazard ratio ----
@@ -138,8 +157,7 @@ hr.pi
 #>          ('Lev+5FU' as test trt, 'Obs' as control)
 #>     group: depth 
 #>     pi.range: 0.95 
-#>     calc.obs: TRUE 
-#>     method: average HR using `calc_ave_hr_pi()`
+#>     calc.obs: TRUE
 plot_hr_pi(hr.pi)
 ```
 
@@ -150,12 +168,12 @@ extract_hr_pi(hr.pi)
 #> # A tibble: 8 × 5
 #>   depth rx      description    HR quantile
 #>   <dbl> <fct>   <chr>       <dbl>    <dbl>
-#> 1     0 Lev+5FU pi_low      0.487   0.0250
-#> 2     0 Lev+5FU pi_med      0.609   0.5   
-#> 3     0 Lev+5FU pi_high     0.761   0.975 
+#> 1     0 Lev+5FU pi_low      0.464   0.0250
+#> 2     0 Lev+5FU pi_med      0.624   0.5   
+#> 3     0 Lev+5FU pi_high     0.794   0.975 
 #> 4     0 Lev+5FU obs         0.590  NA     
-#> 5     1 Lev+5FU pi_low      0.408   0.0250
-#> 6     1 Lev+5FU pi_med      0.550   0.5   
-#> 7     1 Lev+5FU pi_high     0.780   0.975 
+#> 5     1 Lev+5FU pi_low      0.233   0.0250
+#> 6     1 Lev+5FU pi_med      0.597   0.5   
+#> 7     1 Lev+5FU pi_high     1.13    0.975 
 #> 8     1 Lev+5FU obs         0.607  NA
 ```
