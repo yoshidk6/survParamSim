@@ -4,14 +4,17 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="Perform survival simulation with parametric survival model generated from survreg function in survival package.
+    In each simulation coefficients are resampled from variance-covariance matrix of parameter estimates to 
+    capture uncertainty in model parameters.
+    Prediction intervals of Kaplan-Meier estimates and hazard ratio of treatment effect can be further calculated using simulated survival data.">
 <title>Parametric Survival Simulation with Parameter Uncertainty • survParamSim</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
-<script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Parametric Survival Simulation with Parameter Uncertainty">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Parametric Survival Simulation with Parameter Uncertainty">
 <meta property="og:description" content="Perform survival simulation with parametric survival model generated from survreg function in survival package.
     In each simulation coefficients are resampled from variance-covariance matrix of parameter estimates to 
     capture uncertainty in model parameters.
@@ -21,57 +24,52 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <div class="container template-home">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">survParamSim</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.6.9000</span>
-      </span>
-    </div>
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    
+    <a class="navbar-brand me-2" href="index.html">survParamSim</a>
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="articles/survParamSim.html">Get started</a>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.6.9000</small>
+
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item">
+  <a class="nav-link" href="articles/survParamSim.html">Get started</a>
 </li>
-<li>
-  <a href="reference/index.html">Reference</a>
+<li class="nav-item">
+  <a class="nav-link" href="reference/index.html">Reference</a>
 </li>
-<li>
-  <a href="news/index.html">Changelog</a>
+<li class="nav-item">
+  <a class="nav-link" href="news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/yoshidk6/survParamSim/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
+<form class="form-inline my-2 my-lg-0" role="search">
+        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
+</form>
+
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/yoshidk6/survParamSim/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
 </div>
-<!--/.nav-collapse -->
+
+    
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
-
-      
-
-      </header><div class="row">
-  <div class="contents col-md-9">
-<div class="section level1">
+</nav><div class="container template-home">
+<div class="row">
+  <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="survparamsim">survParamSim<a class="anchor" aria-label="anchor" href="#survparamsim"></a>
 </h1></div>
 <p><a href="https://github.com/yoshidk6/survParamSim/actions" class="external-link"><img src="https://github.com/yoshidk6/survParamSim/workflows/R-CMD-check/badge.svg" alt="R build status"></a> <a href="https://cran.r-project.org/package=survParamSim" class="external-link"><img src="https://www.r-pkg.org/badges/version/survParamSim" alt="CRAN status"></a> <a href="https://CRAN.R-project.org/package=survParamSim" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/survParamSim" alt="downloads"></a></p>
@@ -90,7 +88,7 @@
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p><a href="https://yoshidk6.github.io/survParamSim/" class="external-link">This GitHub pages</a> contains function references and <a href="https://yoshidk6.github.io/survParamSim/articles/survParamSim.html" class="external-link">vignette</a>. The example below is a sneak peek of example outputs.</p>
+<p><a href="https://yoshidk6.github.io/survParamSim/">This GitHub pages</a> contains function references and <a href="https://yoshidk6.github.io/survParamSim/articles/survParamSim.html">vignette</a>. The example below is a sneak peek of example outputs.</p>
 <p>First, run survreg to fit parametric survival model:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
@@ -105,6 +103,7 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival" class="external-link">survival</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/yoshidk6/survParamSim" class="external-link">survParamSim</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: package 'survParamSim' was built under R version 4.2.3</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span></span>
 <span></span>
@@ -142,10 +141,15 @@
 <span><span class="co">#&gt;     #subjects: 619 (without NA in model variables)</span></span></code></pre></div>
 <p>Calculate survival curves with prediction intervals:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">km.pi</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/calculate_km_pi.html">calc_ave_km_pi</a></span><span class="op">(</span><span class="va">sim</span>, trt <span class="op">=</span> <span class="st">"rx"</span>, group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"node4"</span>, <span class="st">"depth"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">km.pi</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/calculate_km_pi.html">calc_km_pi</a></span><span class="op">(</span><span class="va">sim</span>, trt <span class="op">=</span> <span class="st">"rx"</span>, group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"node4"</span>, <span class="st">"depth"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in calc_km_pi(sim, trt = "rx", group = c("node4", "depth")): 339 of 800</span></span>
+<span><span class="co">#&gt; simulations (#rep * #trt * #group) did not reach median survival time and these</span></span>
+<span><span class="co">#&gt; are not included for prediction interval calculation. You may want to delay the</span></span>
+<span><span class="co">#&gt; `censor.dur` in simulation.</span></span>
 <span></span>
 <span><span class="va">km.pi</span></span>
 <span><span class="co">#&gt; ---- Simulated and observed (if calculated) survival curves ----</span></span>
+<span><span class="co">#&gt; * Use `extract_medsurv_pi()` to extract prediction intervals of median survival times</span></span>
 <span><span class="co">#&gt; * Use `extract_km_pi()` to extract prediction intervals of K-M curves</span></span>
 <span><span class="co">#&gt; * Use `plot_km_pi()` to draw survival curves</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -153,18 +157,31 @@
 <span><span class="co">#&gt;     trt: rx </span></span>
 <span><span class="co">#&gt;     group: node4 </span></span>
 <span><span class="co">#&gt;     pi.range: 0.95 </span></span>
-<span><span class="co">#&gt;     calc.obs: TRUE </span></span>
-<span><span class="co">#&gt;     method: Average survival using `calc_ave_km_pi()`</span></span>
+<span><span class="co">#&gt;     calc.obs: TRUE</span></span>
 <span><span class="fu"><a href="reference/plot_km_pi.html">plot_km_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Recurrence free rate"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html" class="external-link">expand_limits</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-km_pi_group-1.png" width="100%"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># extract_medsurv_pi(km.pi)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/extractpi.html">extract_medsurv_pi</a></span><span class="op">(</span><span class="va">km.pi</span><span class="op">)</span> <span class="co"># Not implemented for calc_ave_km_pi yet; available for calc_km_pi</span></span>
+<span><span class="co">#&gt; # A tibble: 32 × 7</span></span>
+<span><span class="co">#&gt;    node4 depth rx          n description median quantile</span></span>
+<span><span class="co">#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;   &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1     0     0 Obs       193 pi_low       1257.   0.0250</span></span>
+<span><span class="co">#&gt;  2     0     0 Obs       193 pi_med       1895.   0.5   </span></span>
+<span><span class="co">#&gt;  3     0     0 Obs       193 pi_high      2713.   0.975 </span></span>
+<span><span class="co">#&gt;  4     0     0 Obs       193 obs          1436   NA     </span></span>
+<span><span class="co">#&gt;  5     0     0 Lev+5FU   192 pi_low       2429.   0.0250</span></span>
+<span><span class="co">#&gt;  6     0     0 Lev+5FU   192 pi_med       2716.   0.5   </span></span>
+<span><span class="co">#&gt;  7     0     0 Lev+5FU   192 pi_high      2908.   0.975 </span></span>
+<span><span class="co">#&gt;  8     0     0 Lev+5FU   192 obs            NA   NA     </span></span>
+<span><span class="co">#&gt;  9     0     1 Obs        35 pi_low       1539.   0.0250</span></span>
+<span><span class="co">#&gt; 10     0     1 Obs        35 pi_med       2558.   0.5   </span></span>
+<span><span class="co">#&gt; # … with 22 more rows</span></span></code></pre></div>
 <p>Calculate hazard ratios with prediction intervals:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hr.pi</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/calculate_hr_pi.html">calc_ave_hr_pi</a></span><span class="op">(</span><span class="va">sim</span>, trt <span class="op">=</span> <span class="st">"rx"</span>, group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"depth"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">hr.pi</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/calculate_hr_pi.html">calc_hr_pi</a></span><span class="op">(</span><span class="va">sim</span>, trt <span class="op">=</span> <span class="st">"rx"</span>, group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"depth"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">hr.pi</span></span>
 <span><span class="co">#&gt; ---- Simulated and observed (if calculated) hazard ratio ----</span></span>
@@ -177,8 +194,7 @@
 <span><span class="co">#&gt;          ('Lev+5FU' as test trt, 'Obs' as control)</span></span>
 <span><span class="co">#&gt;     group: depth </span></span>
 <span><span class="co">#&gt;     pi.range: 0.95 </span></span>
-<span><span class="co">#&gt;     calc.obs: TRUE </span></span>
-<span><span class="co">#&gt;     method: average HR using `calc_ave_hr_pi()`</span></span>
+<span><span class="co">#&gt;     calc.obs: TRUE</span></span>
 <span><span class="fu"><a href="reference/plot_hr_pi.html">plot_hr_pi</a></span><span class="op">(</span><span class="va">hr.pi</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-hr_pi-1.png" width="100%"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -186,20 +202,17 @@
 <span><span class="co">#&gt; # A tibble: 8 × 5</span></span>
 <span><span class="co">#&gt;   depth rx      description    HR quantile</span></span>
 <span><span class="co">#&gt;   &lt;dbl&gt; &lt;fct&gt;   &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1     0 Lev+5FU pi_low      0.487   0.0250</span></span>
-<span><span class="co">#&gt; 2     0 Lev+5FU pi_med      0.609   0.5   </span></span>
-<span><span class="co">#&gt; 3     0 Lev+5FU pi_high     0.761   0.975 </span></span>
+<span><span class="co">#&gt; 1     0 Lev+5FU pi_low      0.464   0.0250</span></span>
+<span><span class="co">#&gt; 2     0 Lev+5FU pi_med      0.624   0.5   </span></span>
+<span><span class="co">#&gt; 3     0 Lev+5FU pi_high     0.794   0.975 </span></span>
 <span><span class="co">#&gt; 4     0 Lev+5FU obs         0.590  NA     </span></span>
-<span><span class="co">#&gt; 5     1 Lev+5FU pi_low      0.408   0.0250</span></span>
-<span><span class="co">#&gt; 6     1 Lev+5FU pi_med      0.550   0.5   </span></span>
-<span><span class="co">#&gt; 7     1 Lev+5FU pi_high     0.780   0.975 </span></span>
+<span><span class="co">#&gt; 5     1 Lev+5FU pi_low      0.233   0.0250</span></span>
+<span><span class="co">#&gt; 6     1 Lev+5FU pi_med      0.597   0.5   </span></span>
+<span><span class="co">#&gt; 7     1 Lev+5FU pi_high     1.13    0.975 </span></span>
 <span><span class="co">#&gt; 8     1 Lev+5FU obs         0.607  NA</span></span></code></pre></div>
 </div>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="links">
+  </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://cloud.r-project.org/package=survParamSim" class="external-link">View on CRAN</a></li>
@@ -233,25 +246,24 @@
 
 
 
-  </div>
+  </aside>
 </div>
 
 
-      <footer><div class="copyright">
+    <footer><div class="pkgdown-footer-left">
   <p></p>
 <p>Developed by Kenta Yoshida, Laurent Claret.</p>
 </div>
 
-<div class="pkgdown">
+<div class="pkgdown-footer-right">
   <p></p>
 <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
 
   
-
 
   
 

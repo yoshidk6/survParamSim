@@ -1,7 +1,10 @@
-pandoc: 2.7.3
+pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   survParamSim: survParamSim.html
-last_built: 2023-03-01T20:08Z
+last_built: 2023-05-24T01:51Z
+urls:
+  reference: https://yoshidk6.github.io/survParamSim/reference
+  article: https://yoshidk6.github.io/survParamSim/articles
 
