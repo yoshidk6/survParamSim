@@ -1,5 +1,5 @@
 ## Test environments
-* local Mac OSX install, R 4.0.2
+* local Mac OSX install, R 4.5.0
 * Windows, macOS, Ubuntu 20.04 on Github actions (devel and release)
 * win-builder (devel and release)
 

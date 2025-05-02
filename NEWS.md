@@ -1,5 +1,12 @@
 
-# survParamSim 0.1.7 (in development)
+# survParamSim 0.1.7
+
+## Major changes
+
+* Implemented `calc_ave_hr_pi()` and `calc_ave_km_pi()`. Simulate the entire survival curve 
+rather than a single survival time for each individual, then take average of the
+curves to generate the population survival curve, for the purpose of HR and KM
+curve calculations.
 
 # survParamSim 0.1.6
 
