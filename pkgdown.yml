@@ -3,7 +3,7 @@ pkgdown: 2.1.2
 pkgdown_sha: ~
 articles:
   survParamSim: survParamSim.html
-last_built: 2025-05-02T19:13Z
+last_built: 2025-05-02T19:19Z
 urls:
   reference: https://yoshidk6.github.io/survParamSim/reference
   article: https://yoshidk6.github.io/survParamSim/articles
