@@ -14,24 +14,40 @@ extract_sim <- function(sim) {
   status.var <- as.character(attributes(stats::formula(sim$survreg))$variables[[2]][[3]])
   if(status.var[[1]] == "!") status.var <- status.var[[2]]
 
+  # Columns from simulation output that we want to keep (not from original data)
+  sim_only_cols <- c("time", "event")
+  # Columns used in the model (these will be removed from newdata.nona.sim later)
+  model_cols <- c(time.var, status.var)
+  # Columns in newdata.nona.sim that would conflict with simulation output (but are not used in the model)
+  conflict_cols <- intersect(setdiff(sim_only_cols, model_cols), names(sim$newdata.nona.sim))
+  
+  # Remove conflicting columns and warn
+  newdata_clean <- sim$newdata.nona.sim
+  if (length(conflict_cols) > 0) {
+    newdata_clean <- dplyr::select(newdata_clean, -dplyr::all_of(conflict_cols))
+    warning(sprintf(
+      "The original data contains column(s) named '%s' which conflict with simulation output.\nThese columns have been removed to avoid ambiguity.",
+      paste(conflict_cols, collapse = "', '")
+    ))
+  }
 
   if(methods::is(sim, "survparamsim_resample")){
     sim.merged.with.cov <-
-      sim$newdata.nona.sim %>%
+      newdata_clean %>%
       dplyr::select(-dplyr::all_of(time.var), -dplyr::all_of(status.var), -n.resample) %>%
       dplyr::left_join(sim$sim, ., by = c("rep", "subj.sim")) %>%
       dplyr::select(rep, subj.sim, time, event, dplyr::everything())
 
   } else if(methods::is(sim, "survparamsim_pre_resampled")){
     sim.merged.with.cov <-
-      sim$newdata.nona.sim %>%
+      newdata_clean %>%
       dplyr::select(-dplyr::all_of(time.var), -dplyr::all_of(status.var)) %>%
       dplyr::left_join(sim$sim, ., by = c("rep", "subj.sim")) %>%
       dplyr::select(rep, subj.sim, time, event, dplyr::everything())
 
   } else {
     sim.merged.with.cov <-
-      sim$newdata.nona.sim %>%
+      newdata_clean %>%
       dplyr::select(-dplyr::all_of(time.var), -dplyr::all_of(status.var)) %>%
       dplyr::left_join(sim$sim, ., by = c("subj.sim")) %>%
       dplyr::select(rep, subj.sim, time, event, dplyr::everything())
